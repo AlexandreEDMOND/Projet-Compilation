@@ -1,0 +1,14 @@
+
+But du projet : Le but du projet est de réaliser un compilateur pour le langage CMat, depuis le
+code de haut niveau jusqu'à un code exécutable MIPS ou RISC-V (au choix).
+
+Entrée : Fichier C
+Sortie : 
+
+Le langage CMat comporte des instructions dédiées aux matrices. Dans la suite, on définit une matrice
+comme étant un tableau à une ou à deux dimensions.
+
+
+
+Phase de tests : 
+        - 

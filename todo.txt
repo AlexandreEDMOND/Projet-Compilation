@@ -3,10 +3,20 @@ But du projet : Le but du projet est de réaliser un compilateur pour le langage
 code de haut niveau jusqu'à un code exécutable MIPS ou RISC-V (au choix).
 
 Entrée : Fichier C
-Sortie : 
+Sortie : Code assembleur
 
 Le langage CMat comporte des instructions dédiées aux matrices. Dans la suite, on définit une matrice
 comme étant un tableau à une ou à deux dimensions.
+
+
+Structure à identifier :
+        - int, float
+        - +, -, *, /, ++, --
+        - if, else, while, for
+        - main()
+        - printf(), print(), printmat()
+        - matrix
+        - Pas d'inclusion bibliothèque
 
 
 

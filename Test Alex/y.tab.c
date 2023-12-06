@@ -121,25 +121,16 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    PLUS = 258,                    /* PLUS  */
-    MOINS = 259,                   /* MOINS  */
-    MULT = 260,                    /* MULT  */
-    DIV = 261,                     /* DIV  */
-    INC_PLUS = 262,                /* INC_PLUS  */
-    INC_MOINS = 263,               /* INC_MOINS  */
-    PRINTF = 264,                  /* PRINTF  */
-    PAR_OPEN = 265,                /* PAR_OPEN  */
-    PAR_CLOSE = 266,               /* PAR_CLOSE  */
-    POINT_VIRG = 267,              /* POINT_VIRG  */
-    MATRIX = 268,                  /* MATRIX  */
-    GUIL_OPEN = 269,               /* GUIL_OPEN  */
-    GUIL_CLOSE = 270,              /* GUIL_CLOSE  */
-    RETURN = 271,                  /* RETURN  */
-    STRING_CONSTANT = 272,         /* STRING_CONSTANT  */
-    INT_VALUE = 273,               /* INT_VALUE  */
-    INT = 274,                     /* INT  */
-    FLOAT = 275,                   /* FLOAT  */
-    MAIN = 276                     /* MAIN  */
+    INC_PLUS = 258,                /* INC_PLUS  */
+    INC_MOINS = 259,               /* INC_MOINS  */
+    PRINTF = 260,                  /* PRINTF  */
+    MATRIX = 261,                  /* MATRIX  */
+    RETURN = 262,                  /* RETURN  */
+    STRING_CONSTANT = 263,         /* STRING_CONSTANT  */
+    INT_VALUE = 264,               /* INT_VALUE  */
+    INT = 265,                     /* INT  */
+    FLOAT = 266,                   /* FLOAT  */
+    MAIN = 267                     /* MAIN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -148,25 +139,16 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define PLUS 258
-#define MOINS 259
-#define MULT 260
-#define DIV 261
-#define INC_PLUS 262
-#define INC_MOINS 263
-#define PRINTF 264
-#define PAR_OPEN 265
-#define PAR_CLOSE 266
-#define POINT_VIRG 267
-#define MATRIX 268
-#define GUIL_OPEN 269
-#define GUIL_CLOSE 270
-#define RETURN 271
-#define STRING_CONSTANT 272
-#define INT_VALUE 273
-#define INT 274
-#define FLOAT 275
-#define MAIN 276
+#define INC_PLUS 258
+#define INC_MOINS 259
+#define PRINTF 260
+#define MATRIX 261
+#define RETURN 262
+#define STRING_CONSTANT 263
+#define INT_VALUE 264
+#define INT 265
+#define FLOAT 266
+#define MAIN 267
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -175,7 +157,7 @@ union YYSTYPE
 #line 12 "proj_comp.y"
 int num; char id; char* string_value;
 
-#line 179 "y.tab.c"
+#line 161 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -198,29 +180,25 @@ enum yysymbol_kind_t
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_PLUS = 3,                       /* PLUS  */
-  YYSYMBOL_MOINS = 4,                      /* MOINS  */
-  YYSYMBOL_MULT = 5,                       /* MULT  */
-  YYSYMBOL_DIV = 6,                        /* DIV  */
-  YYSYMBOL_INC_PLUS = 7,                   /* INC_PLUS  */
-  YYSYMBOL_INC_MOINS = 8,                  /* INC_MOINS  */
-  YYSYMBOL_PRINTF = 9,                     /* PRINTF  */
-  YYSYMBOL_PAR_OPEN = 10,                  /* PAR_OPEN  */
-  YYSYMBOL_PAR_CLOSE = 11,                 /* PAR_CLOSE  */
-  YYSYMBOL_POINT_VIRG = 12,                /* POINT_VIRG  */
-  YYSYMBOL_MATRIX = 13,                    /* MATRIX  */
-  YYSYMBOL_GUIL_OPEN = 14,                 /* GUIL_OPEN  */
-  YYSYMBOL_GUIL_CLOSE = 15,                /* GUIL_CLOSE  */
-  YYSYMBOL_RETURN = 16,                    /* RETURN  */
-  YYSYMBOL_STRING_CONSTANT = 17,           /* STRING_CONSTANT  */
-  YYSYMBOL_INT_VALUE = 18,                 /* INT_VALUE  */
-  YYSYMBOL_INT = 19,                       /* INT  */
-  YYSYMBOL_FLOAT = 20,                     /* FLOAT  */
-  YYSYMBOL_MAIN = 21,                      /* MAIN  */
-  YYSYMBOL_YYACCEPT = 22,                  /* $accept  */
-  YYSYMBOL_programme = 23,                 /* programme  */
-  YYSYMBOL_expression = 24,                /* expression  */
-  YYSYMBOL_type = 25                       /* type  */
+  YYSYMBOL_INC_PLUS = 3,                   /* INC_PLUS  */
+  YYSYMBOL_INC_MOINS = 4,                  /* INC_MOINS  */
+  YYSYMBOL_PRINTF = 5,                     /* PRINTF  */
+  YYSYMBOL_MATRIX = 6,                     /* MATRIX  */
+  YYSYMBOL_RETURN = 7,                     /* RETURN  */
+  YYSYMBOL_STRING_CONSTANT = 8,            /* STRING_CONSTANT  */
+  YYSYMBOL_INT_VALUE = 9,                  /* INT_VALUE  */
+  YYSYMBOL_INT = 10,                       /* INT  */
+  YYSYMBOL_FLOAT = 11,                     /* FLOAT  */
+  YYSYMBOL_MAIN = 12,                      /* MAIN  */
+  YYSYMBOL_13_ = 13,                       /* '('  */
+  YYSYMBOL_14_ = 14,                       /* ')'  */
+  YYSYMBOL_15_ = 15,                       /* '{'  */
+  YYSYMBOL_16_ = 16,                       /* '}'  */
+  YYSYMBOL_17_ = 17,                       /* ';'  */
+  YYSYMBOL_YYACCEPT = 18,                  /* $accept  */
+  YYSYMBOL_programme = 19,                 /* programme  */
+  YYSYMBOL_expression = 20,                /* expression  */
+  YYSYMBOL_type = 21                       /* type  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -548,10 +526,10 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   18
+#define YYLAST   21
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  22
+#define YYNTOKENS  18
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
@@ -560,7 +538,7 @@ union yyalloc
 #define YYNSTATES  21
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   276
+#define YYMAXUTOK   267
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -578,15 +556,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      13,    14,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    17,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    15,     2,    16,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -600,8 +578,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21
+       5,     6,     7,     8,     9,    10,    11,    12
 };
 
 #if YYDEBUG
@@ -624,11 +601,10 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "PLUS", "MOINS",
-  "MULT", "DIV", "INC_PLUS", "INC_MOINS", "PRINTF", "PAR_OPEN",
-  "PAR_CLOSE", "POINT_VIRG", "MATRIX", "GUIL_OPEN", "GUIL_CLOSE", "RETURN",
-  "STRING_CONSTANT", "INT_VALUE", "INT", "FLOAT", "MAIN", "$accept",
-  "programme", "expression", "type", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "INC_PLUS",
+  "INC_MOINS", "PRINTF", "MATRIX", "RETURN", "STRING_CONSTANT",
+  "INT_VALUE", "INT", "FLOAT", "MAIN", "'('", "')'", "'{'", "'}'", "';'",
+  "$accept", "programme", "expression", "type", YY_NULLPTR
 };
 
 static const char *
@@ -638,7 +614,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-18)
+#define YYPACT_NINF (-8)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -652,9 +628,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -17,   -18,   -18,     4,   -16,   -18,    -1,     0,    -4,    -8,
-       2,    -5,    -9,    -3,     3,   -18,    -8,     5,   -18,     6,
-     -18
+      -6,    -8,    -8,     6,    -3,    -8,    -1,    -7,    -2,    -4,
+       1,     7,    -5,     0,     2,    -8,    -4,     3,    -8,     4,
+      -8
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -670,7 +646,7 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -18,   -18,     8,   -18
+      -8,    -8,     9,    -8
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -684,29 +660,31 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      10,    10,     1,     2,     5,     6,    15,    11,    11,     7,
-       9,     8,    13,    14,    17,    18,    19,    12,    20
+      10,    10,    11,    11,     1,     2,     5,     8,    17,     6,
+       0,    15,     7,     9,    13,     0,    14,    19,    12,    18,
+       0,    20
 };
 
 static const yytype_int8 yycheck[] =
 {
-       9,     9,    19,    20,     0,    21,    15,    16,    16,    10,
-      14,    11,    10,    18,    17,    12,    11,     9,    12
+       5,     5,     7,     7,    10,    11,     0,    14,     8,    12,
+      -1,    16,    13,    15,    13,    -1,     9,    14,     9,    17,
+      -1,    17
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    19,    20,    23,    25,     0,    21,    10,    11,    14,
-       9,    16,    24,    10,    18,    15,    24,    17,    12,    11,
-      12
+       0,    10,    11,    19,    21,     0,    12,    13,    14,    15,
+       5,     7,    20,    13,     9,    16,    20,     8,    17,    14,
+      17
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    22,    23,    24,    24,    24,    25,    25
+       0,    18,    19,    20,    20,    20,    21,    21
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -1445,38 +1423,38 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* programme: type MAIN PAR_OPEN PAR_CLOSE GUIL_OPEN expression GUIL_CLOSE  */
+  case 2: /* programme: type MAIN '(' ')' '{' expression '}'  */
 #line 22 "proj_comp.y"
-                                                                           {printf("\nDétection fonction main\n");}
-#line 1452 "y.tab.c"
+                                                   {printf("\nDétection fonction main\n");}
+#line 1430 "y.tab.c"
     break;
 
-  case 3: /* expression: PRINTF PAR_OPEN STRING_CONSTANT PAR_CLOSE POINT_VIRG  */
+  case 3: /* expression: PRINTF '(' STRING_CONSTANT ')' ';'  */
 #line 25 "proj_comp.y"
-                                                                    {printf("%s", (yyvsp[-2].string_value));}
-#line 1458 "y.tab.c"
+                                                  {printf("%s", (yyvsp[-2].string_value));}
+#line 1436 "y.tab.c"
     break;
 
-  case 4: /* expression: RETURN INT_VALUE POINT_VIRG  */
+  case 4: /* expression: RETURN INT_VALUE ';'  */
 #line 26 "proj_comp.y"
-                                          {;}
-#line 1464 "y.tab.c"
+                                   {printf("Détection return\n");}
+#line 1442 "y.tab.c"
     break;
 
   case 6: /* type: INT  */
 #line 30 "proj_comp.y"
                         {;}
-#line 1470 "y.tab.c"
+#line 1448 "y.tab.c"
     break;
 
   case 7: /* type: FLOAT  */
 #line 31 "proj_comp.y"
                         {;}
-#line 1476 "y.tab.c"
+#line 1454 "y.tab.c"
     break;
 
 
-#line 1480 "y.tab.c"
+#line 1458 "y.tab.c"
 
       default: break;
     }

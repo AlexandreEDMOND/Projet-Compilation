@@ -5,32 +5,48 @@
 #include <ctype.h>
 void yyerror (char *s);
 int yylex();
+
+#define MAX_VARIABLES 100
+
+typedef struct {
+    char name[50];
+    char type;
+    int value;
+} Variable;
+
+Variable variables[MAX_VARIABLES];
+int variableCount = 0;
+
+
 %}
 
 %%
 
 "int"       return INT;
 "float"     return FLOAT;
-"+"         return PLUS;
-"-"         return MOINS;
-"*"         return MULT;
-"/"         return DIV;
+"+"         return yytext[0];
+"-"         return yytext[0];
+"*"         return yytext[0];
+"/"         return yytext[0];
 "++"        return INC_PLUS;
 "--"        return INC_MOINS;
 "main"      return MAIN;
 "printf"    return PRINTF;
 "matrix"    return MATRIX;
-"("         return PAR_OPEN;
-")"         return PAR_CLOSE;
-"{"         return GUIL_OPEN;
-"}"         return GUIL_CLOSE;
-";"         return POINT_VIRG;
+"("         return yytext[0];
+")"         return yytext[0];
+"{"         return yytext[0];
+"}"         return yytext[0];
+";"         return yytext[0];
 "return"    return RETURN;
+
 [0-9]+ {
     yylval.num = atoi(yytext); 
     return INT_VALUE;
 }
+
 \/\*([^*]|(\*+[^*\/]))*\*+\/ {printf("Detection d'un commentaire");}
+
 \"[^"]+\"   {
                 yylval.string_value = strdup(yytext + 1);  // Skip the first character (quote)
                 yylval.string_value[strlen(yylval.string_value) - 1] = '\0';  // Remove the last character (quote)

@@ -32,6 +32,7 @@ int variableCount = 0;
 "--"        return INC_MOINS;
 "main"      return MAIN;
 "printf"    return PRINTF;
+"print"     return PRINT;
 "matrix"    return MATRIX;
 "("         return yytext[0];
 ")"         return yytext[0];
@@ -39,6 +40,7 @@ int variableCount = 0;
 "}"         return yytext[0];
 ";"         return yytext[0];
 "return"    return RETURN;
+"="         return yytext[0];
 
 [0-9]+ {
     yylval.num = atoi(yytext); 
@@ -53,6 +55,10 @@ int variableCount = 0;
                 return STRING_CONSTANT;
             }
 
+[a-zA-Z_][a-zA-Z0-9_]* {
+    yylval.string_value = strdup(yytext);
+    return STRING_CONSTANT;
+}
 
 . {}
 

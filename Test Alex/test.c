@@ -1,8 +1,5 @@
-#include <stdio.h>
-
 int main(){
-
-    printf("Bonjour\n");
-    
+    /* Ceci est un commentaire */  
+    printf("Bonjour");  
     return 0;
 }

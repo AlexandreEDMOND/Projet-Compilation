@@ -53,7 +53,26 @@ extern int yydebug;
     YYEMPTY = -2,
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
-    YYUNDEF = 257                  /* "invalid token"  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    PLUS = 258,                    /* PLUS  */
+    MOINS = 259,                   /* MOINS  */
+    MULT = 260,                    /* MULT  */
+    DIV = 261,                     /* DIV  */
+    INC_PLUS = 262,                /* INC_PLUS  */
+    INC_MOINS = 263,               /* INC_MOINS  */
+    PRINTF = 264,                  /* PRINTF  */
+    PAR_OPEN = 265,                /* PAR_OPEN  */
+    PAR_CLOSE = 266,               /* PAR_CLOSE  */
+    POINT_VIRG = 267,              /* POINT_VIRG  */
+    MATRIX = 268,                  /* MATRIX  */
+    GUIL_OPEN = 269,               /* GUIL_OPEN  */
+    GUIL_CLOSE = 270,              /* GUIL_CLOSE  */
+    RETURN = 271,                  /* RETURN  */
+    STRING_CONSTANT = 272,         /* STRING_CONSTANT  */
+    INT_VALUE = 273,               /* INT_VALUE  */
+    INT = 274,                     /* INT  */
+    FLOAT = 275,                   /* FLOAT  */
+    MAIN = 276                     /* MAIN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -62,15 +81,34 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
+#define PLUS 258
+#define MOINS 259
+#define MULT 260
+#define DIV 261
+#define INC_PLUS 262
+#define INC_MOINS 263
+#define PRINTF 264
+#define PAR_OPEN 265
+#define PAR_CLOSE 266
+#define POINT_VIRG 267
+#define MATRIX 268
+#define GUIL_OPEN 269
+#define GUIL_CLOSE 270
+#define RETURN 271
+#define STRING_CONSTANT 272
+#define INT_VALUE 273
+#define INT 274
+#define FLOAT 275
+#define MAIN 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
 #line 12 "proj_comp.y"
-int num; char id;
+int num; char id; char* string_value;
 
-#line 74 "y.tab.h"
+#line 112 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

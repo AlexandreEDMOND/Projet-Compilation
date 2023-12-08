@@ -6,17 +6,6 @@
 void yyerror (char *s);
 int yylex();
 
-#define MAX_VARIABLES 100
-
-typedef struct {
-    char name[50];
-    char type;
-    int value;
-} Variable;
-
-Variable variables[MAX_VARIABLES];
-int variableCount = 0;
-
 
 %}
 

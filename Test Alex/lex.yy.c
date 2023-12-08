@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 24
-#define YY_END_OF_BUFFER 25
+#define YY_NUM_RULES 25
+#define YY_END_OF_BUFFER 26
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,12 +365,12 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[58] =
     {   0,
-        0,    0,   25,   23,   24,   23,   12,   13,    5,    3,
-        4,    6,   19,   16,   18,   22,   22,   22,   22,   22,
-       22,   14,   15,    0,    7,    8,    0,   19,   22,   22,
-       22,   22,   22,   22,   21,    0,    0,   22,    1,   22,
-       22,   22,   22,   20,   22,    9,   22,   22,   22,    2,
-       22,   22,   22,   11,   10,   17,    0
+        0,    0,   26,   24,   25,   24,   13,   14,    5,    3,
+        4,    6,   20,   17,   19,   23,   23,   23,   23,   23,
+       23,   15,   16,    0,    7,    8,    0,   20,   23,   23,
+       23,   23,   23,   23,   22,    0,    0,   23,    1,   23,
+       23,   23,   23,   21,   23,    9,   23,   23,   23,    2,
+       23,   11,   23,   12,   10,   18,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -483,20 +483,9 @@ char *yytext;
 void yyerror (char *s);
 int yylex();
 
-#define MAX_VARIABLES 100
 
-typedef struct {
-    char name[50];
-    char type;
-    int value;
-} Variable;
-
-Variable variables[MAX_VARIABLES];
-int variableCount = 0;
-
-
-#line 499 "lex.yy.c"
-#line 500 "lex.yy.c"
+#line 488 "lex.yy.c"
+#line 489 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -713,10 +702,10 @@ YY_DECL
 		}
 
 	{
-#line 23 "proj_comp.lex"
+#line 12 "proj_comp.lex"
 
 
-#line 720 "lex.yy.c"
+#line 709 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -775,137 +764,142 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "proj_comp.lex"
+#line 14 "proj_comp.lex"
 return INT;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "proj_comp.lex"
+#line 15 "proj_comp.lex"
 return FLOAT;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "proj_comp.lex"
+#line 16 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 28 "proj_comp.lex"
+#line 17 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 29 "proj_comp.lex"
+#line 18 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "proj_comp.lex"
+#line 19 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 31 "proj_comp.lex"
+#line 20 "proj_comp.lex"
 return INC_PLUS;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "proj_comp.lex"
+#line 21 "proj_comp.lex"
 return INC_MOINS;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "proj_comp.lex"
+#line 22 "proj_comp.lex"
 return MAIN;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "proj_comp.lex"
+#line 23 "proj_comp.lex"
 return PRINTF;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "proj_comp.lex"
-return MATRIX;
+#line 24 "proj_comp.lex"
+return PRINT;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 36 "proj_comp.lex"
-return yytext[0];
+#line 25 "proj_comp.lex"
+return MATRIX;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 37 "proj_comp.lex"
+#line 26 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "proj_comp.lex"
+#line 27 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "proj_comp.lex"
+#line 28 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "proj_comp.lex"
+#line 29 "proj_comp.lex"
 return yytext[0];
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 41 "proj_comp.lex"
-return RETURN;
+#line 30 "proj_comp.lex"
+return yytext[0];
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "proj_comp.lex"
-return yytext[0];
+#line 31 "proj_comp.lex"
+return RETURN;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "proj_comp.lex"
+#line 32 "proj_comp.lex"
+return yytext[0];
+	YY_BREAK
+case 20:
+YY_RULE_SETUP
+#line 34 "proj_comp.lex"
 {
     yylval.num = atoi(yytext); 
     return INT_VALUE;
 }
 	YY_BREAK
-case 20:
-/* rule 20 can match eol */
-YY_RULE_SETUP
-#line 49 "proj_comp.lex"
-{printf("Detection d'un commentaire");}
-	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 51 "proj_comp.lex"
+#line 39 "proj_comp.lex"
+{printf("Detection d'un commentaire");}
+	YY_BREAK
+case 22:
+/* rule 22 can match eol */
+YY_RULE_SETUP
+#line 41 "proj_comp.lex"
 {
                 yylval.string_value = strdup(yytext + 1);  // Skip the first character (quote)
                 yylval.string_value[strlen(yylval.string_value) - 1] = '\0';  // Remove the last character (quote)
                 return STRING_CONSTANT;
             }
 	YY_BREAK
-case 22:
+case 23:
 YY_RULE_SETUP
-#line 57 "proj_comp.lex"
+#line 47 "proj_comp.lex"
 {
     yylval.string_value = strdup(yytext);
     return STRING_CONSTANT;
 }
 	YY_BREAK
-case 23:
-YY_RULE_SETUP
-#line 62 "proj_comp.lex"
-{}
-	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 64 "proj_comp.lex"
+#line 52 "proj_comp.lex"
+{}
+	YY_BREAK
+case 25:
+YY_RULE_SETUP
+#line 54 "proj_comp.lex"
 ECHO;
 	YY_BREAK
-#line 909 "lex.yy.c"
+#line 903 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1910,5 +1904,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 64 "proj_comp.lex"
+#line 54 "proj_comp.lex"
 

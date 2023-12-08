@@ -57,13 +57,14 @@ extern int yydebug;
     INC_PLUS = 258,                /* INC_PLUS  */
     INC_MOINS = 259,               /* INC_MOINS  */
     PRINTF = 260,                  /* PRINTF  */
-    MATRIX = 261,                  /* MATRIX  */
-    RETURN = 262,                  /* RETURN  */
-    STRING_CONSTANT = 263,         /* STRING_CONSTANT  */
-    INT_VALUE = 264,               /* INT_VALUE  */
-    INT = 265,                     /* INT  */
-    FLOAT = 266,                   /* FLOAT  */
-    MAIN = 267                     /* MAIN  */
+    PRINT = 261,                   /* PRINT  */
+    MATRIX = 262,                  /* MATRIX  */
+    RETURN = 263,                  /* RETURN  */
+    STRING_CONSTANT = 264,         /* STRING_CONSTANT  */
+    INT_VALUE = 265,               /* INT_VALUE  */
+    INT = 266,                     /* INT  */
+    FLOAT = 267,                   /* FLOAT  */
+    MAIN = 268                     /* MAIN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -75,22 +76,23 @@ extern int yydebug;
 #define INC_PLUS 258
 #define INC_MOINS 259
 #define PRINTF 260
-#define MATRIX 261
-#define RETURN 262
-#define STRING_CONSTANT 263
-#define INT_VALUE 264
-#define INT 265
-#define FLOAT 266
-#define MAIN 267
+#define PRINT 261
+#define MATRIX 262
+#define RETURN 263
+#define STRING_CONSTANT 264
+#define INT_VALUE 265
+#define INT 266
+#define FLOAT 267
+#define MAIN 268
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "proj_comp.y"
+#line 41 "proj_comp.y"
 int num; char id; char* string_value;
 
-#line 94 "y.tab.h"
+#line 96 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -63,10 +63,13 @@ declaration_variable    : type STRING_CONSTANT {
                             addVariable($2, 0, "int");
                             printf("Déclaration variable");
                             }
-                        | type STRING_CONSTANT '=' INT_VALUE {
+                        | type STRING_CONSTANT '=' valeur {
                             addVariable($2, $4, "int");
                             printf("Déclaration variable avec valeur");
                             }
+
+valeur      : INT_VALUE         {return $1;}
+            ;
 
 type        : INT       {;}
             | FLOAT     {;}

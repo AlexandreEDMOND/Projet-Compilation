@@ -1,12 +1,12 @@
 
-But du projet : Le but du projet est de réaliser un compilateur pour le langage CMat, depuis le
-code de haut niveau jusqu'à un code exécutable MIPS ou RISC-V (au choix).
+But du projet : Faire un compilateur pour le langage CMat qui produit un code 
+                exécutable MIPS ou RISC-V (au choix).
 
 Entrée : Fichier C
 Sortie : Code assembleur
 
-Le langage CMat comporte des instructions dédiées aux matrices. Dans la suite, on définit une matrice
-comme étant un tableau à une ou à deux dimensions.
+Le langage CMat comporte des instructions dédiées aux matrices.
+Matrice =Uun tableau à une ou à deux dimensions.
 
 
 Structure à identifier :
@@ -19,6 +19,19 @@ Structure à identifier :
         - Pas d'inclusion bibliothèque
 
 
+Etape : 
+        - Gerer les déclarations de int
+        - Stocker des int
+        - Pouvoir les afficher (Faire le Print != Printf)
+        - Faire des opérations dessus
+        - Pouvoir stocker des valeurs dans de nouveaux int
+        
+        - Stocker les matrices
+        - Les afficher (Faire Printmat)
+        - Faire des opérations dessus
+
 
 Phase de tests : 
-        - 
+        - Reconnais tous les mots clés et stocke bien les noms de variables (Lex)
+        - Détecte les mauvais mots clés (Yacc)
+        - Capable de lire un programme qui calcule l'addition de 2 chiffres et affiche le résultat

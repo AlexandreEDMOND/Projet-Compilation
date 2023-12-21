@@ -15,11 +15,11 @@
 
 %token<intval> INT_NUMBER
 %token <floatval> FLOAT_NUMBER
-%token <stringval> IDENTIFIER
+%token <stringval> IDENTIFIER STRING
 
 %token INT FLOAT MATRIX RETURN
 %token PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN INCREMENT DECREMENT
-%token IF ELSE WHILE FOR OPENPAR CLOSEPAR OPENBRACK CLOSEBRACK OPENBRACE CLOSEBRACE SEMICOLON COMMA QUOTE
+%token IF ELSE WHILE FOR OPENPAR CLOSEPAR OPENBRACK CLOSEBRACK OPENBRACE CLOSEBRACE SEMICOLON COMMA
 %token EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
 %token PRINTF PRINT PRINTMAT
 
@@ -38,7 +38,7 @@ program:
   | instructions
   ;
 
-instructions :
+instructions:
   instruction
   | instructions instruction
   ;
@@ -51,13 +51,16 @@ instruction:
 line:
   declaration
   | affectation
-  | RETURN value
+  | RETURN expression
+  | affichage
 
 block:
   control OPENBRACE instructions CLOSEBRACE
+  | if_control OPENBRACE instructions CLOSEBRACE ELSE OPENBRACE instructions CLOSEBRACE
 
 declaration:
   type IDENTIFIER ASSIGN expression
+  | type IDENTIFIER
 
 affectation:
   IDENTIFIER ASSIGN expression
@@ -75,10 +78,26 @@ expression:
   | MINUS expression %prec UMINUS
 
 control:
-  IF OPENPAR condition CLOSEPAR
+  if_control
   | WHILE OPENPAR condition CLOSEPAR
   | FOR OPENPAR declaration SEMICOLON condition SEMICOLON affectation CLOSEPAR
-  | ELSE
+  | type IDENTIFIER OPENPAR params_or_empty CLOSEPAR
+
+if_control:
+  IF OPENPAR condition CLOSEPAR
+
+
+affichage:
+  PRINTF OPENPAR STRING CLOSEPAR
+  PRINT OPENPAR expression CLOSEPAR
+
+params_or_empty:
+  params
+  | %empty
+
+params:
+  | params COMMA declaration
+  | declaration
 
 condition:
   expression EQUAL expression
@@ -91,9 +110,5 @@ condition:
 type:
   INT
   | FLOAT
-
-value:
-  INT_NUMBER
-  | FLOAT_NUMBER
 %%
 

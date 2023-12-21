@@ -11,6 +11,7 @@ FLOAT [0-9]*\.[0-9]*
 INT [1-9][0-9]*|[0]
 COMMENTS        "//"([^\n])*"\n"
 LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
+STRING  \"([^\\\"]|\\.)*\"
 
 %%
 [ \t] {}
@@ -42,7 +43,6 @@ LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
 "}" {return CLOSEBRACE;}
 "," {return COMMA;}
 ";" {return SEMICOLON;}
-"\"" {return QUOTE;}
 
 "if" {return IF;}
 "else" {return ELSE;}
@@ -60,6 +60,7 @@ LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
 
 {INT}  {return INT_NUMBER;}
 {FLOAT} {return FLOAT_NUMBER;}
+{STRING} {return STRING;}
 
 {IDENTIFIER} {return IDENTIFIER;}
 

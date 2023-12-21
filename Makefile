@@ -15,7 +15,7 @@ OBJECTS  := $(SOURCES:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 all: syntax lex obj $(OBJECTS)
 	mkdir -p $(BIN_PATH)
 	$(CC) -o $(BIN_PATH)/$(PREFIX).bin $(OBJ_PATH)/$(PREFIX).lex.o $(OBJ_PATH)/$(PREFIX).tab.o $(OBJECTS) -I $(INCLUDE_PATH)
-	echo "\033[32m-> Compilation terminée"
+	echo "\033[32m-> Compilation terminée \033[0m"
 
 obj: $(SRC_PATH)/$(PREFIX).main.c
 	mkdir -p $(OBJ_PATH)

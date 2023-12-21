@@ -21,12 +21,7 @@ noreturn void raler(int syserr, const char *msg, ...)
     exit(EXIT_FAILURE);
 }
 
-void afficher_bit(unsigned int n, int taille)
+void yyerror(const char *msg)
 {
-    printf("{ ");
-    for (int i = 0; i < taille; i++)
-        if (n & (1 << i))
-            printf("%d, ", i + 1);
-
-    printf("}\n");
+    raler(0, "\033[31mErreur de syntaxe : %s\n", msg);
 }

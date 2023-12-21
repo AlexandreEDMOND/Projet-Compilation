@@ -29,4 +29,5 @@
 
 noreturn void raler(int syserr, const char *msg, ...);
 
-void afficher_bit(unsigned int n, int taille);
+extern int yylex();
+void yyerror(const char *msg);

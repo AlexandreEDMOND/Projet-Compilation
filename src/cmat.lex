@@ -13,10 +13,10 @@ COMMENTS        "//"([^\n])*"\n"
 LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
 
 %%
-[ \t];
-{LONG_COMMENTS};
-{COMMENTS};
-[\n] {return EOL;}
+[ \t] {}
+{LONG_COMMENTS} {}
+{COMMENTS} {}
+[\n] {}
 
 "+" {return PLUS;}
 "-" {return MINUS;}
@@ -38,6 +38,8 @@ LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
 ")" {return CLOSEPAR;}
 "[" {return OPENBRACK;}
 "]" {return CLOSEBRACK;}
+"{" {return OPENBRACE;}
+"}" {return CLOSEBRACE;}
 "," {return COMMA;}
 ";" {return SEMICOLON;}
 "\"" {return QUOTE;}

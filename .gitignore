@@ -1,3 +1,13 @@
 .vscode/
+
+# Dossiers générés à la compilation
 bin/
 obj/
+
+# Fichiers c générés à la compilation
+src/cmat.lex.c
+src/cmat.tab.c
+
+# Fichier headers générés à la compilation
+include/cmat.lex.h
+include/cmat.tab.h

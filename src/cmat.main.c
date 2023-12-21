@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
   int r = 0;
   while (r == 0)
   {
-    printf(">> ");
     r = yyparse();
   }
 

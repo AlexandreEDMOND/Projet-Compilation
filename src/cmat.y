@@ -17,23 +17,23 @@
 %token <floatval> FLOAT_NUMBER
 %token <stringval> IDENTIFIER
 
-%token INT FLOAT MATRIX
+%token INT FLOAT MATRIX RETURN
 %token PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN INCREMENT DECREMENT
 %token IF ELSE WHILE FOR OPENPAR CLOSEPAR OPENBRACK CLOSEBRACK OPENBRACE CLOSEBRACE SEMICOLON COMMA QUOTE
 %token EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
 %token PRINTF PRINT PRINTMAT
 
-%type <intval> line instruction declaration affectation controle
+%type <intval> program instructions instruction
 
 %left PLUS MINUS
 %left TIMES DIVIDE
 %right UMINUS
 %nonassoc EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
 
-%start line
+%start program
 
 %% 
-line:
+program:
   %empty
   | instructions
   ;
@@ -44,46 +44,41 @@ instructions :
   ;
 
 instruction:
+  line SEMICOLON
+  | block
+  ;
+
+line:
   declaration
   | affectation
-  | controle
-  ;
+  | RETURN value
+
+block:
+  control OPENBRACE instructions CLOSEBRACE
 
 declaration:
-  type IDENTIFIER ASSIGN value
-  ;
-
-type:
-  INT
-  | FLOAT
-  ;
-
-value:
-  INT_NUMBER
-  | FLOAT_NUMBER
-  ;
+  type IDENTIFIER ASSIGN expression
 
 affectation:
   IDENTIFIER ASSIGN expression
   | IDENTIFIER INCREMENT
   | IDENTIFIER DECREMENT
-  ;
 
 expression:
   IDENTIFIER
+  | INT_NUMBER
+  | FLOAT_NUMBER
   | expression PLUS expression
   | expression MINUS expression
   | expression TIMES expression
   | expression DIVIDE expression
   | MINUS expression %prec UMINUS
-  ;
 
-controle:
-  IF OPENPAR condition CLOSEPAR OPENBRACE instructions CLOSEBRACE
-  | IF OPENPAR condition CLOSEPAR OPENBRACE instructions CLOSEBRACE ELSE OPENBRACE instructions CLOSEBRACE
-  | WHILE OPENPAR condition CLOSEPAR OPENBRACE instructions CLOSEBRACE
-  | FOR OPENPAR declaration SEMICOLON condition SEMICOLON affectation CLOSEPAR OPENBRACE instructions CLOSEBRACE
-  ;
+control:
+  IF OPENPAR condition CLOSEPAR
+  | WHILE OPENPAR condition CLOSEPAR
+  | FOR OPENPAR declaration SEMICOLON condition SEMICOLON affectation CLOSEPAR
+  | ELSE
 
 condition:
   expression EQUAL expression
@@ -92,6 +87,13 @@ condition:
   | expression LESSTHAN expression
   | expression GREATERTHANEQUAL expression
   | expression LESSTHANEQUAL expression
-  ;
+
+type:
+  INT
+  | FLOAT
+
+value:
+  INT_NUMBER
+  | FLOAT_NUMBER
 %%
 

@@ -56,6 +56,7 @@ LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
 "int" {return INT;}
 "float" {return FLOAT;}
 "matrix" {return MATRIX;}
+"return" {return RETURN;}
 
 {INT}  {return INT_NUMBER;}
 {FLOAT} {return FLOAT_NUMBER;}

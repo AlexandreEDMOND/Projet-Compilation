@@ -1,7 +1,7 @@
 extern char *output_file;
 extern int show_tos;
 
-typedef struct args_options
+typedef struct
 {
   char *output_file;
   int show_tos;

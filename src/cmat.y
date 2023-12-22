@@ -74,7 +74,7 @@ control:
   IF OPAR condition CPAR {printf("Block if\n");}
   | ELSE
   | WHILE OPAR condition CPAR control {printf("Block while\n");}
-  | FOR OPAR statement SEMICOLON condition SEMICOLON statement CPAR control {printf("Block for\n");}
+  | FOR OPAR affectation SEMICOLON condition SEMICOLON statement CPAR control {printf("Block for\n");}
   ;
 
 expression:

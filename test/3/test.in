@@ -1,0 +1,23 @@
+int main()
+{
+  int a = 8;
+  int b;
+  int i;
+
+  while (b == 0)
+  {
+    if (a > i) 
+    {
+      b = 1;
+    }
+    else
+    {
+      b = 0;
+    }
+
+    i++;
+
+  }
+
+  return 0;
+}

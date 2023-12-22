@@ -2,8 +2,10 @@
 
 TEST_FOLDER="test"
 
+PROGRAM="bin/cmat.bin"
+
 title() {
-  echo -e "\033[34m ------------------ $1 ------------------ \033[0m"
+  echo "\033[34m------------------ $1 ------------------\033[0m"
 }
 
 run_test() {
@@ -14,16 +16,15 @@ run_test() {
   expected_output_file="$test_folder/ref.out"
 
   title "Test $test_number"
-  ./bin/cmat.bin < $input_file > $test_folder/out.txt
+  echo "\033[33mDescription: $(cat $test_folder/description.txt) \033[0m"
+  $PROGRAM < $input_file > $output_file
 
   if diff -q $output_file $expected_output_file; then
-    echo "Le test a réussi"
+    echo "\033[32mVALIDE\033[0m"
   else
-    echo "Le test a échoué. Différences détéctées :"
+    echo "\033[31mERREUR\033[0m"
     diff $output_file $expected_output_file
   fi
-  
-
 }
 
 compil() {
@@ -49,10 +50,10 @@ if [ $# -eq 1 ]; then
 
 else
   # Exécuter tous les tests
+  compil
   for test_folder in $TEST_FOLDER/*; do
     test_number=$(basename $test_folder)
     if [ -d "$test_folder" ]; then
-      compil
       run_test $test_folder $test_number
     fi
   done

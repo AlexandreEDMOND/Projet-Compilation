@@ -1,7 +1,5 @@
 # Projet Compilation
 
-On a encore rien fait 🤣
-
 ## Première Version
 
 Le programme prend en compte :

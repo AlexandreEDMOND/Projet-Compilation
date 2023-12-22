@@ -41,7 +41,6 @@ if [ $# -eq 1 ]; then
   test_number=$1
   test_folder="$TEST_FOLDER/$test_number"
   if [ -d $test_folder ]; then
-    compil
     run_test $test_folder $test_number
   else
     echo "Numéro de test invalide. Utilisation : $0 [numéro de test]"
@@ -50,7 +49,6 @@ if [ $# -eq 1 ]; then
 
 else
   # Exécuter tous les tests
-  compil
   for test_folder in $TEST_FOLDER/*; do
     test_number=$(basename $test_folder)
     if [ -d "$test_folder" ]; then

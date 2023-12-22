@@ -91,7 +91,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 64 "proj_comp.y"
+#line 8 "proj_comp.y"
 
     InfoVariable t_info;
     int num; 

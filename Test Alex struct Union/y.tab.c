@@ -69,67 +69,11 @@
 /* First part of user prologue.  */
 #line 1 "proj_comp.y"
 
-void yyerror (const char *s);
-int yylex();
-#include <stdio.h> 
-#include <stdlib.h>
-#include <ctype.h>
-#include <stdint.h>
-#include <string.h>
+    #include "struct.h"
+    void yyerror (const char *s);
+    int yylex();
 
-#define MAX_VARIABLES 100
-
-typedef struct {
-    union {
-        int intValue;
-        float floatValue;
-    } value;
-    char type;
-} InfoVariable;
-
-typedef struct {
-    char name[50];
-    InfoVariable info_variable;
-} Variable;
-
-
-Variable variables[MAX_VARIABLES];
-int variableCount = 0;
-
-
-void modifier_variable(char* name, InfoVariable new_info_variable){
-    for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-            variables[i].info_variable = new_info_variable;
-            return;
-        }
-    }
-}
-
-InfoVariable findVariable(char* name) {
-    for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-            return variables[i].info_variable;
-        }
-    }
-}
-
-void addVariable(char* name, char* value, char type) {
-    strcpy(variables[variableCount].name, name);
-    variables[variableCount].info_variable.type = type;
-    if(value != NULL){    
-        if(type == 'i'){
-            variables[variableCount].info_variable.value.intValue = atoi(value);
-        }
-        else if(type == 'f'){
-            variables[variableCount].info_variable.value.floatValue = atof(value);
-        }
-    }
-    variableCount++;
-}
-
-
-#line 133 "y.tab.c"
+#line 77 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -210,7 +154,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 64 "proj_comp.y"
+#line 8 "proj_comp.y"
 
     InfoVariable t_info;
     int num; 
@@ -218,7 +162,7 @@ union YYSTYPE
     char id; 
     char* string_value;
 
-#line 222 "y.tab.c"
+#line 166 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -657,11 +601,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int8 yyrline[] =
 {
-       0,    82,    82,    85,    88,    89,    90,    91,    94,    95,
-     104,   108,   112,   118,   119,   120,   124,   125,   126,   127,
-     131,   135,   136
+       0,    26,    26,    29,    32,    33,    34,    35,    38,    39,
+      48,    52,    56,    62,    63,    64,    68,    69,    70,    71,
+      75,    79,    80
 };
 #endif
 
@@ -1518,19 +1462,19 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* main: type MAIN '(' ')'  */
-#line 85 "proj_comp.y"
+#line 29 "proj_comp.y"
                                 {printf("\nDétection fonction main\n");}
-#line 1524 "y.tab.c"
+#line 1468 "y.tab.c"
     break;
 
   case 8: /* affichage: PRINTF '(' STRING_CONSTANT ')'  */
-#line 94 "proj_comp.y"
+#line 38 "proj_comp.y"
                                                  {printf("%s", (yyvsp[-1].string_value));}
-#line 1530 "y.tab.c"
+#line 1474 "y.tab.c"
     break;
 
   case 9: /* affichage: PRINT '(' affectation ')'  */
-#line 95 "proj_comp.y"
+#line 39 "proj_comp.y"
                                                     {if((yyvsp[-1].t_info).type == 'i'){
                                                         printf("%i\n", (yyvsp[-1].t_info).value.intValue);
                                                     }
@@ -1538,100 +1482,100 @@ yyreduce:
                                                         printf("%f\n", (yyvsp[-1].t_info).value.floatValue);
                                                     }
                                                     }
-#line 1542 "y.tab.c"
+#line 1486 "y.tab.c"
     break;
 
   case 10: /* return: RETURN INT_VALUE ';'  */
-#line 104 "proj_comp.y"
+#line 48 "proj_comp.y"
                               {printf("Détection return\n");
                                 printf("Valeur return : %i\n", (yyvsp[-1].num));}
-#line 1549 "y.tab.c"
+#line 1493 "y.tab.c"
     break;
 
   case 11: /* declaration_variable: type STRING_CONSTANT  */
-#line 108 "proj_comp.y"
+#line 52 "proj_comp.y"
                                                {
                             addVariable((yyvsp[0].string_value), NULL, 'i');
                             printf("Déclaration variable");
                             }
-#line 1558 "y.tab.c"
+#line 1502 "y.tab.c"
     break;
 
   case 12: /* declaration_variable: type STRING_CONSTANT '=' affectation  */
-#line 112 "proj_comp.y"
+#line 56 "proj_comp.y"
                                                                {
                             printf("Déclaration variable avec valeur\n");
                             addVariable((yyvsp[-2].string_value), affectation.value, affectation.type);
                             }
-#line 1567 "y.tab.c"
+#line 1511 "y.tab.c"
     break;
 
   case 13: /* affectation: INT_VALUE  */
-#line 118 "proj_comp.y"
+#line 62 "proj_comp.y"
                             {affectation.value.intValue = (yyvsp[0].num); affectation.type = 'i';}
-#line 1573 "y.tab.c"
+#line 1517 "y.tab.c"
     break;
 
   case 14: /* affectation: FLOAT_VALUE  */
-#line 119 "proj_comp.y"
+#line 63 "proj_comp.y"
                             {affectation.value.floatValue = (yyvsp[0].flottant); affectation.type = 'f';}
-#line 1579 "y.tab.c"
+#line 1523 "y.tab.c"
     break;
 
   case 15: /* affectation: STRING_CONSTANT  */
-#line 120 "proj_comp.y"
+#line 64 "proj_comp.y"
                                   {InfoVariable info = findVariable((yyvsp[0].string_value));
                                     affectation.value = info.value;
                                     affectation.type = info.type;
                                     }
-#line 1588 "y.tab.c"
+#line 1532 "y.tab.c"
     break;
 
   case 16: /* affectation: affectation '+' affectation  */
-#line 124 "proj_comp.y"
+#line 68 "proj_comp.y"
                                               {}
-#line 1594 "y.tab.c"
+#line 1538 "y.tab.c"
     break;
 
   case 17: /* affectation: affectation '-' affectation  */
-#line 125 "proj_comp.y"
+#line 69 "proj_comp.y"
                                               {}
-#line 1600 "y.tab.c"
+#line 1544 "y.tab.c"
     break;
 
   case 18: /* affectation: affectation '*' affectation  */
-#line 126 "proj_comp.y"
+#line 70 "proj_comp.y"
                                               {}
-#line 1606 "y.tab.c"
+#line 1550 "y.tab.c"
     break;
 
   case 19: /* affectation: affectation '/' affectation  */
-#line 127 "proj_comp.y"
+#line 71 "proj_comp.y"
                                               {}
-#line 1612 "y.tab.c"
+#line 1556 "y.tab.c"
     break;
 
   case 20: /* operation: STRING_CONSTANT '=' affectation  */
-#line 131 "proj_comp.y"
+#line 75 "proj_comp.y"
                                             {modifier_variable((yyvsp[-2].string_value), (yyvsp[0].t_info));
                                         printf("Modif valeur variable\n");}
-#line 1619 "y.tab.c"
+#line 1563 "y.tab.c"
     break;
 
   case 21: /* type: INT  */
-#line 135 "proj_comp.y"
+#line 79 "proj_comp.y"
                         {;}
-#line 1625 "y.tab.c"
+#line 1569 "y.tab.c"
     break;
 
   case 22: /* type: FLOAT  */
-#line 136 "proj_comp.y"
+#line 80 "proj_comp.y"
                         {;}
-#line 1631 "y.tab.c"
+#line 1575 "y.tab.c"
     break;
 
 
-#line 1635 "y.tab.c"
+#line 1579 "y.tab.c"
 
       default: break;
     }
@@ -1855,7 +1799,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 138 "proj_comp.y"
+#line 82 "proj_comp.y"
 
 
 

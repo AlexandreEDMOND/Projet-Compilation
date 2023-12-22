@@ -11,27 +11,27 @@ int yylex();
 
 typedef struct {
     char name[50];
-    int value;
+    char value[50];
     char type[50];
 } Variable;
 
 Variable variables[MAX_VARIABLES];
 int variableCount = 0;
 
-int findVariable(char* name) {
+char* findVariable(char* name) {
     for (int i = 0; i < variableCount; i++) {
         if (strcmp(variables[i].name, name) == 0) {
             return variables[i].value;
         }
     }
-    return -986;
+    return NULL;
 }
 
-void addVariable(char* name, int value, char* type) {
+void addVariable(char* name, char* value, char* type) {
     strcpy(variables[variableCount].name, name);
-    variables[variableCount].value = value;
+    if(value != NULL)
+        strcpy(variables[variableCount].value, value);
     strcpy(variables[variableCount].type, type);
-
     variableCount++;
 }
 
@@ -48,28 +48,34 @@ void addVariable(char* name, int value, char* type) {
 
 %%
 
-programme   : type MAIN '(' ')' '{' expression '}' {printf("\nDétection fonction main\n");} 
+programme   : main '{' expression return '}' 
+            ;
+
+main        : type MAIN '(' ')' {printf("\nDétection fonction main\n");}
             ;
 
 expression  : PRINTF '(' STRING_CONSTANT ')' ';'  {printf("%s", $3);}
             | PRINT '(' INT_VALUE ')' ';'   {printf("%i\n", $3);}
-            | PRINT '(' STRING_CONSTANT ')' ';'   {printf("%i\n", findVariable($3));}
-            | RETURN INT_VALUE ';' {printf("Détection return\n");}
+            | PRINT '(' STRING_CONSTANT ')' ';'   {printf("%s\n", findVariable($3));}
             | declaration_variable ';'
             | expression expression
             ;
 
+return : RETURN INT_VALUE ';' {printf("Détection return\n");}
+        ;
+
 declaration_variable    : type STRING_CONSTANT {
-                            addVariable($2, 0, "int");
+                            addVariable($2, NULL, "int");
                             printf("Déclaration variable");
                             }
-                        | type STRING_CONSTANT '=' valeur {
-                            addVariable($2, $4, "int");
+                        | type STRING_CONSTANT '=' INT_VALUE {
+                            char str[50];
+                            sprintf(str, "%d", $4);
+                            addVariable($2, str, "int");
                             printf("Déclaration variable avec valeur");
                             }
+                        ;
 
-valeur      : INT_VALUE         {return $1;}
-            ;
 
 type        : INT       {;}
             | FLOAT     {;}

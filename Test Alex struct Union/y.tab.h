@@ -91,10 +91,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 61 "proj_comp.y"
-int num; float flottant; char id; char* string_value;
+#line 64 "proj_comp.y"
 
-#line 98 "y.tab.h"
+    InfoVariable t_info;
+    int num; 
+    float flottant; 
+    char id; 
+    char* string_value;
+
+#line 103 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -80,53 +80,56 @@ int yylex();
 #define MAX_VARIABLES 100
 
 typedef struct {
+    union {
+        int intValue;
+        float floatValue;
+    } value;
+    char type;
+} InfoVariable;
+
+typedef struct {
     char name[50];
-    char value[50];
-    char type[50];
+    InfoVariable info_variable;
 } Variable;
+
 
 Variable variables[MAX_VARIABLES];
 int variableCount = 0;
 
-void incrementer_variable(char* name, int valeur){
+
+void modifier_variable(char* name, InfoVariable new_info_variable){
     for (int i = 0; i < variableCount; i++) {
         if (strcmp(variables[i].name, name) == 0) {
-            int valeur_variable = atoi(variables[i].value);
-            valeur_variable += valeur;
-            sprintf(variables[i].value, "%d", valeur_variable);
+            variables[i].info_variable = new_info_variable;
             return;
         }
     }
 }
 
-void modifier_variable(char* name, int valeur){
+InfoVariable findVariable(char* name) {
     for (int i = 0; i < variableCount; i++) {
         if (strcmp(variables[i].name, name) == 0) {
-            sprintf(variables[i].value, "%d", valeur);
-            return;
+            return variables[i].info_variable;
         }
     }
 }
 
-char* findVariable(char* name) {
-    for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-            return variables[i].value;
-        }
-    }
-    return NULL;
-}
-
-void addVariable(char* name, char* value, char* type) {
+void addVariable(char* name, char* value, char type) {
     strcpy(variables[variableCount].name, name);
-    if(value != NULL)
-        strcpy(variables[variableCount].value, value);
-    strcpy(variables[variableCount].type, type);
+    variables[variableCount].info_variable.type = type;
+    if(value != NULL){    
+        if(type == 'i'){
+            variables[variableCount].info_variable.value.intValue = atoi(value);
+        }
+        else if(type == 'f'){
+            variables[variableCount].info_variable.value.floatValue = atof(value);
+        }
+    }
     variableCount++;
 }
 
 
-#line 130 "y.tab.c"
+#line 133 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -207,10 +210,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 61 "proj_comp.y"
-int num; float flottant; char id; char* string_value;
+#line 64 "proj_comp.y"
 
-#line 214 "y.tab.c"
+    InfoVariable t_info;
+    int num; 
+    float flottant; 
+    char id; 
+    char* string_value;
+
+#line 222 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -592,16 +600,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   53
+#define YYLAST   51
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  25
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  24
+#define YYNRULES  22
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  52
+#define YYNSTATES  50
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   269
@@ -649,11 +657,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    73,    73,    76,    79,    80,    81,    82,    85,    86,
-      89,    93,    97,   106,   107,   108,   109,   110,   111,   112,
-     116,   118,   120,   124,   125
+       0,    82,    82,    85,    88,    89,    90,    91,    94,    95,
+     104,   108,   112,   118,   119,   120,   124,   125,   126,   127,
+     131,   135,   136
 };
 #endif
 
@@ -684,7 +692,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-23)
+#define YYPACT_NINF (-21)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -698,12 +706,11 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      14,   -23,   -23,     3,    -9,    -5,   -23,    19,     2,    13,
-      23,    -2,    -1,    10,    22,    24,    33,    26,    36,    28,
-     -23,   -23,    28,    37,    19,    30,   -23,   -23,   -23,    29,
-     -23,    32,   -23,   -23,   -23,    -8,    12,    34,   -23,    28,
-     -23,   -23,    28,    28,    28,    28,   -23,    12,    12,    12,
-      12,    12
+      -1,   -21,   -21,     3,     0,     2,   -21,     1,     8,     9,
+      21,    -2,    -4,    20,    22,    23,    31,    25,    35,    26,
+      26,    36,     1,    29,   -21,   -21,   -21,    27,   -21,    30,
+     -21,   -21,   -21,     6,    10,    32,   -21,    26,   -21,   -21,
+      26,    26,    26,    26,   -21,    10,    10,    10,    10,    10
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -711,24 +718,23 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    23,    24,     0,     0,     0,     1,     0,     0,     0,
+       0,    21,    22,     0,     0,     0,     1,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      20,    21,     0,     0,     7,     0,     4,     5,     6,    11,
-       3,     0,    15,    13,    14,     0,    22,     0,     2,     0,
-       8,     9,     0,     0,     0,     0,    10,    12,    16,    17,
-      18,    19
+       0,     0,     7,     0,     4,     5,     6,    11,     3,     0,
+      15,    13,    14,     0,    20,     0,     2,     0,     8,     9,
+       0,     0,     0,     0,    10,    12,    16,    17,    18,    19
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -23,   -23,   -23,    41,   -23,   -23,   -23,   -22,   -23,    51
+     -21,   -21,   -21,    12,   -21,   -21,   -21,   -20,   -21,    49
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,    24,    13,    25,    14,    35,    15,    16
+       0,     3,     4,    22,    13,    23,    14,    33,    15,    16
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -736,22 +742,22 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      36,    20,    21,     6,     9,    10,     7,    23,    11,     8,
-      41,     1,     2,    42,    43,    44,    45,    47,    22,    17,
-      48,    49,    50,    51,     9,    10,     1,     2,    11,    26,
-      18,     1,     2,    42,    43,    44,    45,    32,    33,    34,
-      19,    27,    29,    28,    30,    31,    38,    37,    12,    39,
-      40,     5,     0,    46
+      34,     9,    10,     6,    21,    11,     9,    10,     1,     2,
+      11,     1,     2,     1,     2,     7,     8,    45,    20,    12,
+      46,    47,    48,    49,    39,    17,    18,    40,    41,    42,
+      43,    40,    41,    42,    43,    30,    31,    32,    19,    24,
+      27,    25,    26,    28,    29,    36,    35,    37,    38,     5,
+       0,    44
 };
 
 static const yytype_int8 yycheck[] =
 {
-      22,     3,     4,     0,     5,     6,    15,     8,     9,    14,
-      18,    12,    13,    21,    22,    23,    24,    39,    20,    17,
-      42,    43,    44,    45,     5,     6,    12,    13,     9,    19,
-      17,    12,    13,    21,    22,    23,    24,     9,    10,    11,
-      17,    19,     9,    19,    18,     9,    16,    10,     7,    20,
-      18,     0,    -1,    19
+      20,     5,     6,     0,     8,     9,     5,     6,    12,    13,
+       9,    12,    13,    12,    13,    15,    14,    37,    20,     7,
+      40,    41,    42,    43,    18,    17,    17,    21,    22,    23,
+      24,    21,    22,    23,    24,     9,    10,    11,    17,    19,
+       9,    19,    19,    18,     9,    16,    10,    20,    18,     0,
+      -1,    19
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -760,10 +766,9 @@ static const yytype_int8 yystos[] =
 {
        0,    12,    13,    26,    27,    34,     0,    15,    14,     5,
        6,     9,    28,    29,    31,    33,    34,    17,    17,    17,
-       3,     4,    20,     8,    28,    30,    19,    19,    19,     9,
-      18,     9,     9,    10,    11,    32,    32,    10,    16,    20,
-      18,    18,    21,    22,    23,    24,    19,    32,    32,    32,
-      32,    32
+      20,     8,    28,    30,    19,    19,    19,     9,    18,     9,
+       9,    10,    11,    32,    32,    10,    16,    20,    18,    18,
+      21,    22,    23,    24,    19,    32,    32,    32,    32,    32
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -771,7 +776,7 @@ static const yytype_int8 yyr1[] =
 {
        0,    25,    26,    27,    28,    28,    28,    28,    29,    29,
       30,    31,    31,    32,    32,    32,    32,    32,    32,    32,
-      33,    33,    33,    34,    34
+      33,    34,    34
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -779,7 +784,7 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     5,     4,     2,     2,     2,     2,     4,     4,
        3,     2,     4,     1,     1,     1,     3,     3,     3,     3,
-       2,     2,     3,     1,     1
+       3,     1,     1
 };
 
 
@@ -1513,128 +1518,120 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* main: type MAIN '(' ')'  */
-#line 76 "proj_comp.y"
+#line 85 "proj_comp.y"
                                 {printf("\nDétection fonction main\n");}
-#line 1519 "y.tab.c"
+#line 1524 "y.tab.c"
     break;
 
   case 8: /* affichage: PRINTF '(' STRING_CONSTANT ')'  */
-#line 85 "proj_comp.y"
+#line 94 "proj_comp.y"
                                                  {printf("%s", (yyvsp[-1].string_value));}
-#line 1525 "y.tab.c"
+#line 1530 "y.tab.c"
     break;
 
   case 9: /* affichage: PRINT '(' affectation ')'  */
-#line 86 "proj_comp.y"
-                                                   {printf("%d\n", (yyvsp[-1].num));}
-#line 1531 "y.tab.c"
+#line 95 "proj_comp.y"
+                                                    {if((yyvsp[-1].t_info).type == 'i'){
+                                                        printf("%i\n", (yyvsp[-1].t_info).value.intValue);
+                                                    }
+                                                    if((yyvsp[-1].t_info).type == 'f'){
+                                                        printf("%f\n", (yyvsp[-1].t_info).value.floatValue);
+                                                    }
+                                                    }
+#line 1542 "y.tab.c"
     break;
 
   case 10: /* return: RETURN INT_VALUE ';'  */
-#line 89 "proj_comp.y"
+#line 104 "proj_comp.y"
                               {printf("Détection return\n");
                                 printf("Valeur return : %i\n", (yyvsp[-1].num));}
-#line 1538 "y.tab.c"
+#line 1549 "y.tab.c"
     break;
 
   case 11: /* declaration_variable: type STRING_CONSTANT  */
-#line 93 "proj_comp.y"
+#line 108 "proj_comp.y"
                                                {
-                            addVariable((yyvsp[0].string_value), NULL, "int");
+                            addVariable((yyvsp[0].string_value), NULL, 'i');
                             printf("Déclaration variable");
                             }
-#line 1547 "y.tab.c"
+#line 1558 "y.tab.c"
     break;
 
   case 12: /* declaration_variable: type STRING_CONSTANT '=' affectation  */
-#line 97 "proj_comp.y"
+#line 112 "proj_comp.y"
                                                                {
                             printf("Déclaration variable avec valeur\n");
-                            char str[50];
-                            sprintf(str, "%d", (yyvsp[0].num));
-                            printf("Test affichage : %s\n", str);
-                            addVariable((yyvsp[-2].string_value), str, "int");
+                            addVariable((yyvsp[-2].string_value), affectation.value, affectation.type);
                             }
-#line 1559 "y.tab.c"
+#line 1567 "y.tab.c"
     break;
 
   case 13: /* affectation: INT_VALUE  */
-#line 106 "proj_comp.y"
-                            {(yyval.num) = (yyvsp[0].num);}
-#line 1565 "y.tab.c"
+#line 118 "proj_comp.y"
+                            {affectation.value.intValue = (yyvsp[0].num); affectation.type = 'i';}
+#line 1573 "y.tab.c"
     break;
 
   case 14: /* affectation: FLOAT_VALUE  */
-#line 107 "proj_comp.y"
-                            {(yyval.num) = (yyvsp[0].flottant);}
-#line 1571 "y.tab.c"
+#line 119 "proj_comp.y"
+                            {affectation.value.floatValue = (yyvsp[0].flottant); affectation.type = 'f';}
+#line 1579 "y.tab.c"
     break;
 
   case 15: /* affectation: STRING_CONSTANT  */
-#line 108 "proj_comp.y"
-                                  {(yyval.num) = atoi(findVariable((yyvsp[0].string_value)));}
-#line 1577 "y.tab.c"
+#line 120 "proj_comp.y"
+                                  {InfoVariable info = findVariable((yyvsp[0].string_value));
+                                    affectation.value = info.value;
+                                    affectation.type = info.type;
+                                    }
+#line 1588 "y.tab.c"
     break;
 
   case 16: /* affectation: affectation '+' affectation  */
-#line 109 "proj_comp.y"
-                                              {(yyval.num) = ((yyvsp[-2].num)+(yyvsp[0].num));}
-#line 1583 "y.tab.c"
+#line 124 "proj_comp.y"
+                                              {}
+#line 1594 "y.tab.c"
     break;
 
   case 17: /* affectation: affectation '-' affectation  */
-#line 110 "proj_comp.y"
-                                              {(yyval.num) = ((yyvsp[-2].num)-(yyvsp[0].num));}
-#line 1589 "y.tab.c"
+#line 125 "proj_comp.y"
+                                              {}
+#line 1600 "y.tab.c"
     break;
 
   case 18: /* affectation: affectation '*' affectation  */
-#line 111 "proj_comp.y"
-                                              {(yyval.num) = ((yyvsp[-2].num)*(yyvsp[0].num));}
-#line 1595 "y.tab.c"
+#line 126 "proj_comp.y"
+                                              {}
+#line 1606 "y.tab.c"
     break;
 
   case 19: /* affectation: affectation '/' affectation  */
-#line 112 "proj_comp.y"
-                                              {if((yyvsp[0].num) != 0){(yyval.num) = ((yyvsp[-2].num)/(yyvsp[0].num));}}
-#line 1601 "y.tab.c"
+#line 127 "proj_comp.y"
+                                              {}
+#line 1612 "y.tab.c"
     break;
 
-  case 20: /* operation: STRING_CONSTANT INC_PLUS  */
-#line 116 "proj_comp.y"
-                                        {incrementer_variable((yyvsp[-1].string_value), 1);
-                                        printf("Incrémentation variable +\n");}
-#line 1608 "y.tab.c"
-    break;
-
-  case 21: /* operation: STRING_CONSTANT INC_MOINS  */
-#line 118 "proj_comp.y"
-                                        {incrementer_variable((yyvsp[-1].string_value), -1);
-                                        printf("Incrémentation variable -\n");}
-#line 1615 "y.tab.c"
-    break;
-
-  case 22: /* operation: STRING_CONSTANT '=' affectation  */
-#line 120 "proj_comp.y"
-                                            {modifier_variable((yyvsp[-2].string_value), (yyvsp[0].num));
+  case 20: /* operation: STRING_CONSTANT '=' affectation  */
+#line 131 "proj_comp.y"
+                                            {modifier_variable((yyvsp[-2].string_value), (yyvsp[0].t_info));
                                         printf("Modif valeur variable\n");}
-#line 1622 "y.tab.c"
+#line 1619 "y.tab.c"
     break;
 
-  case 23: /* type: INT  */
-#line 124 "proj_comp.y"
+  case 21: /* type: INT  */
+#line 135 "proj_comp.y"
                         {;}
-#line 1628 "y.tab.c"
+#line 1625 "y.tab.c"
     break;
 
-  case 24: /* type: FLOAT  */
-#line 125 "proj_comp.y"
+  case 22: /* type: FLOAT  */
+#line 136 "proj_comp.y"
                         {;}
-#line 1634 "y.tab.c"
+#line 1631 "y.tab.c"
     break;
 
 
-#line 1638 "y.tab.c"
+#line 1635 "y.tab.c"
 
       default: break;
     }
@@ -1858,7 +1855,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 127 "proj_comp.y"
+#line 138 "proj_comp.y"
 
 
 

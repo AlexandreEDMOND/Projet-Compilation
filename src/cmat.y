@@ -17,16 +17,18 @@
 %token <floatval> FLOAT_NUMBER
 %token <stringval> IDENTIFIER STRING
 
-%token INT FLOAT MATRIX RETURN EXIT
-%token PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN INCREMENT DECREMENT
-%token IF ELSE WHILE FOR OPENPAR CLOSEPAR OPENBRACK CLOSEBRACK OPENBRACE CLOSEBRACE SEMICOLON COMMA
-%token EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
-%token PRINTF PRINT PRINTMAT
+%token EQ NE GT LT GE LE AND OR NOT
+%token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
+%token OPAR CPAR OBRACK CBRACK OBRACE CBRACE SEMICOLON COMMA
+%token IF ELSE WHILE FOR RETURN
+%token PRINTF PRINT PRINTMAT MAIN
+%token INT FLOAT MATRIX
 
-%type <intval> program instructions instruction
+%type <intval> program
 
 %left PLUS MINUS
 %left TIMES DIVIDE
+%right TRANSPOSE
 %right UMINUS
 %nonassoc EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
 
@@ -34,70 +36,58 @@
 
 %% 
 program:
-  %empty
-  | instructions
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n"); exit(0);}
   ;
 
 instructions:
-  instruction
-  | instructions instruction
+  instructions instruction
+  | instruction
   ;
 
 instruction:
-  line SEMICOLON
-  | block
+  statement SEMICOLON
+  | control OBRACE instructions CBRACE
+
+statement:
+  declaration {printf("Déclaration\n");}
+  | affectation {printf("Affectation\n");}
+  | call {printf("Appel de fonction\n");}
+  | RETURN expression {printf("Retour de fonction\n");}
   ;
 
-line:
-  declaration
-  | affectation
-  | RETURN expression
-  | affichage
-
-block:
-  control OPENBRACE instructions CLOSEBRACE
-  | if_control OPENBRACE instructions CLOSEBRACE ELSE OPENBRACE instructions CLOSEBRACE
-
 declaration:
-  type IDENTIFIER ASSIGN expression
-  | type IDENTIFIER
+  datatype IDENTIFIER
+  | datatype IDENTIFIER ASSIGN expression
+  ;
 
 affectation:
-  IDENTIFIER ASSIGN expression { printf("Affectation de %s\n", $1);}
-  | IDENTIFIER INCREMENT
-  | IDENTIFIER DECREMENT
+  IDENTIFIER ASSIGN expression
+  | IDENTIFIER unary
+  ;
+
+call:
+  PRINTF OPAR STRING CPAR
+  | PRINT OPAR expression CPAR
+  ;
+
+control:
+  IF OPAR condition CPAR {printf("Block if\n");}
+  | ELSE
+  | WHILE OPAR condition CPAR control {printf("Block while\n");}
+  | FOR OPAR statement SEMICOLON condition SEMICOLON statement CPAR control {printf("Block for\n");}
+  ;
 
 expression:
-  IDENTIFIER
-  | INT_NUMBER
+  INT_NUMBER
   | FLOAT_NUMBER
+  | IDENTIFIER
   | expression PLUS expression
   | expression MINUS expression
   | expression TIMES expression
   | expression DIVIDE expression
   | MINUS expression %prec UMINUS
-
-control:
-  if_control
-  | WHILE OPENPAR condition CLOSEPAR
-  | FOR OPENPAR declaration SEMICOLON condition SEMICOLON affectation CLOSEPAR
-  | type IDENTIFIER OPENPAR params_or_empty CLOSEPAR
-
-if_control:
-  IF OPENPAR condition CLOSEPAR
-
-
-affichage:
-  PRINTF OPENPAR STRING CLOSEPAR
-  PRINT OPENPAR expression CLOSEPAR
-
-params_or_empty:
-  params
-  | %empty
-
-params:
-  | params COMMA declaration
-  | declaration
+  | OPAR expression CPAR
+  ;
 
 condition:
   expression EQUAL expression
@@ -106,9 +96,19 @@ condition:
   | expression LESSTHAN expression
   | expression GREATERTHANEQUAL expression
   | expression LESSTHANEQUAL expression
+  | condition AND condition
+  | condition OR condition
+  | NOT condition
+  ;
 
-type:
+unary:
+  INC
+  | DEC
+  ;
+
+datatype:
   INT
   | FLOAT
+  ;
 %%
 

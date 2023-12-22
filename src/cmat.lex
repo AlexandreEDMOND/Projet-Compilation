@@ -11,7 +11,7 @@ FLOAT [0-9]*\.[0-9]*
 INT [1-9][0-9]*|[0]
 COMMENTS        "//"([^\n])*"\n"
 LONG_COMMENTS   "/*"([^*]|\*[^/])*\*"/"
-STRING  \"([^\\\"]|\\.)*\"
+STRING  ["].*["]
 
 %%
 [ \t] {}
@@ -19,28 +19,31 @@ STRING  \"([^\\\"]|\\.)*\"
 {COMMENTS} {}
 [\n] {}
 
+"==" {return EQ;}
+"!=" {return NE;}
+"<" {return LT;}
+">" {return GT;}
+"<=" {return LE;}
+">=" {return GE;}
+"&&" {return AND;}
+"||" {return OR;}
+"!" {return NOT;}
+
+"++" {return INC;}
+"--" {return DEC;}
 "+" {return PLUS;}
 "-" {return MINUS;}
 "*" {return TIMES;}
 "/" {return DIVIDE;}
 "~" {return TRANSPOSE;}
-"++" {return INCREMENT;}
-"--" {return DECREMENT;}
-
-"==" {return EQUAL;}
-"!=" {return NOTEQUAL;}
-"<" {return LESSTHAN;}
-">" {return GREATERTHAN;}
-"<=" {return LESSTHANEQUAL;}
-">=" {return GREATERTHANEQUAL;}
 "=" {return ASSIGN;}
 
-"(" {return OPENPAR;}
-")" {return CLOSEPAR;}
-"[" {return OPENBRACK;}
-"]" {return CLOSEBRACK;}
-"{" {return OPENBRACE;}
-"}" {return CLOSEBRACE;}
+"(" {return OPAR;}
+")" {return CPAR;}
+"[" {return OBRACK;}
+"]" {return CBRACK;}
+"{" {return OBRACE;}
+"}" {return CBRACE;}
 "," {return COMMA;}
 ";" {return SEMICOLON;}
 
@@ -48,15 +51,16 @@ STRING  \"([^\\\"]|\\.)*\"
 "else" {return ELSE;}
 "while" {return WHILE;}
 "for" {return FOR;}
+"return" {return RETURN;}
 
 "printf" {return PRINTF;}
 "print" {return PRINT;}
 "printmat" {return PRINTMAT;}
+"main" {return MAIN;}
 
 "int" {return INT;}
 "float" {return FLOAT;}
 "matrix" {return MATRIX;}
-"return" {return RETURN;}
 
 {INT}  {return INT_NUMBER;}
 {FLOAT} {return FLOAT_NUMBER;}

@@ -50,6 +50,7 @@ instruction:
 statement:
   declaration {printf("Déclaration\n");}
   | affectation {printf("Affectation\n");}
+  | affichage {printf("Affichage\n");}
   | RETURN expression {printf("Retour de fonction\n");}
   ;
 
@@ -61,6 +62,11 @@ declaration:
 affectation:
   IDENTIFIER ASSIGN expression
   | IDENTIFIER unary
+  ;
+
+affichage:
+  PRINTF OPAR STRING CPAR {printf("Affichage d'une chaine de caractère\n");}
+  | PRINT OPAR expression CPAR {printf("Affichage d'un nombre/ID\n");}
   ;
 
 expression:

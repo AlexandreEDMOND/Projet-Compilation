@@ -46,12 +46,10 @@ instructions:
 
 instruction:
   statement SEMICOLON
-  | control OBRACE instructions CBRACE
 
 statement:
   declaration {printf("Déclaration\n");}
   | affectation {printf("Affectation\n");}
-  | call {printf("Appel de fonction\n");}
   | RETURN expression {printf("Retour de fonction\n");}
   ;
 
@@ -65,18 +63,6 @@ affectation:
   | IDENTIFIER unary
   ;
 
-call:
-  PRINTF OPAR STRING CPAR
-  | PRINT OPAR expression CPAR
-  ;
-
-control:
-  IF OPAR condition CPAR {printf("Block if\n");}
-  | ELSE
-  | WHILE OPAR condition CPAR control {printf("Block while\n");}
-  | FOR OPAR affectation SEMICOLON condition SEMICOLON statement CPAR control {printf("Block for\n");}
-  ;
-
 expression:
   INT_NUMBER
   | FLOAT_NUMBER
@@ -87,18 +73,6 @@ expression:
   | expression DIVIDE expression
   | MINUS expression %prec UMINUS
   | OPAR expression CPAR
-  ;
-
-condition:
-  expression EQUAL expression
-  | expression NOTEQUAL expression
-  | expression GREATERTHAN expression
-  | expression LESSTHAN expression
-  | expression GREATERTHANEQUAL expression
-  | expression LESSTHANEQUAL expression
-  | condition AND condition
-  | condition OR condition
-  | NOT condition
   ;
 
 unary:

@@ -1,16 +1,11 @@
 #pragma once
 
-typedef struct
-{
-  char* value;
-  char type;
-} info_symbol;
-
 // Structure de la table des symboles
 typedef struct
 {
   char *id;
-  info_symbol* info_symbole;
+  char* value;
+  char type;
 } symbol;
 
 typedef struct

@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
   args_options *options = parse_args(argc, argv);
   table_of_symbol = create_symbol_table(options->show_tos);
+  
 
   int r = 0;
   while (r == 0)

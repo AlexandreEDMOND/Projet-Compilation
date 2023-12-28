@@ -16,10 +16,10 @@
   float floatval; // déclaration du type associé à FLOAT_NUMBER
   char *stringval; // déclaration du type associé à IDENTIFIER
   char typeval; // Info pour le type de variable stockée en table des symboles
-  info_symbol info;
+  symbol info_symbol;
 }
 
-%token <info> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER 
+%token <info_symbol> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER 
 %token <stringval> STRING
 
 %token EQ NE GT LT GE LE AND OR NOT
@@ -30,8 +30,8 @@
 %token INT FLOAT MATRIX
 
 %type <intval> program
-%type <typeval> datatype
-%type <info> expression
+%type <typeval> datatype unary
+%type <info_symbol> expression
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -62,13 +62,39 @@ statement:
   ;
 
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2.value, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2.value, $4.value, $1);}
+  datatype IDENTIFIER {add_symbol(table_of_symbol, $2.id, NULL, $1);}
+  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2.id, $4.value, $1);}
   ;
 
 affectation:
-  IDENTIFIER ASSIGN expression
-  | IDENTIFIER unary
+  IDENTIFIER ASSIGN expression {
+    symbol* symbole = get_symbol(table_of_symbol, $1.id);
+    printf("%s\n", symbole->id);
+    printf("Test\n");
+    strcpy(symbole->value, $3.value);
+  }
+  | IDENTIFIER unary {
+    if($2 == '+'){
+      symbol* symbole = get_symbol(table_of_symbol, $1.id);
+      if(symbole->type == 'i'){
+        int nombre = atoi(symbole->value);
+        nombre++;
+        char str[50];
+        sprintf(str, "%i", nombre);
+        strcpy(symbole->value, str);
+        printf("Augmentation\n");
+      }
+      if(symbole->type == 'f'){
+        float nombre = atof(symbole->value);
+        nombre++;
+        char str[50];
+        sprintf(str, "%f", nombre);
+        strcpy(symbole->value, str);
+        printf("Augmentation\n");
+      }
+      
+    }
+  }
   ;
 
 affichage:
@@ -86,8 +112,9 @@ expression:
     $$.type = 'f';
     }
   | IDENTIFIER {
-    symbol* symbole = get_symbol(table_of_symbol, $1.value);
-    //$$ = symbole->value;
+    symbol* symbole = get_symbol(table_of_symbol, $1.id);
+    strcpy($$.value, symbole->value);
+    $$.type = symbole->type;
   }
   | expression PLUS expression
   | expression MINUS expression
@@ -98,13 +125,13 @@ expression:
   ;
 
 unary:
-  INC
-  | DEC
+  INC {$$ = '+';}
+  | DEC {$$ = '-';}
   ;
 
 datatype:
-  INT {$$='i';}
-  | FLOAT {$$='f';}
+  INT {$$ = 'i';}
+  | FLOAT {$$ = 'f';}
   ;
 %%
 

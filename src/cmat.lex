@@ -64,16 +64,19 @@ STRING  ["].*["]
 "matrix" {return MATRIX;}
 
 {INT}  {
-    yylval.intval = atoi(yytext);
+    yylval.info_symbol.value = strdup(yytext);
     return INT_NUMBER;
     }
-{FLOAT} {return FLOAT_NUMBER;}
+{FLOAT} {
+    yylval.info_symbol.value = strdup(yytext);
+    return FLOAT_NUMBER;
+    }
 {STRING} {
     yylval.stringval = strdup(yytext);
     return STRING;}
 
 {IDENTIFIER} {
-    yylval.stringval = strdup(yytext);
+    yylval.info_symbol.id = strdup(yytext);
     return IDENTIFIER;
     }
 

@@ -15,12 +15,11 @@
   int intval; // déclaration du type associé à INT_NUMBER
   float floatval; // déclaration du type associé à FLOAT_NUMBER
   char *stringval; // déclaration du type associé à IDENTIFIER
-  char typeval; // Info pour le type de variable stockée en table des symboles
+  char charval; // Info pour le type de variable stockée en table des symboles
   symbol info_symbol;
 }
 
-%token <info_symbol> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER 
-%token <stringval> STRING
+%token <stringval> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER, STRING
 
 %token EQ NE GT LT GE LE AND OR NOT
 %token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
@@ -30,8 +29,8 @@
 %token INT FLOAT MATRIX
 
 %type <intval> program
-%type <typeval> datatype unary
-%type <info_symbol> expression
+%type <charval> datatype unary arithmetiques
+%type <stringval> expression valeur
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -56,24 +55,24 @@ instruction:
 
 statement:
   declaration {}
-  | affectation {printf("Affectation\n");}
+  | affectation {}
   | affichage {}
-  | RETURN expression {printf("Retour de fonction\n");}
+  | RETURN expression {}
   ;
 
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2.id, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2.id, $4.value, $1);}
+  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
+  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
   ;
 
 affectation:
   IDENTIFIER ASSIGN expression {
-    symbol* symbole = get_symbol(table_of_symbol, $1.id);
-    strcpy(symbole->value, $3.value);
+    symbol* symbole = get_symbol(table_of_symbol, $1);
+    strcpy(symbole->value, $3);
   }
   | IDENTIFIER unary {
     if($2 == '+'){
-      symbol* symbole = get_symbol(table_of_symbol, $1.id);
+      symbol* symbole = get_symbol(table_of_symbol, $1);
       if(symbole->type == 'i'){
         int nombre = atoi(symbole->value);
         nombre++;
@@ -96,52 +95,49 @@ affectation:
 affichage:
   PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
   | PRINT OPAR expression CPAR {
-      if($3.type == 'i'){
-        printf("%i\n", atoi($3.value));
-      }
-      if($3.type == 'f'){
-        printf("%f\n", atof($3.value));
-      }
+      printf("%s\n", $3);
     }
   ;
 
 expression:
-  INT_NUMBER {
-    strcpy($$.value, $1.value);
-    $$.type = 'i';
-    }
-  | FLOAT_NUMBER {
-    strcpy($$.value, $1.value);
-    $$.type = 'f';
-    }
-  | IDENTIFIER {
-    symbol* symbole = get_symbol(table_of_symbol, $1.id);
-    strcpy($$.value, symbole->value);
-    $$.type = symbole->type;
-  }
-  | expression PLUS expression {
+  expression arithmetiques expression {
     char str[50];
-    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '+'));
-    strcpy($$.value, str);
+    sprintf(str, "%f", do_arithmetiques($1, $3, $2));
+    strcpy($$, str);
   }
-  | expression MINUS expression {
+  | valeur {strcpy($$, $1);}
+  // Problème avec le signe moins
+  // Voir comment le corriger
+  | MINUS expression %prec UMINUS {
+    float nombre = atof($2);
+    nombre *= -1;
     char str[50];
-    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '-'));
-    strcpy($$.value, str);
+    sprintf(str, "%f", nombre);
+    strcpy($$, str);
   }
-  | expression TIMES expression {
-    char str[50];
-    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '*'));
-    strcpy($$.value, str);
-  }
-  | expression DIVIDE expression {
-    char str[50];
-    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '/'));
-    strcpy($$.value, str);
-  }
-  | MINUS expression %prec UMINUS
   | OPAR expression CPAR {$$ = $2;}
   ;
+
+valeur:
+  INT_NUMBER {
+    strcpy($$, $1);
+    }
+  | FLOAT_NUMBER {
+    strcpy($$, $1);
+    }
+  | IDENTIFIER {
+    symbol* symbole = get_symbol(table_of_symbol, $1);
+    strcpy($$, symbole->value);
+  }
+  ;
+
+arithmetiques:
+  PLUS {$$ = '+';}
+  | MINUS {$$ = '-';}
+  | TIMES {$$ = '*';}
+  | DIVIDE {$$ = '/';}
+  ;
+
 
 unary:
   INC {$$ = '+';}

@@ -64,11 +64,11 @@ STRING  ["].*["]
 "matrix" {return MATRIX;}
 
 {INT}  {
-    yylval.info_symbol.value = strdup(yytext);
+    yylval.stringval = strdup(yytext);
     return INT_NUMBER;
     }
 {FLOAT} {
-    yylval.info_symbol.value = strdup(yytext);
+    yylval.stringval = strdup(yytext);
     return FLOAT_NUMBER;
     }
 {STRING} {
@@ -76,7 +76,7 @@ STRING  ["].*["]
     return STRING;}
 
 {IDENTIFIER} {
-    yylval.info_symbol.id = strdup(yytext);
+    yylval.stringval = strdup(yytext);
     return IDENTIFIER;
     }
 

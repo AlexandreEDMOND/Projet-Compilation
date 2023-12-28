@@ -12,11 +12,11 @@ int main(){
     int a = 8;
     int b;
     b = a + 1;
-    int c = b+5; //Marche pas si c = 5 + b
+    int c = 5*b;
     c++;
-    a = a - b;
-    a = c / 3;
-    int d = -a;
+    a = b - a;
+    a = c / 2;
+    int d = (a*5) - 6;
     print(a);
     print(b);
     print(c);

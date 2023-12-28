@@ -19,28 +19,33 @@ symbol_table *create_symbol_table(int display)
   return table;
 }
 
-void add_symbol(symbol_table *table, char *id, char *data_type, char *type, int line_number)
+void add_symbol(symbol_table *table, char *id, char *data_type, char type)
 {
   if (table->size == table->capacity)
   {
     table->capacity *= 2;
     NCHK(table->symbols = realloc(table->symbols, table->capacity * sizeof(symbol)));
   }
-
+  
   symbol *s = &table->symbols[table->size++];
 
   NCHK(s->id = malloc(strlen(id) + 1));
-  NCHK(s->data_type = malloc(strlen(data_type) + 1));
-  NCHK(s->type = malloc(strlen(type) + 1));
 
   strcpy(s->id, id);
-  strcpy(s->data_type, data_type);
-  strcpy(s->type, type);
-  s->line_number = line_number;
+  if(data_type != NULL){
+      if(type == 'i'){
+      s->value.int_value = atoi(data_type);
+    }
+    if(type == 'f'){
+      s->value.float_value = atof(data_type);
+    }
+  }
+  s->type = type;
+  
 
-  if (table->display)
+  if (table->display == 1)
   {
-    printf("Ajout de la variable %s de type %s à la ligne %d\n", id, data_type, line_number);
+    printf("Ajout de la variable %s de valeur %s et de type %c\n", id, data_type, type);
   }
 }
 
@@ -62,8 +67,6 @@ void free_symbol_table(symbol_table *table)
   for (int i = 0; i < table->size; i++)
   {
     free(table->symbols[i].id);
-    free(table->symbols[i].data_type);
-    free(table->symbols[i].type);
   }
 
   free(table->symbols);

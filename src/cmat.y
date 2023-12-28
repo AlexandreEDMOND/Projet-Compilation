@@ -4,6 +4,10 @@
   #include <string.h>
   
   #include "utils.h" // Définit yyerror et yylex
+  #include "symbol_table.h"
+
+  extern symbol_table* table_of_symbol;
+
 %}
 
 %union 
@@ -11,6 +15,7 @@
   int intval; // déclaration du type associé à INT_NUMBER
   float floatval; // déclaration du type associé à FLOAT_NUMBER
   char *stringval; // déclaration du type associé à IDENTIFIER
+  char typeval; // Info pour le type de variable stockée en table des symboles
 }
 
 %token<intval> INT_NUMBER
@@ -25,6 +30,8 @@
 %token INT FLOAT MATRIX
 
 %type <intval> program
+%type <typeval> datatype
+%type <stringval> expression
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -48,15 +55,15 @@ instruction:
   statement SEMICOLON
 
 statement:
-  declaration {printf("Déclaration\n");}
+  declaration {}
   | affectation {printf("Affectation\n");}
-  | affichage {printf("Affichage\n");}
+  | affichage {}
   | RETURN expression {printf("Retour de fonction\n");}
   ;
 
 declaration:
-  datatype IDENTIFIER
-  | datatype IDENTIFIER ASSIGN expression
+  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
+  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
   ;
 
 affectation:
@@ -65,14 +72,32 @@ affectation:
   ;
 
 affichage:
-  PRINTF OPAR STRING CPAR {printf("Affichage d'une chaine de caractère\n");}
-  | PRINT OPAR expression CPAR {printf("Affichage d'un nombre/ID\n");}
+  PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
+  | PRINT OPAR expression CPAR {printf("%s\n", $3);}
   ;
 
 expression:
-  INT_NUMBER
-  | FLOAT_NUMBER
-  | IDENTIFIER
+  INT_NUMBER {
+    char str[20];
+    sprintf(str, "%i", $1);
+    $$ = str;
+    }
+  | FLOAT_NUMBER {
+    char str[20];
+    sprintf(str, "%f", $1);
+    $$ = str;
+    }
+  | IDENTIFIER {
+    symbol* symbole = get_symbol(table_of_symbol, $1);
+    char str[20];
+    if(symbole->type == 'i'){
+      sprintf(str, "%i", symbole->value.int_value);
+    }
+    if(symbole->type == 'f'){
+      sprintf(str, "%f", symbole->value.float_value);
+    }
+    $$ = str;
+  }
   | expression PLUS expression
   | expression MINUS expression
   | expression TIMES expression
@@ -87,8 +112,8 @@ unary:
   ;
 
 datatype:
-  INT
-  | FLOAT
+  INT {$$='i';}
+  | FLOAT {$$='f';}
   ;
 %%
 

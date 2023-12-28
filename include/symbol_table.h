@@ -4,15 +4,18 @@
 typedef struct
 {
   char *id;
-  char *data_type;
-  char *type;
-  int line_number;
+  union {
+    int int_value;
+    float float_value;
+    // Ajoutez d'autres types ici
+  } value;
+  char type;
 } symbol;
 
 typedef struct
 {
   int display;
-  symbol *symbols;
+  symbol* symbols;
   int size;
   int capacity;
 } symbol_table;
@@ -20,7 +23,7 @@ typedef struct
 // Fonctions de gestion de la table des symboles
 symbol_table *create_symbol_table(int display);
 
-void add_symbol(symbol_table *table, char *id, char *data_type, char *type, int line_number);
+void add_symbol(symbol_table *table, char *id, char *data_type, char type);
 
 symbol *get_symbol(symbol_table *table, char *id);
 

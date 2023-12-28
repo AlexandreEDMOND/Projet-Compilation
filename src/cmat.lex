@@ -62,11 +62,19 @@ STRING  ["].*["]
 "float" {return FLOAT;}
 "matrix" {return MATRIX;}
 
-{INT}  {return INT_NUMBER;}
+{INT}  {
+    yylval.intval = atoi(yytext);
+    return INT_NUMBER;
+    }
 {FLOAT} {return FLOAT_NUMBER;}
-{STRING} {return STRING;}
+{STRING} {
+    yylval.stringval = strdup(yytext);
+    return STRING;}
 
-{IDENTIFIER} {return IDENTIFIER;}
+{IDENTIFIER} {
+    yylval.stringval = strdup(yytext);
+    return IDENTIFIER;
+    }
 
 .               {raler(0, "Invalid character : %s", yytext);}
 

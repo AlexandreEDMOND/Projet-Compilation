@@ -69,8 +69,6 @@ declaration:
 affectation:
   IDENTIFIER ASSIGN expression {
     symbol* symbole = get_symbol(table_of_symbol, $1.id);
-    printf("%s\n", symbole->id);
-    printf("Test\n");
     strcpy(symbole->value, $3.value);
   }
   | IDENTIFIER unary {
@@ -82,7 +80,6 @@ affectation:
         char str[50];
         sprintf(str, "%i", nombre);
         strcpy(symbole->value, str);
-        printf("Augmentation\n");
       }
       if(symbole->type == 'f'){
         float nombre = atof(symbole->value);
@@ -90,7 +87,6 @@ affectation:
         char str[50];
         sprintf(str, "%f", nombre);
         strcpy(symbole->value, str);
-        printf("Augmentation\n");
       }
       
     }
@@ -99,7 +95,14 @@ affectation:
 
 affichage:
   PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
-  | PRINT OPAR expression CPAR {printf("%s\n", $3.value);}
+  | PRINT OPAR expression CPAR {
+      if($3.type == 'i'){
+        printf("%i\n", atoi($3.value));
+      }
+      if($3.type == 'f'){
+        printf("%f\n", atof($3.value));
+      }
+    }
   ;
 
 expression:
@@ -116,12 +119,28 @@ expression:
     strcpy($$.value, symbole->value);
     $$.type = symbole->type;
   }
-  | expression PLUS expression
-  | expression MINUS expression
-  | expression TIMES expression
-  | expression DIVIDE expression
+  | expression PLUS expression {
+    char str[50];
+    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '+'));
+    strcpy($$.value, str);
+  }
+  | expression MINUS expression {
+    char str[50];
+    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '-'));
+    strcpy($$.value, str);
+  }
+  | expression TIMES expression {
+    char str[50];
+    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '*'));
+    strcpy($$.value, str);
+  }
+  | expression DIVIDE expression {
+    char str[50];
+    sprintf(str, "%f", do_arithmetiques($1.value, $3.value, '/'));
+    strcpy($$.value, str);
+  }
   | MINUS expression %prec UMINUS
-  | OPAR expression CPAR
+  | OPAR expression CPAR {$$ = $2;}
   ;
 
 unary:
@@ -134,4 +153,3 @@ datatype:
   | FLOAT {$$ = 'f';}
   ;
 %%
-

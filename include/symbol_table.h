@@ -24,3 +24,5 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type);
 symbol *get_symbol(symbol_table *table, char *id);
 
 void free_symbol_table(symbol_table *table);
+
+float do_arithmetiques(char* symbole_1, char* symbole_2, char operation);

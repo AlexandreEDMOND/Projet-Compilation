@@ -72,3 +72,36 @@ void free_symbol_table(symbol_table *table)
   free(table->symbols);
   free(table);
 }
+
+float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
+  float value_1 = atof(symbole_1);
+  float value_2 = atof(symbole_2);
+  float result;
+
+  switch (operation) {
+    case '+':
+        result = value_1 + value_2;
+        break;
+    case '-':
+        result = value_1 - value_2;
+        break;
+    case '*':
+        result = value_1 * value_2;
+        break;
+    case '/':
+        if(value_2 != 0){
+          result = value_1 / value_2;
+        }
+        else{
+          printf("Division par zero\n");
+          exit(1);
+        }
+        break;
+    default:
+        printf("Choix invalide fonction do_arithmétiques\n");
+        exit(1);
+        break;
+  }
+  printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
+  return result;
+}

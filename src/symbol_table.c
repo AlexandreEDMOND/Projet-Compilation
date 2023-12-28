@@ -30,19 +30,14 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type)
   symbol *s = &table->symbols[table->size++];
 
   NCHK(s->id = malloc(strlen(id) + 1));
+  NCHK(s->info_symbole = calloc(1, sizeof(info_symbol)));
+
+  info_symbol* info = s->info_symbole;
 
   strcpy(s->id, id);
-  if(data_type != NULL){
-      if(type == 'i'){
-      s->value.int_value = atoi(data_type);
-    }
-    if(type == 'f'){
-      s->value.float_value = atof(data_type);
-    }
-  }
-  s->type = type;
+  strcpy(info->value, data_type);
+  info->type = type;
   
-
   if (table->display == 1)
   {
     printf("Ajout de la variable %s de valeur %s et de type %c\n", id, data_type, type);
@@ -67,6 +62,7 @@ void free_symbol_table(symbol_table *table)
   for (int i = 0; i < table->size; i++)
   {
     free(table->symbols[i].id);
+    free(table->symbols[i].info_symbole);
   }
 
   free(table->symbols);

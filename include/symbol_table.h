@@ -1,15 +1,16 @@
 #pragma once
 
+typedef struct
+{
+  char* value;
+  char type;
+} info_symbol;
+
 // Structure de la table des symboles
 typedef struct
 {
   char *id;
-  union {
-    int int_value;
-    float float_value;
-    // Ajoutez d'autres types ici
-  } value;
-  char type;
+  info_symbol* info_symbole;
 } symbol;
 
 typedef struct

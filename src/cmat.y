@@ -3,8 +3,8 @@
   #include <stdlib.h>
   #include <string.h>
   
-  #include "utils.h" // Définit yyerror et yylex
   #include "symbol_table.h"
+  #include "utils.h" // Définit yyerror et yylex
 
   extern symbol_table* table_of_symbol;
 
@@ -16,11 +16,11 @@
   float floatval; // déclaration du type associé à FLOAT_NUMBER
   char *stringval; // déclaration du type associé à IDENTIFIER
   char typeval; // Info pour le type de variable stockée en table des symboles
+  info_symbol info;
 }
 
-%token<intval> INT_NUMBER
-%token <floatval> FLOAT_NUMBER
-%token <stringval> IDENTIFIER STRING
+%token <info> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER 
+%token <stringval> STRING
 
 %token EQ NE GT LT GE LE AND OR NOT
 %token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
@@ -31,7 +31,7 @@
 
 %type <intval> program
 %type <typeval> datatype
-%type <stringval> expression
+%type <info> expression
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -62,8 +62,8 @@ statement:
   ;
 
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
+  datatype IDENTIFIER {add_symbol(table_of_symbol, $2.value, NULL, $1);}
+  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2.value, $4.value, $1);}
   ;
 
 affectation:
@@ -73,30 +73,21 @@ affectation:
 
 affichage:
   PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
-  | PRINT OPAR expression CPAR {printf("%s\n", $3);}
+  | PRINT OPAR expression CPAR {printf("%s\n", $3.value);}
   ;
 
 expression:
   INT_NUMBER {
-    char str[20];
-    sprintf(str, "%i", $1);
-    $$ = str;
+    strcpy($$.value, $1.value);
+    $$.type = 'i';
     }
   | FLOAT_NUMBER {
-    char str[20];
-    sprintf(str, "%f", $1);
-    $$ = str;
+    strcpy($$.value, $1.value);
+    $$.type = 'f';
     }
   | IDENTIFIER {
-    symbol* symbole = get_symbol(table_of_symbol, $1);
-    char str[20];
-    if(symbole->type == 'i'){
-      sprintf(str, "%i", symbole->value.int_value);
-    }
-    if(symbole->type == 'f'){
-      sprintf(str, "%f", symbole->value.float_value);
-    }
-    $$ = str;
+    symbol* symbole = get_symbol(table_of_symbol, $1.value);
+    //$$ = symbole->value;
   }
   | expression PLUS expression
   | expression MINUS expression

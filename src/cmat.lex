@@ -1,4 +1,5 @@
 %{
+    #include "symbol_table.h"
     #include <stdio.h>
     #include "cmat.tab.h"
     #include "utils.h"

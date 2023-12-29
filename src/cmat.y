@@ -2,6 +2,7 @@
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
+  #include <stdbool.h>
   
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
@@ -19,7 +20,7 @@
   symbol info_symbol;
 }
 
-%token <stringval> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER, STRING
+%token <stringval> INT_NUMBER FLOAT_NUMBER IDENTIFIER STRING
 
 %token EQ NE GT LT GE LE AND OR NOT
 %token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
@@ -31,6 +32,7 @@
 %type <intval> program
 %type <charval> datatype unary arithmetiques
 %type <stringval> expression valeur
+%type <intval> condition
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -52,6 +54,16 @@ instructions:
 
 instruction:
   statement SEMICOLON
+  | structure
+  ;
+
+structure:
+  IF OPAR condition CPAR OBRACE instructions CBRACE {printf("Détection IF\n");}
+  ;
+
+condition:
+  expression EQ expression {$$ = 1;}
+  ;
 
 statement:
   declaration {}
@@ -60,16 +72,24 @@ statement:
   | RETURN expression {}
   ;
 
+// Stockage des variables déclarées
+// MIPS : Modification dans le .data
 declaration:
   datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
   | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
   ;
 
+
 affectation:
+  //MIPS : Il n'y a que l'info de la valeur dans "expression"
+  //Pouvoir récupérer le type de "expression"
+  //Yacc fait toute l'arithmétiques mais pas le MIPS avec cette structure
+  //Faire une fonction pour chaque ligne
   IDENTIFIER ASSIGN expression {
     symbol* symbole = get_symbol(table_of_symbol, $1);
     strcpy(symbole->value, $3);
   }
+  // Faire l'assignement avant de faire le ++
   | IDENTIFIER unary {
     if($2 == '+'){
       symbol* symbole = get_symbol(table_of_symbol, $1);
@@ -93,6 +113,7 @@ affectation:
   ;
 
 affichage:
+  //Pensez au printmat pour les matrices
   PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
   | PRINT OPAR expression CPAR {
       printf("%s\n", $3);
@@ -106,6 +127,7 @@ expression:
     strcpy($$, str);
   }
   | valeur {strcpy($$, $1);}
+
   // Problème avec le signe moins
   // Voir comment le corriger
   | MINUS expression %prec UMINUS {
@@ -137,7 +159,6 @@ arithmetiques:
   | TIMES {$$ = '*';}
   | DIVIDE {$$ = '/';}
   ;
-
 
 unary:
   INC {$$ = '+';}

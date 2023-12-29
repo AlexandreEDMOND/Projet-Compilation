@@ -22,6 +22,7 @@ symbol_table *create_symbol_table(int display)
 
 void add_symbol(symbol_table *table, char *id, char *data_type, char type)
 {
+  // Check la taille de la table de symboles
   if (table->size == table->capacity)
   {
     table->capacity *= 2;
@@ -73,6 +74,8 @@ void free_symbol_table(symbol_table *table)
   free(table);
 }
 
+//Convertir en symbol
+//Afficher erreur si les types sont différents
 float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
   float value_1 = atof(symbole_1);
   float value_2 = atof(symbole_2);

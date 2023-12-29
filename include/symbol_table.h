@@ -3,9 +3,10 @@
 // Structure de la table des symboles
 typedef struct
 {
-  char *id;
-  char* value;
-  char type;
+  char* id; //Nom de la variable
+  char* value; //Valeur de la variable (NULL si pas définie)
+  // Faire un enum pour le type
+  char type; // 'i' : int / 'f' : float / 'm' : matrix
 } symbol;
 
 typedef struct

@@ -1,0 +1,12 @@
+int main()
+{
+  int a = 5;
+  int b = 1569;
+  int c = -2;
+
+  print(a);
+  print(b);
+  print(c);
+  
+  return 0;
+}

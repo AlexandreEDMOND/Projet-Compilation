@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main()
+{
+  float a = -6.5;
+  float b = 1856.75982;
+  float c;
+
+  int d = -86;
+  int e = 69;
+  int f;
+
+  c = a;
+  a = b;
+
+  f = d;
+  d = e;
+
+  printf("%f\n", a);
+  printf("%f\n", b);
+  printf("%f\n", c);
+  printf("%i\n", d);
+  printf("%i\n", e);
+  printf("%i\n", f);
+  
+  return 0;
+}

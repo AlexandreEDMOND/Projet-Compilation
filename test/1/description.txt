@@ -1,1 +1,1 @@
-La fonction main est reconnue
+Fonction main seul sans argument

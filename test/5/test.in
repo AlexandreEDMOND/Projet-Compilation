@@ -1,0 +1,12 @@
+int main()
+{
+  float a = 8.00;
+  float b = 1856.75982;
+  float c = -86.34;
+
+  print(a);
+  print(b);
+  print(c);
+  
+  return 0;
+}

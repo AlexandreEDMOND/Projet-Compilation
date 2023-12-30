@@ -1,12 +1,8 @@
 int main()
 {
-  int a = 8;
+  int a;
   int b;
-  b = a + 1;
-  int c = 5*b;
-  c++;
-  a = b - a;
-  a = c / 3;
-  int d = -a;
+  int c;
+
   return 0;
 }

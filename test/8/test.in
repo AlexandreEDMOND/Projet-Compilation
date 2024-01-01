@@ -14,12 +14,12 @@ int main()
   f = d;
   d = e;
 
-  printf("%f\n", a);
-  printf("%f\n", b);
-  printf("%f\n", c);
-  printf("%i\n", d);
-  printf("%i\n", e);
-  printf("%i\n", f);
+  print(a);
+  print(b);
+  print(c);
+  print(d);
+  print(e);
+  print(f);
   
   return 0;
 }

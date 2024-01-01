@@ -105,6 +105,5 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
         exit(1);
         break;
   }
-  printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
   return result;
 }

@@ -32,7 +32,6 @@
 %type <intval> program
 %type <charval> datatype unary arithmetiques
 %type <stringval> expression valeur
-%type <intval> condition
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -44,7 +43,7 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n"); exit(0);}
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {exit(0);}
   ;
 
 instructions:
@@ -54,16 +53,8 @@ instructions:
 
 instruction:
   statement SEMICOLON
-  | structure
   ;
 
-structure:
-  IF OPAR condition CPAR OBRACE instructions CBRACE {printf("Détection IF\n");}
-  ;
-
-condition:
-  expression EQ expression {$$ = 1;}
-  ;
 
 statement:
   declaration {}

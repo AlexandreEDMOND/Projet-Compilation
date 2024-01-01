@@ -18,7 +18,7 @@ run_test() {
   title "Test $test_number"
   echo "\033[33mDescription: $(cat $test_folder/description.txt) \033[0m"
   # On lance le programme
-  $PROGRAM < $input_file > $output_file
+  $PROGRAM "-o" $output_file < $input_file
 
   if diff -q $output_file $expected_output_file; then
     echo "\033[32mVALIDE\033[0m"

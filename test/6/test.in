@@ -5,7 +5,7 @@ int main()
   int c = -86;
 
   a = 74;
-  b = -3
+  b = -3;
   c = 0;
 
   print(a);

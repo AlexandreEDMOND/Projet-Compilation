@@ -117,17 +117,20 @@ expression:
     sprintf(str, "%f", do_arithmetiques($1, $3, $2));
     strcpy($$, str);
   }
-  | valeur {strcpy($$, $1);}
-
   // Problème avec le signe moins
   // Voir comment le corriger
   | MINUS expression %prec UMINUS {
-    float nombre = atof($2);
-    nombre *= -1;
-    char str[50];
-    sprintf(str, "%f", nombre);
-    strcpy($$, str);
+    if($2[0] != '-'){
+      char signe_moins[] = "-";
+      strcat(signe_moins, $2);
+      $$ = signe_moins;
+    }
+    else{
+      char* signe_moins= $2 + 1;
+      $$ = signe_moins;
+    }
   }
+  | valeur {strcpy($$, $1);}
   | OPAR expression CPAR {$$ = $2;}
   ;
 

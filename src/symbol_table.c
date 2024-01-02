@@ -58,7 +58,7 @@ symbol *get_symbol(symbol_table *table, char *id)
       return &table->symbols[i];
     }
   }
-
+  printf("Pas de symbol trouvé pour la recherche de l'id : %s\n", id);
   return NULL;
 }
 
@@ -106,4 +106,11 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
         break;
   }
   return result;
+}
+
+
+float convert_minus_sign(char* symbole){
+  float nombre = atof(symbole);
+  nombre *= -1;
+  return nombre;
 }

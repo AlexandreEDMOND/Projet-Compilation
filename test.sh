@@ -25,6 +25,7 @@ run_test() {
   else
     echo "\033[31mERREUR\033[0m"
     diff $output_file $expected_output_file
+    exit 1
   fi
 }
 
@@ -35,6 +36,8 @@ compil() {
   title "Compilation"
   make
 }
+
+compil
 
 # Si un numéro de test est fourni en paramètre
 if [ $# -eq 1 ]; then

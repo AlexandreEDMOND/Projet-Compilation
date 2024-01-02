@@ -107,10 +107,3 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
   }
   return result;
 }
-
-
-float convert_minus_sign(char* symbole){
-  float nombre = atof(symbole);
-  nombre *= -1;
-  return nombre;
-}

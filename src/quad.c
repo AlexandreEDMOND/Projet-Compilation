@@ -19,9 +19,8 @@ Ql *create_list(Quad *quad) {
     return ql;
 }
 
-/* Crée un quad et l'ajoute dans la liste principale
-* Alias : gencode
-*/
+/* Crée un quad et l'ajoute dans la liste principale*/
+
 Quad *init_quad(
     char op, char* operand1, char* operand2, char* result) {
     Quad * quad;
@@ -30,7 +29,6 @@ Quad *init_quad(
     quad->operand1 = operand1;
     quad->operand2 = operand2;
     quad->result = result;
-    //quad->idx = nextquad(quad_list);
     //add_quad(quad_list, quad);
     return quad;
 }
@@ -48,6 +46,7 @@ void add_quad(Ql *ql, Quad *quad) {
                 ql->data, ql->capacity * sizeof(Quad));
     }
     ql->data[ql->size++] = quad;
+    ql->data[ql->size-1]->idx=nextquad(ql);
 }
 
 /* On affiche la table des quad */
@@ -77,7 +76,6 @@ void print_quad(Quad * quad) {
     //print_operand(quad->result);
     printf("\n");
 }
-
 /* Renvoie l'index du prochain quad */
 int nextquad(Ql *quad_list) {
     return quad_list->size;

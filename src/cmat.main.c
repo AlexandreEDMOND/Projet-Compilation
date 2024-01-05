@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
   Quad *quad;
   args_options *options = parse_args(argc, argv);
   table_of_symbol = create_symbol_table(options->show_tos);
-  quad = init_quad('=', "1", "2", "3");
+  quad = init_quad('=', "2", "3", "5");
   quad_list = create_list(quad);
 
   int r = 0;

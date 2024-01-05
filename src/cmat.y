@@ -8,10 +8,11 @@
 
   extern symbol_table* table_of_symbol;
   extern Ql* quad_list;
+  Quad *quad;
 %}
 
 %union 
-{
+{ 
   int intval; // déclaration du type associé à INT_NUMBER
   float floatval; // déclaration du type associé à FLOAT_NUMBER
   char *stringval; // déclaration du type associé à IDENTIFIER
@@ -43,7 +44,7 @@
 %% 
 program:
   datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n");
-  printf("%s\n",quad_list->data[0]->operand1);
+  print_quad_list(quad_list);
    exit(0);}
   ;
 
@@ -65,6 +66,7 @@ statement:
 declaration:
   datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
   | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);
+  add_quad(quad_list,init_quad('=',$4,"Rien",$2));
   }
   ;
 

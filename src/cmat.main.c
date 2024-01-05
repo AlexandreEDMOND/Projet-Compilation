@@ -3,15 +3,19 @@
 #include "symbol_table.h"
 #include <stdio.h>
 #include <string.h>
+#include "quad.h"
 
 extern int yyparse();
 symbol_table* table_of_symbol;
+Ql *quad_list;
 
 int main(int argc, char *argv[])
 {
+  Quad *quad;
   args_options *options = parse_args(argc, argv);
   table_of_symbol = create_symbol_table(options->show_tos);
-  
+  quad = init_quad('=', "1", "2", "3");
+  quad_list = create_list(quad);
 
   int r = 0;
   while (r == 0)

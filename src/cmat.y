@@ -2,12 +2,12 @@
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
-  
+  #include "quad.h"
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
 
   extern symbol_table* table_of_symbol;
-
+  extern Ql* quad_list;
 %}
 
 %union 
@@ -42,7 +42,9 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n"); exit(0);}
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n");
+  printf("%s\n",quad_list->data[0]->operand1);
+   exit(0);}
   ;
 
 instructions:
@@ -62,7 +64,8 @@ statement:
 
 declaration:
   datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
+  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);
+  }
   ;
 
 affectation:

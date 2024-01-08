@@ -64,6 +64,30 @@ symbol *get_symbol(symbol_table *table, char *id)
   return NULL;
 }
 
+void set_symbol(symbol_table *table, char *id, char *new_value)
+{
+    symbol *s = get_symbol(table, id);
+    if (s == NULL)
+    {
+        printf("Symbole %s non trouvé\n", id);
+        return;
+    }
+
+    if (s->value != NULL)
+    {
+        free(s->value);
+    }
+
+    NCHK(s->value = malloc(strlen(new_value) + 1));
+    strcpy(s->value, new_value);
+
+    if (table->display == 1)
+    {
+        printf("Modification de la valeur du symbole %s en %s\n", id, new_value);
+    }
+}
+
+
 void free_symbol_table(symbol_table *table)
 {
   for (int i = 0; i < table->size; i++)
@@ -107,4 +131,23 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
   }
   printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
   return result;
+}
+
+void print_symbol_table(const symbol_table *table)
+{
+    if (table == NULL)
+    {
+        printf("La table des symboles est vide.\n");
+        return;
+    }
+
+    printf("Table des symboles:\n");
+    printf("ID\tValeur\tType\n");
+    printf("-------------------------\n");
+
+    for (int i = 0; i < table->size; i++)
+    {
+        symbol *s = &table->symbols[i];
+        printf("%s\t%s\t%c\n", s->id, s->value ? s->value : "NULL", s->type);
+    }
 }

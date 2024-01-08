@@ -22,12 +22,12 @@ Ql *create_list(Quad *quad) {
 
 /* Crée un quad et l'ajoute dans la liste principale*/
 Quad *gencode(
-    char op, char* operand1, char* operand2, char* result) {
+    char op, char* operande1, char* operande2, char* result) {
     Quad * quad;
     NCHK(quad = malloc(sizeof(Quad)));
     quad->op = op;
-    quad->operand1 = operand1;
-    quad->operand2 = operand2;
+    quad->operand1 = operande1;
+    quad->operand2 = operande2;
     quad->result = result;
     return quad;
 }
@@ -64,6 +64,7 @@ void print_quad_list(Ql *ql) {
 void print_quad(Quad * quad) {
     printf("| idx: %d\n", quad->idx);
     printf("| OPERATEUR\t");
+    printf("%c\n",quad->op);
     //print_operator(quad->op);
     printf("\n| OPERANDE 1\t");
     printf("%s\n",quad->operand1);

@@ -1,10 +1,10 @@
 #pragma once
 #define INIT_QUAD_LIST_CAPACITY 100
-
+#include "operand.h"
 // Définit un quad
 typedef struct Quad {
-    char op;
-    char * operand1;
+    char op; // + - =
+    char * operand1; // 1 2
     char * operand2;
     char *result;
     int idx;  // Index du quad

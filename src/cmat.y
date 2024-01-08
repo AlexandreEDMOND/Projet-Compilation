@@ -6,6 +6,7 @@
   #include "genMips.h"
   #include "file_MIPS.h"
   #include "genQuad.h"
+  #include "operand.h"
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
 
@@ -46,9 +47,10 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {gen_mips(table_of_symbol);
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {gen_mips(table_of_symbol,quad_list);
     printf("Programme correctement compilé\n");
   print_quad_list(quad_list);
+  print_symbol_table(table_of_symbol);
    exit(0);}
   ;
 
@@ -74,8 +76,7 @@ declaration:
 
 affectation:
   IDENTIFIER ASSIGN expression {
-    symbol* symbole = get_symbol(table_of_symbol, $1);
-    strcpy(symbole->value, $3);
+    assignation_Affectation(table_of_symbol, $1, $3);
   }
   | IDENTIFIER unary {
     if($2 == '+'){
@@ -108,9 +109,7 @@ affichage:
 
 expression:
   expression arithmetiques expression {
-    char str[50];
-    sprintf(str, "%f", do_arithmetiques($1, $3, $2));
-    strcpy($$, str);
+    operation_arithmetique($$,$1,$3,$2);
   }
   | valeur {strcpy($$, $1);}
   // Problème avec le signe moins

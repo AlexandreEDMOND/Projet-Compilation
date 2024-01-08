@@ -1,7 +1,8 @@
 #include <stdio.h>
 int main(){
+    int a=3;
+    int b=4;
     int c;
-    int a=1;
-    float b=2.2;
+    c=a+b;
     return 0;
 }

@@ -3,10 +3,10 @@
 
 // Opérande
 typedef struct Operand {
-	//Type_operand type;
-	Symbol *symbol;	 // Symbole associé à l'opérande (si id ou une constante)
     float value_float;
-	int value_int;	
+	int value_int;
+	char *id;	
+	symbol* Symbol;
 } Operand;
 
 // Liste d'opérandes
@@ -15,3 +15,6 @@ typedef struct Op_list {
 	int size;
 	int capacity;
 } Op_list;
+
+// Fonction pour initialiser un pointeur vers Operand
+Operand* createOperand(char*value,char*id,symbol*Symbol);

@@ -39,6 +39,9 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type)
   if(data_type != NULL){
     strcpy(s->value, data_type);
   }
+  else{
+    s->value=NULL;
+  }
   
   s->type = type;
   

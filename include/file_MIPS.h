@@ -1,5 +1,4 @@
 #pragma once
-#include <stdio.h>
-
-void gen_mips();
-void gen_data(FILE*output);
+#include "symbol_table.h"
+void gen_mips(symbol_table *table);
+void gen_data(FILE*output,symbol_table *table);

@@ -4,6 +4,7 @@
   #include <string.h>
   #include "quad.h"
   #include "genMips.h"
+  #include "file_MIPS.h"
   #include "genQuad.h"
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
@@ -22,7 +23,7 @@
   symbol info_symbol;
 }
 
-%token <stringval> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER, STRING
+%token <stringval> INT_NUMBER FLOAT_NUMBER IDENTIFIER STRING
 
 %token EQ NE GT LT GE LE AND OR NOT
 %token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
@@ -45,7 +46,8 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n");
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {gen_mips(table_of_symbol);
+    printf("Programme correctement compilé\n");
   print_quad_list(quad_list);
    exit(0);}
   ;
@@ -66,7 +68,7 @@ statement:
   ;
 
 declaration:
-  datatype IDENTIFIER {assignation(table_of_symbol, $2,$1);}
+  datatype IDENTIFIER {assignation(table_of_symbol,$2,$1);}
   | datatype IDENTIFIER ASSIGN expression {assignation_Expression(table_of_symbol, $2, $4, $1);}
   ;
 

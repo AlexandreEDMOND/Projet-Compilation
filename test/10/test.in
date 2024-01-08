@@ -1,0 +1,17 @@
+int main()
+{
+  int a = 4 + 3 + 7 + 856;
+  int b;
+  b = 3 + 7 + 856 + 4;
+
+  int c = 4 - 3 - 7 - 856;
+  int d;
+  d = 3 - 7 - 856 - 4;
+
+  print(a);
+  print(b);
+  print(c);
+  print(d);
+  
+  return 0;
+}

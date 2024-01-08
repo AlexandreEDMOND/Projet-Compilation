@@ -80,26 +80,31 @@ affectation:
     symbol* symbole = get_symbol(table_of_symbol, $1);
     strcpy(symbole->value, $3);
   }
-  // Faire l'assignement avant de faire le ++
+
   | IDENTIFIER unary {
-    if($2 == '+'){
-      symbol* symbole = get_symbol(table_of_symbol, $1);
-      if(symbole->type == 'i'){
-        int nombre = atoi(symbole->value);
-        nombre++;
-        char str[50];
-        sprintf(str, "%i", nombre);
-        strcpy(symbole->value, str);
-      }
-      if(symbole->type == 'f'){
-        float nombre = atof(symbole->value);
-        nombre++;
-        char str[50];
-        sprintf(str, "%f", nombre);
-        strcpy(symbole->value, str);
-      }
-      
+    symbol* symbole = get_symbol(table_of_symbol, $1);
+    float nombre;
+    if(symbole->type == 'i'){
+      nombre = atoi(symbole->value);
     }
+    if(symbole->type == 'f'){
+      nombre = atof(symbole->value);
+    }
+    if($2 == '+'){
+      nombre++;
+    }
+    if($2 == '-'){
+      nombre--;
+    }
+    char str[50];
+    if(symbole->type == 'i'){
+      int conversion = nombre;
+      sprintf(str, "%i", conversion);
+    }
+    if(symbole->type == 'f'){
+      sprintf(str, "%f", nombre);
+    }
+    strcpy(symbole->value, str);
   }
   ;
 

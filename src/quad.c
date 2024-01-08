@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "quad.h"
+#include "utils.h"
 
 /* Crée une quad_list */
 Ql *init_quad_list() {
     Ql *ql;
-    ql = malloc(sizeof(Ql));
+    NCHK(ql = malloc(sizeof(Ql)));
     ql->size = 0;
     ql->capacity = INIT_QUAD_LIST_CAPACITY;
-    ql->data = calloc(ql->capacity, sizeof(Quad));
+    NCHK(ql->data = calloc(ql->capacity, sizeof(Quad)));
     return ql;
 }
 
@@ -20,16 +21,14 @@ Ql *create_list(Quad *quad) {
 }
 
 /* Crée un quad et l'ajoute dans la liste principale*/
-
-Quad *init_quad(
+Quad *gencode(
     char op, char* operand1, char* operand2, char* result) {
     Quad * quad;
-    quad = malloc(sizeof(Quad));
+    NCHK(quad = malloc(sizeof(Quad)));
     quad->op = op;
     quad->operand1 = operand1;
     quad->operand2 = operand2;
     quad->result = result;
-    //add_quad(quad_list, quad);
     return quad;
 }
 
@@ -67,12 +66,15 @@ void print_quad(Quad * quad) {
     printf("| OPERATEUR\t");
     //print_operator(quad->op);
     printf("\n| OPERANDE 1\t");
+    printf("%s\n",quad->operand1);
     //print_operand(quad->operand1);
     printf("\n");
     printf("| OPERANDE 2\t");
+    printf("%s\n",quad->operand2);
    // print_operand(quad->operand2);
     printf("\n");
     printf("| RESULTAT\t");
+    printf("%s\n",quad->result);
     //print_operand(quad->result);
     printf("\n");
 }

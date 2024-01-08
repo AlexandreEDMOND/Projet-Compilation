@@ -3,6 +3,8 @@
   #include <stdlib.h>
   #include <string.h>
   #include "quad.h"
+  #include "genMips.h"
+  #include "genQuad.h"
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
 
@@ -64,10 +66,8 @@ statement:
   ;
 
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);
-  add_quad(quad_list,init_quad('=',$4,"Rien",$2));
-  }
+  datatype IDENTIFIER {assignation(table_of_symbol, $2,$1);}
+  | datatype IDENTIFIER ASSIGN expression {assignation_Expression(table_of_symbol, $2, $4, $1);}
   ;
 
 affectation:

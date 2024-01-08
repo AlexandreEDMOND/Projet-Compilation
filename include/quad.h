@@ -26,7 +26,7 @@ Ql *create_list(Quad *quad);
 /* Crée un quad et l'ajoute dans la liste principale
 * Alias : gencode
 */
-Quad *init_quad(
+Quad *gencode(
     char op, char * operand1, char * operand2, char* result);
 
 /* Génère une liste avec un goto indéterminé */

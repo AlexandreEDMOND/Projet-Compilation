@@ -1,16 +1,6 @@
 int main()
 {
-  int a;
-  int b = 56;
-  int c = -86;
-
-  a = 74;
-  b = -3;
-  c = 0;
-
-  print(a);
-  print(b);
-  print(c);
-  
+  printf("Hello World\n");
+  printf("Incroyable ça ? Non ? Ok je ferme ma guele...\n");
   return 0;
 }

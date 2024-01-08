@@ -8,6 +8,9 @@
   #include "utils.h" // Définit yyerror et yylex
 
   extern symbol_table* table_of_symbol;
+  extern char* quads_alex[100];
+  extern int compteur_quads;
+  int compteur_string_const = 0;
 
 %}
 
@@ -43,7 +46,8 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {exit(0);}
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {
+  return 1;}
   ;
 
 instructions:
@@ -60,14 +64,23 @@ statement:
   declaration {}
   | affectation {}
   | affichage {}
-  | RETURN expression {}
+  | RETURN expression {
+    strcpy(quads_alex[compteur_quads], "\t\t# Terminer le programme\n\t\tli $v0, 10          # Code de service pour la sortie de programme\n\t\tsyscall\n");
+    compteur_quads++;
+  }
   ;
 
 // Stockage des variables déclarées
 // MIPS : Modification dans le .data
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
+  datatype IDENTIFIER {
+    add_symbol(table_of_symbol, $2, NULL, $1);
+    //Ajout dans le .data et plus jamais on y touche
+    }
+  | datatype IDENTIFIER ASSIGN expression {
+    add_symbol(table_of_symbol, $2, $4, $1);
+    //Ajout dans le .data et plus jamais on y touche
+    }
   ;
 
 
@@ -79,9 +92,13 @@ affectation:
   IDENTIFIER ASSIGN expression {
     symbol* symbole = get_symbol(table_of_symbol, $1);
     strcpy(symbole->value, $3);
+    //Modification de la valeur de IDENTIFIER avec la valeur de expression
+    //Comment faire si la valeur de expression vient d'un calcul arithmétique
+      //Faire le calcul avant?
   }
 
   | IDENTIFIER unary {
+    //Reviens à faire une affectation avec la valeur de IDENTIFIER avec IDENTIFIER +1 ou -1
     symbol* symbole = get_symbol(table_of_symbol, $1);
     float nombre;
     if(symbole->type == 'i'){
@@ -110,10 +127,25 @@ affectation:
 
 affichage:
   //Pensez au printmat pour les matrices
-  PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
-  | PRINT OPAR expression CPAR {
-      printf("%s\n", $3);
+  PRINTF OPAR STRING CPAR {
+    //printf("%s\n", $3);
+
+    char string_name[100];
+    sprintf(string_name, "str_const%i", compteur_string_const);
+    compteur_string_const++;
+
+    printf("\t\t%s: .asciiz %s\n",string_name, $3);
+
+    char phrase[1000];
+    sprintf(phrase, "\t\t# Afficher le texte\n\t\tli $v0, 4           # Code de service pour l'affichage de chaîne\n\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", string_name);
+    strcpy(quads_alex[compteur_quads], phrase);
+    compteur_quads++;
+    // Stocker la variable à afficher dans .data
     }
+  | PRINT OPAR expression CPAR {
+      //printf("%s\n", $3);
+    }
+  // Faire un affichage en MIPS
   ;
 
 expression:
@@ -122,8 +154,6 @@ expression:
     sprintf(str, "%f", do_arithmetiques($1, $3, $2));
     strcpy($$, str);
   }
-  // Problème avec le signe moins
-  // Voir comment le corriger
   | MINUS expression %prec UMINUS {
     if($2[0] != '-'){
       char signe_moins[] = "-";

@@ -13,7 +13,7 @@ void assignation(symbol_table *table, char *id, char type) {
     if (type=='f'){
         add_symbol(table,id,NULL, 'f');
     }
-   add_quad(quad_list,gencode('=',"empty","empty",id)); 
+   add_quad(quad_list,gencode('=',NULL,NULL,id)); 
 }
 
 void assignation_Expression(symbol_table *table, char *id, char *data_type, char type) {
@@ -23,18 +23,21 @@ void assignation_Expression(symbol_table *table, char *id, char *data_type, char
     if (type=='f'){
         add_symbol(table,id,data_type, 'f');
     }
-   add_quad(quad_list,gencode('=',data_type,"empty",id)); 
+    Operand *operand1= createOperand(table,id);
+   add_quad(quad_list,gencode('=',operand1,NULL,id)); 
 }
 
 void assignation_Affectation(symbol_table *table, char *id,char *data_type){
     set_symbol(table,id,data_type);
-    add_quad(quad_list,gencode('=',data_type,"empty",id));
+    Operand *operand1= createOperand(table,id);
+    add_quad(quad_list,gencode('=',operand1,NULL,id));
 }
 
-void operation_arithmetique(char*operande1,char*operande2,char operation){
+void operation_arithmetique(char*operande1,char*operande2,char operation,symbol_table *table){
     char str[50];
     char *res = malloc(sizeof(char*));
-    //Operand *operande1= createOperand(symbol_table*table,char*id);
-    Quad*quad=gencode(operation,operande1,operande2,res);
+    Operand *operand1= createOperand(table,operande1);
+    Operand *operand2=createOperand(table,operande2);
+    Quad*quad=gencode(operation,operand1,operand2,res);
     add_quad(quad_list,quad);
 }

@@ -4,8 +4,8 @@
 // Définit un quad
 typedef struct Quad {
     char op; // + - =
-    char * operand1; // 1 2
-    char * operand2;
+    Operand * operand1; // 1 2
+    Operand * operand2;
     char *result;
     int idx;  // Index du quad
 } Quad;
@@ -27,7 +27,7 @@ Ql *create_list(Quad *quad);
 * Alias : gencode
 */
 Quad *gencode(
-    char op, char * operand1, char * operand2, char* result);
+    char op, Operand* operand1, Operand* operand2, char* result);
 
 /* Génère une liste avec un goto indéterminé */
 //Ql *init_goto();

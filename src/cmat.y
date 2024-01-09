@@ -108,7 +108,7 @@ affichage:
 
 expression:
   expression arithmetiques expression {
-    operation_arithmetique($1,$3,$2);
+    operation_arithmetique($1,$3,$2,table_of_symbol);
   }
   | valeur {strcpy($$, $1);}
   // Problème avec le signe moins

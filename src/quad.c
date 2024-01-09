@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "quad.h"
 #include "utils.h"
+#include "operand.h"
 
 /* Crée une quad_list */
 Ql *init_quad_list() {
@@ -22,7 +23,7 @@ Ql *create_list(Quad *quad) {
 
 /* Crée un quad*/
 Quad *gencode(
-    char op, char* operande1, char* operande2, char* result) {
+    char op, Operand* operande1, Operand* operande2, char* result) {
     Quad * quad;
     NCHK(quad = malloc(sizeof(Quad)));
     quad->op = op;
@@ -66,14 +67,17 @@ void print_quad(Quad * quad) {
     printf("| OPERATEUR\t");
     printf("%c\n",quad->op);
     printf("\n| OPERANDE 1\t");
-    printf("%s\n",quad->operand1);
+    if (quad->operand1!=NULL){
+        print_operator(quad->operand1);
+    }
     printf("\n");
     printf("| OPERANDE 2\t");
-    printf("%s\n",quad->operand2);
+     if (quad->operand2!=NULL){
+         print_operator(quad->operand2);
+     }
     printf("\n");
     printf("| RESULTAT\t");
     printf("%s\n",quad->result);
-    //print_operand(quad->result);
     printf("\n");
 }
 /* Renvoie l'index du prochain quad */

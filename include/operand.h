@@ -17,3 +17,4 @@ typedef struct Op_list {
 
 // Fonction pour initialiser un pointeur vers Operand
 Operand* createOperand(symbol_table*table,char*id);
+void print_operator(Operand *operande);

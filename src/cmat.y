@@ -5,11 +5,11 @@
   #include <stdbool.h>
   
   #include "symbol_table.h"
+  #include "quads.h"
   #include "utils.h" // Définit yyerror et yylex
 
   extern symbol_table* table_of_symbol;
-  extern char* quads_alex[100];
-  extern int compteur_quads;
+  extern Quad_list* quad_list;
   int compteur_string_const = 0;
 
 %}
@@ -65,8 +65,7 @@ statement:
   | affectation {}
   | affichage {}
   | RETURN expression {
-    strcpy(quads_alex[compteur_quads], "\t\t# Terminer le programme\n\t\tli $v0, 10          # Code de service pour la sortie de programme\n\t\tsyscall\n");
-    compteur_quads++;
+    gencode('e', "", "");
   }
   ;
 
@@ -75,11 +74,13 @@ statement:
 declaration:
   datatype IDENTIFIER {
     add_symbol(table_of_symbol, $2, NULL, $1);
+     printf("\t\t%s: .word %i\n",$2, 0);
     //Ajout dans le .data et plus jamais on y touche
     }
   | datatype IDENTIFIER ASSIGN expression {
     add_symbol(table_of_symbol, $2, $4, $1);
     //Ajout dans le .data et plus jamais on y touche
+    printf("\t\t%s: .word %s\n",$2, $4);
     }
   ;
 
@@ -126,26 +127,18 @@ affectation:
   ;
 
 affichage:
-  //Pensez au printmat pour les matrices
   PRINTF OPAR STRING CPAR {
-    //printf("%s\n", $3);
 
     char string_name[100];
     sprintf(string_name, "str_const%i", compteur_string_const);
     compteur_string_const++;
-
+    
     printf("\t\t%s: .asciiz %s\n",string_name, $3);
 
-    char phrase[1000];
-    sprintf(phrase, "\t\t# Afficher le texte\n\t\tli $v0, 4           # Code de service pour l'affichage de chaîne\n\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", string_name);
-    strcpy(quads_alex[compteur_quads], phrase);
-    compteur_quads++;
-    // Stocker la variable à afficher dans .data
+    gencode('p', string_name, "cst_string");
     }
   | PRINT OPAR expression CPAR {
-      //printf("%s\n", $3);
     }
-  // Faire un affichage en MIPS
   ;
 
 expression:

@@ -1,12 +1,13 @@
 #include "utils.h"
 #include "args.h"
 #include "symbol_table.h"
+#include "quads.h"
 #include <stdio.h>
 #include <string.h>
 
 extern int yyparse();
 symbol_table* table_of_symbol;
-char* quads_alex[100];
+Quad_list* quad_list_main;
 int compteur_quads = 0;
 
 int main(int argc, char *argv[])
@@ -14,10 +15,7 @@ int main(int argc, char *argv[])
 
   args_options *options = parse_args(argc, argv);
   table_of_symbol = create_symbol_table(options->show_tos);
-
-  for(int i=0; i<100; i++){
-    quads_alex[i] = malloc(sizeof(char)*1000);
-  }
+  quad_list_main = init_quad_list();
 
   // Créez un fichier de sortie pour le code assembleur
   FILE *output_file;
@@ -43,17 +41,15 @@ int main(int argc, char *argv[])
     r = yyparse();
   }
 
+  //print_quad_list(quad_list_main);
+
   printf("\n.text\nmain:\n");
-  for(int i=0; i<compteur_quads; i++){
-    printf("%s", quads_alex[i]);
-  }
+  print_list_quad_MIPS(quad_list_main);
 
   free(options);
   free_symbol_table(table_of_symbol);
+  free_quad_list(quad_list_main);
 
-  for(int i=0; i<compteur_quads; i++){
-    free(quads_alex[i]);
-  }
 
   if(options->output_file != NULL){
     fclose(output_file);

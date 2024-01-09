@@ -1,6 +1,9 @@
 .data
+		a: .word 26
+		b: .word 0
 		str_const0: .asciiz "Hello World\n"
 		str_const1: .asciiz "Incroyable ça ? Non ? Ok je ferme ma guele...\n"
+		str_const2: .asciiz "Romain est en live c'est faux\n"
 
 .text
 main:
@@ -12,6 +15,11 @@ main:
 		# Afficher le texte
 		li $v0, 4           # Code de service pour l'affichage de chaîne
 		la $a0, str_const1     # Charger l'adresse de la chaîne à afficher dans $a0
+		syscall
+
+		# Afficher le texte
+		li $v0, 4           # Code de service pour l'affichage de chaîne
+		la $a0, str_const2     # Charger l'adresse de la chaîne à afficher dans $a0
 		syscall
 
 		# Terminer le programme

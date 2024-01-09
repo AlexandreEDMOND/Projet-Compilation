@@ -6,7 +6,6 @@
   #include "genMips.h"
   #include "file_MIPS.h"
   #include "genQuad.h"
-  #include "operand.h"
   #include "symbol_table.h"
   #include "utils.h" // Définit yyerror et yylex
 
@@ -109,7 +108,7 @@ affichage:
 
 expression:
   expression arithmetiques expression {
-    operation_arithmetique($$,$1,$3,$2);
+    operation_arithmetique($1,$3,$2);
   }
   | valeur {strcpy($$, $1);}
   // Problème avec le signe moins
@@ -133,7 +132,7 @@ valeur:
     }
   | IDENTIFIER {
     symbol* symbole = get_symbol(table_of_symbol, $1);
-    strcpy($$, symbole->value);
+    strcpy($$, symbole->id);
   }
   ;
 

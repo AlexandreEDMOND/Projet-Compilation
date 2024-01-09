@@ -8,6 +8,7 @@ typedef struct
   char type;
   char *reg;
   int ligne;
+  int global_variable;
 } symbol;
 
 typedef struct
@@ -28,5 +29,6 @@ void set_symbol(symbol_table *table, char *id, char *new_value);
 
 void free_symbol_table(symbol_table *table);
 
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation);
+void do_arithmetiques(char* res, const char* operande1, const char* operande2, char operation);
 void print_symbol_table(const symbol_table *table);
+void set_registre(symbol_table *table, char *id, char *reg);

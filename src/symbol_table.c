@@ -44,7 +44,7 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type)
   }
   
   s->type = type;
-  
+  s->reg=NULL;
   if (table->display == 1)
   {
     printf("Ajout de la variable %s de valeur %s et de type %c\n", id, data_type, type);
@@ -62,6 +62,31 @@ symbol *get_symbol(symbol_table *table, char *id)
   }
 
   return NULL;
+}
+
+void set_registre(symbol_table *table, char *id, char *reg) {
+  // Find the symbol with the given id
+  for (int i = 0; i < table->size; i++) {
+    if (strcmp(table->symbols[i].id, id) == 0) {
+      // If the symbol already has a register assigned, free it
+      if (table->symbols[i].reg != NULL) {
+        free(table->symbols[i].reg);
+      }
+
+      // Allocate memory for the new register and assign it
+      table->symbols[i].reg = malloc(strlen(reg) + 1);
+      strcpy(table->symbols[i].reg, reg);
+
+      // Optionally, print a message if the table is set to display
+      if (table->display) {
+        printf("Registre de '%s' mis à jour à '%s'\n", id, reg);
+      }
+
+      return;
+    }
+  }
+
+  printf("Symbole '%s' non trouvé dans la table des symboles\n", id);
 }
 
 void set_symbol(symbol_table *table, char *id, char *new_value)
@@ -100,37 +125,35 @@ void free_symbol_table(symbol_table *table)
   free(table);
 }
 
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
-  float value_1 = atof(symbole_1);
-  float value_2 = atof(symbole_2);
-  float result;
+void do_arithmetiques(char* res, const char* operande1, const char* operande2, char operation) {
+    int op1 = atoi(operande1);
+    int op2 = atoi(operande2);
+    int result;
 
-  switch (operation) {
-    case '+':
-        result = value_1 + value_2;
-        break;
-    case '-':
-        result = value_1 - value_2;
-        break;
-    case '*':
-        result = value_1 * value_2;
-        break;
-    case '/':
-        if(value_2 != 0){
-          result = value_1 / value_2;
-        }
-        else{
-          printf("Division par zero\n");
-          exit(1);
-        }
-        break;
-    default:
-        printf("Choix invalide fonction do_arithmétiques\n");
-        exit(1);
-        break;
-  }
-  printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
-  return result;
+    switch (operation) {
+        case '+':
+            result = op1 + op2;
+            break;
+        case '-':
+            result = op1 - op2;
+            break;
+        case '*':
+            result = op1 * op2;
+            break;
+        case '/':
+            if (op2 != 0) {
+                result = op1 / op2;
+            } else {
+                strcpy(res, "Division by zero");
+                return;
+            }
+            break;
+        default:
+            strcpy(res, "Invalid operation");
+            return;
+    }
+
+    sprintf(res, "%d", result);
 }
 
 void print_symbol_table(const symbol_table *table)

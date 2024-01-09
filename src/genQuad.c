@@ -31,11 +31,10 @@ void assignation_Affectation(symbol_table *table, char *id,char *data_type){
     add_quad(quad_list,gencode('=',data_type,"empty",id));
 }
 
-void operation_arithmetique(char*res,char*operande1,char*operande2,char operation){
+void operation_arithmetique(char*operande1,char*operande2,char operation){
     char str[50];
-    //Operand *operand1=createOperand(operande1);
-    //Operand *operand2=createOperand(operande2);
-    sprintf(str, "%f", do_arithmetiques(operande1,operande2, operation));
-    strcpy(res, str);
-    add_quad(quad_list,gencode(operation,operande1,operande2,res));
+    char *res = malloc(sizeof(char*));
+    //Operand *operande1= createOperand(symbol_table*table,char*id);
+    Quad*quad=gencode(operation,operande1,operande2,res);
+    add_quad(quad_list,quad);
 }

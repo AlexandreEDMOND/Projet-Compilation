@@ -20,7 +20,7 @@ Ql *create_list(Quad *quad) {
     return ql;
 }
 
-/* Crée un quad et l'ajoute dans la liste principale*/
+/* Crée un quad*/
 Quad *gencode(
     char op, char* operande1, char* operande2, char* result) {
     Quad * quad;
@@ -65,14 +65,11 @@ void print_quad(Quad * quad) {
     printf("| idx: %d\n", quad->idx);
     printf("| OPERATEUR\t");
     printf("%c\n",quad->op);
-    //print_operator(quad->op);
     printf("\n| OPERANDE 1\t");
     printf("%s\n",quad->operand1);
-    //print_operand(quad->operand1);
     printf("\n");
     printf("| OPERANDE 2\t");
     printf("%s\n",quad->operand2);
-   // print_operand(quad->operand2);
     printf("\n");
     printf("| RESULTAT\t");
     printf("%s\n",quad->result);

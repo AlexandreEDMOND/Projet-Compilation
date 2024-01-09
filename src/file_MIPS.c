@@ -28,19 +28,35 @@ void gen_data(FILE *output,symbol_table *table) {
 void gen_quad(Ql* quad_list,symbol_table *table){
 for (int i=0;i<quad_list->size;i++){
     if (quad_list->data[i]->op=='+'){
-        symbol* symbol1=get_symbol(table,quad_list->data[i]->operand1);//check le registre
-        symbol *symbol2=get_symbol(table,quad_list->data[i]->operand2);//check le registre
-        //put_int_reg(atoi(symbol1->value),"t1");//check si c'est un int 
-        //put_int_reg(atoi(symbol2->value),"t2");//check si c'est un int 
+        //Si pas dans un registre mettre dedans 
+            set_registre(table,table->symbols[1].id,"t1");
+            put_int_reg(atoi(table->symbols[1].value),"t1");
+
+            set_registre(table,table->symbols[2].id,"t2");
+            put_int_reg(atoi(table->symbols[2].value),"t2");
         add("t3","t1", "t2");//check si le registre est libre 
+        put_reg_to_reg("t3","v0");
     }
 }
+}
+/* Génère la pile */
+void gen_stack() {
+	// On alloue la mémoire pour la pile
+    fprintf(output, "\n\t# On alloue la mémoire pour la pile\n");
+    //fprintf(output, "\taddiu\t$sp,\t$sp,\t-%d\n", symbols_table->last_pos + 4);
+    //fprintf(output, "\tsw\t\t$fp,\t%d($sp)\n", symbols_table->last_pos);
+    fprintf(output, "\tmove\t$fp,\t$sp\n");
 }
 void gen_mips(symbol_table *table,Ql* quad_list) {
     output= fopen("Fichier.asm/test.asm", "w");
     gen_data(output,table);
     gen_quad(quad_list,table);
+    gen_exit();
     fclose(output);
+}
+
+void gen_exit(){
+    fprintf(output,"\t\t\t syscall\n ");
 }
 
 

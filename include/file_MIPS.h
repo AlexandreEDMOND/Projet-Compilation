@@ -4,3 +4,4 @@
 extern FILE *output;
 void gen_mips(symbol_table *table,Ql* quad_list);
 void gen_data(FILE*output,symbol_table *table);
+void gen_exit();

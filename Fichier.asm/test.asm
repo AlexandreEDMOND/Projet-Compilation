@@ -1,5 +1,10 @@
 .data
 	a: .word	 3
 	b: .word	 4
-	c: .word	 7.000000
+	c: .word	 a
+		li	$t1,	4
+		li	$t2,	0
 		add	$t3,	$t1,	$t2
+		li	$v0,	t3
+			 syscall
+ 

@@ -10,7 +10,7 @@ Operand* createOperand(symbol_table*table,char*id) {
     symbol *Symbole=get_symbol(table,id);
     if (op != NULL) {
         op->Symbol->type=Symbole->type;
-        op->value_int = Symbole->value;      // Initialiser le champ value_int
+        op->value_int = atoi(Symbole->value);      // Initialiser le champ value_int
         op->id=Symbole->id;
      }
     return op;  // Retourne le pointeur vers le nouvel Operand

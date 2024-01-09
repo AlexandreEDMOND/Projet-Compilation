@@ -132,12 +132,23 @@ affichage:
     char string_name[100];
     sprintf(string_name, "str_const%i", compteur_string_const);
     compteur_string_const++;
-    
+
     printf("\t\t%s: .asciiz %s\n",string_name, $3);
 
     gencode('p', string_name, "cst_string");
     }
+  | PRINT OPAR IDENTIFIER CPAR {
+      gencode('p', $3, "id");
+    }
+  ;
   | PRINT OPAR expression CPAR {
+      char string_name[100];
+      sprintf(string_name, "tempo_var%i", compteur_string_const);
+      compteur_string_const++;
+
+      printf("\t\t%s: .word %i\n",string_name, atoi($3));
+
+      gencode('p', string_name, "expression");
     }
   ;
 

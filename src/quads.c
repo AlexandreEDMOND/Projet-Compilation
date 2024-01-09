@@ -91,7 +91,10 @@ void print_quad_MIPS(Quad* quad){
             printf("\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", quad->operand1);
         }
         else{
-            printf("Problème ici\n");
+            printf("\t\t# Afficher d'un int\n");
+            printf("\t\tlw $a0, %s   # Charger la valeur de l'entier depuis la mémoire\n", quad->operand1);
+            printf("\t\tli $v0, 1             # Code de service pour afficher un entier\n");
+            printf("\t\tsyscall\n\n");
         }
     }
     if(quad->op == 'e'){

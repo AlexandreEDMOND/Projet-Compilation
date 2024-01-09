@@ -1,10 +1,12 @@
 int main()
 {
   float a = 26;
-  int b;
   printf("Hello World\n");
-  printf("Incroyable ça ? Non ? Ok je ferme ma guele...\n");
-  printf("Romain est en live c'est faux\n");
+  print(5);
+  printf("\n");
   print(a);
+  printf("\n");
+  print(a+5);
+  printf("\n");
   return 0;
 }

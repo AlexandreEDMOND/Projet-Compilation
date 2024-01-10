@@ -80,6 +80,7 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
   float value_1 = atof(symbole_1);
   float value_2 = atof(symbole_2);
   //printf("Calcul entre %f et %f pour %c\n", value_1, value_2, operation);
+  printf("%f / %c / %f /", value_1, operation, value_2);
   float result;
 
   switch (operation) {

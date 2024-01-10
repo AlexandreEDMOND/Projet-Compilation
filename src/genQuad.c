@@ -6,6 +6,7 @@
 #include <string.h>
 #include "operand.h"
 extern Ql* quad_list;
+
 void assignation(symbol_table *table, char *id, char type) {
     if (type=='i'){
         add_symbol(table,id,NULL, 'i');
@@ -31,6 +32,15 @@ void assignation_Affectation(symbol_table *table, char *id,char *data_type){
     set_symbol(table,id,data_type);
     Operand *operand1= createOperand(table,id);
     add_quad(quad_list,gencode('=',operand1,NULL,id));
+}
+
+void assign_quad_print(char *valeur,symbol_table *table){
+    for (int i=0;i<table->size;i++){
+        if (strcmp(table->symbols[i].id,valeur)==0){
+            Quad*quad=gencode('p',NULL,NULL,table->symbols[i].value);
+           add_quad(quad_list,quad); 
+        }
+    }
 }
 
 void operation_arithmetique(char*operande1,char*operande2,char operation,symbol_table *table){

@@ -1,10 +1,11 @@
-.data
-	a: .word	 3
-	b: .word	 4
-	c: .word	 a
+.text
+    main:
+		li	$t0,	3
 		li	$t1,	4
-		li	$t2,	0
-		add	$t3,	$t1,	$t2
-		li	$v0,	t3
-			 syscall
+		add	$t2,	$t0,	$t1
+		move $a0, $t2       # Mettre la valeur de c dans $a0
+		li $v0, 1  
+		syscall
+ 		li $v0, 10      # syscall pour terminer l'exécution
+		syscall
  

@@ -4,6 +4,7 @@
 #include "genMIPS.h"
 #include "quad.h"
 #include "genQuad.h"
+#include "instruction_MIPS.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -26,18 +27,14 @@ void gen_data(FILE *output,symbol_table *table) {
     }
 }
 void gen_quad(Ql* quad_list,symbol_table *table){
-for (int i=0;i<quad_list->size;i++){
-    if (quad_list->data[i]->op=='+'){
-        //Si pas dans un registre mettre dedans 
-            set_registre(table,table->symbols[1].id,"t1");
-            put_int_reg(atoi(table->symbols[1].value),"t1");
-
-            set_registre(table,table->symbols[2].id,"t2");
-            put_int_reg(atoi(table->symbols[2].value),"t2");
-        add("t3","t1", "t2");//check si le registre est libre 
-        put_reg_to_reg("t3","v0");
+    for (int i=0;i<quad_list->size;i++){
+        if (quad_list->data[i]->op=='+'){
+            afficher_op_arith(quad_list->data[i]);
+        }
+        if (quad_list->data[i]->op=='p'){
+            afficher_print(quad_list->data[i]);
+        }
     }
-}
 }
 /* Génère la pile */
 void gen_stack() {
@@ -49,14 +46,14 @@ void gen_stack() {
 }
 void gen_mips(symbol_table *table,Ql* quad_list) {
     output= fopen("Fichier.asm/test.asm", "w");
-    gen_data(output,table);
+    //gen_data(output,table);
+    gen_txt();
+    gen_main();
     gen_quad(quad_list,table);
-    gen_exit();
+    exitMIPS();
+    gen_syscall();
     fclose(output);
 }
 
-void gen_exit(){
-    fprintf(output,"\t\t\t syscall\n ");
-}
 
 

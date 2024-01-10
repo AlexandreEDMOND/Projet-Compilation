@@ -73,7 +73,7 @@ void print_quad(Quad * quad) {
     printf("\n");
     printf("| OPERANDE 2\t");
      if (quad->operand2!=NULL){
-         print_operator(quad->operand2);
+        print_operator(quad->operand2);
      }
     printf("\n");
     printf("| RESULTAT\t");

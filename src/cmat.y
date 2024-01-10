@@ -102,7 +102,7 @@ affectation:
 affichage:
   PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
   | PRINT OPAR expression CPAR {
-      printf("%s\n", $3);
+    assign_quad_print($3,table_of_symbol);
     }
   ;
 

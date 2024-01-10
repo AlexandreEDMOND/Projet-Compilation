@@ -15,8 +15,10 @@ symbol_table *create_symbol_table(int display)
 
   table->display = display;
   table->size = 0;
-  table->capacity = INITIAL_CAPACITY;
-
+  table->last_temp = 0;
+  table->last_pos = 0;
+  table->last_const = 0;
+  table->capacity = INITIAL_CAPACITY; 
   return table;
 }
 
@@ -39,13 +41,39 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type)
   if(data_type != NULL){
     strcpy(s->value, data_type);
   }
+  else{
+    s->value=NULL;
+  }
   
   s->type = type;
-  
+  s->reg=NULL;
   if (table->display == 1)
   {
     printf("Ajout de la variable %s de valeur %s et de type %c\n", id, data_type, type);
   }
+}
+
+
+/* Ajoute une constante à la table des symboles */
+symbol * add_const_st(char * data) {
+    data = trim(data);
+
+    symbol* s;
+    CHK(s = malloc(sizeof(symbol)));
+    s->type = CONST_S;
+    s->position = -1;
+    CHK(s->data = calloc(strlen(data)+1, sizeof(char)));
+    sprintf(s->data, "%s", data);
+
+
+    char* name;
+    CHK(name = calloc(10, sizeof(char)));
+
+    snprintf(name, 10, "_const_%d", symbols_table->last_const);
+    symbols_table->last_const++;
+    s->name = name;
+    add_st(symbols_table, name, s);
+    return s;
 }
 
 symbol *get_symbol(symbol_table *table, char *id)
@@ -61,6 +89,55 @@ symbol *get_symbol(symbol_table *table, char *id)
   return NULL;
 }
 
+void set_registre(symbol_table *table, char *id, char *reg) {
+  // Find the symbol with the given id
+  for (int i = 0; i < table->size; i++) {
+    if (strcmp(table->symbols[i].id, id) == 0) {
+      // If the symbol already has a register assigned, free it
+      if (table->symbols[i].reg != NULL) {
+        free(table->symbols[i].reg);
+      }
+
+      // Allocate memory for the new register and assign it
+      table->symbols[i].reg = malloc(strlen(reg) + 1);
+      strcpy(table->symbols[i].reg, reg);
+
+      // Optionally, print a message if the table is set to display
+      if (table->display) {
+        printf("Registre de '%s' mis à jour à '%s'\n", id, reg);
+      }
+
+      return;
+    }
+  }
+
+  printf("symbole '%s' non trouvé dans la table des symboles\n", id);
+}
+
+void set_symbol(symbol_table *table, char *id, char *new_value)
+{
+    symbol *s = get_symbol(table, id);
+    if (s == NULL)
+    {
+        printf("symbole %s non trouvé\n", id);
+        return;
+    }
+
+    if (s->value != NULL)
+    {
+        free(s->value);
+    }
+
+    NCHK(s->value = malloc(strlen(new_value) + 1));
+    strcpy(s->value, new_value);
+
+    if (table->display == 1)
+    {
+        printf("Modification de la valeur du symbole %s en %s\n", id, new_value);
+    }
+}
+
+
 void free_symbol_table(symbol_table *table)
 {
   for (int i = 0; i < table->size; i++)
@@ -73,35 +150,71 @@ void free_symbol_table(symbol_table *table)
   free(table);
 }
 
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
-  float value_1 = atof(symbole_1);
-  float value_2 = atof(symbole_2);
-  float result;
+void do_arithmetiques(char* res, const char* operande1, const char* operande2, char operation) {
+    int op1 = atoi(operande1);
+    int op2 = atoi(operande2);
+    int result;
 
-  switch (operation) {
-    case '+':
-        result = value_1 + value_2;
-        break;
-    case '-':
-        result = value_1 - value_2;
-        break;
-    case '*':
-        result = value_1 * value_2;
-        break;
-    case '/':
-        if(value_2 != 0){
-          result = value_1 / value_2;
-        }
-        else{
-          printf("Division par zero\n");
-          exit(1);
-        }
-        break;
-    default:
-        printf("Choix invalide fonction do_arithmétiques\n");
-        exit(1);
-        break;
-  }
-  printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
-  return result;
+    switch (operation) {
+        case '+':
+            result = op1 + op2;
+            break;
+        case '-':
+            result = op1 - op2;
+            break;
+        case '*':
+            result = op1 * op2;
+            break;
+        case '/':
+            if (op2 != 0) {
+                result = op1 / op2;
+            } else {
+                strcpy(res, "Division by zero");
+                return;
+            }
+            break;
+        default:
+            strcpy(res, "Invalid operation");
+            return;
+    }
+
+    sprintf(res, "%d", result);
+}
+
+void print_symbol_table(const symbol_table *table)
+{
+    if (table == NULL)
+    {
+        printf("La table des symboles est vide.\n");
+        return;
+    }
+
+    printf("Table des symboles:\n");
+    printf("ID\tValeur\tType\n");
+    printf("-------------------------\n");
+
+    for (int i = 0; i < table->size; i++)
+    {
+        symbol *s = &table->symbols[i];
+        printf("%s\t%s\t%c\n", s->id, s->value ? s->value : "NULL", s->type);
+    }
+}
+
+
+symbol * add_temp_st(symbol_table *table, char *data_type, char type) {
+    symbol* s;
+    CHK(s = malloc(sizeof(Symbol)));
+    s->type = TEMP_S;
+    s->type_data = INTEGER_T;
+    s->position = symbols_table->last_pos;
+    symbols_table->last_pos+=4;  // Chaque variable prend 4 octets
+
+    char * name;
+    CHECK(name = calloc(10, sizeof(char)));
+    snprintf(name, 10, "_temp_%d", symbols_table->last_temp);
+    symbols_table->last_temp++;
+    s->name = name;
+    add_st(symbols_table, name, s);
+
+    return s;
 }

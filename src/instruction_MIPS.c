@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include "instruction_MIPS.h"
 #include "genMIPS.h"
+#include <stdlib.h>
 void afficher_print(Quad*quad){
-        //affichage_string();
-        //charger_addresse();
-        //gen_syscall();
         affichageMIPS("t2");
         affichage_int();
         gen_syscall();     
     
+}
+void afficher_print_value(Quad*quad){
+        put_int_reg(atoi(quad->result),"t0");
+        print_int("t0");
+        affichage_int();
+        gen_syscall();
 }
 void afficher_op_arith(Quad*quad){
         //Si pas dans un registre mettre dedans 

@@ -35,11 +35,17 @@ void assignation_Affectation(symbol_table *table, char *id,char *data_type){
 }
 
 void assign_quad_print(char *valeur,symbol_table *table){
+    int T=0;
     for (int i=0;i<table->size;i++){
         if (strcmp(table->symbols[i].id,valeur)==0){
-            Quad*quad=gencode('p',NULL,NULL,table->symbols[i].value);
+            Quad*quad=gencode('p',NULL,NULL,table->symbols[i].id);
            add_quad(quad_list,quad); 
+           T=1;
         }
+    }
+    if (T==0){
+        Quad*quad=gencode('p',NULL,NULL,valeur);
+        add_quad(quad_list,quad); 
     }
 }
 

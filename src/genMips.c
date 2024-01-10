@@ -40,6 +40,9 @@ void charger_addresse(){
 void affichageMIPS(char *reg){
     fprintf(output,"\t\tmove $a0, $%s       # Mettre la valeur de c dans $a0\n",reg);
 }
+void print_int(char* res){
+     fprintf(output,"\t\tmove $a0, $%s       # Mettre la valeur de c dans $a0\n",res);
+}
 void exitMIPS(){
     fprintf(output,"\t\tli $v0, 10      # syscall pour terminer l'exécution\n");
 }

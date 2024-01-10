@@ -32,7 +32,16 @@ void gen_quad(Ql* quad_list,symbol_table *table){
             afficher_op_arith(quad_list->data[i]);
         }
         if (quad_list->data[i]->op=='p'){
-            afficher_print(quad_list->data[i]);
+            int T=0;
+            for (int j=0;j<table->size;j++){
+                if (strcmp(quad_list->data[i]->result,table->symbols[j].id)==0){
+                    afficher_print(quad_list->data[i]);
+                    T=1;
+                }
+            }
+            if (T==0){
+                afficher_print_value(quad_list->data[i]);
+            }
         }
     }
 }

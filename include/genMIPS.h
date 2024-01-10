@@ -12,3 +12,4 @@ void charger_addresse();
 void gen_txt();
 void gen_main();
 void gen_syscall();
+void print_int(char* res);

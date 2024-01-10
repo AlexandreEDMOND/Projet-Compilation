@@ -4,6 +4,6 @@ int main(){
     int b=4;
     int c;
     c=a+b;
-    print(a);
+    print(10);
     return 0;
 }

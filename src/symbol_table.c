@@ -76,11 +76,11 @@ void free_symbol_table(symbol_table *table)
 
 //Convertir en symbol
 //Afficher erreur si les types sont différents
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
-  float value_1 = atof(symbole_1);
-  float value_2 = atof(symbole_2);
-  //printf("Calcul entre %f et %f pour %c\n", value_1, value_2, operation);
-  printf("%f / %c / %f /", value_1, operation, value_2);
+dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int num_registre){
+  float value_1 = atof(q_1->valeur);
+  float value_2 = atof(q_2->valeur);
+  //printf("Calcul entre %f (reg %i) et %f (reg %i) pour %c / Stockage dans (reg %i)\n", value_1, q_1->stockage, value_2, q_2->stockage, operation, num_registre + 1);
+  //printf("%f / %c / %f /", value_1, operation, value_2);
   float result;
 
   switch (operation) {
@@ -107,5 +107,13 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
         exit(1);
         break;
   }
-  return result;
+
+  char str[50];
+  sprintf(str, "%f", result);
+
+  dinguerie* new_q = malloc(sizeof(dinguerie));
+  strcpy(new_q->valeur, str);
+  new_q->stockage = num_registre + 1;
+
+  return new_q;
 }

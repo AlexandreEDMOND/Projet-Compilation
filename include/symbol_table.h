@@ -17,6 +17,13 @@ typedef struct
   int capacity;
 } symbol_table;
 
+typedef struct
+    {
+      char valeur[50];
+      int stockage;
+  } dinguerie;
+
+
 // Fonctions de gestion de la table des symboles
 symbol_table *create_symbol_table(int display);
 
@@ -26,4 +33,4 @@ symbol *get_symbol(symbol_table *table, char *id);
 
 void free_symbol_table(symbol_table *table);
 
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation);
+dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int num_registre);

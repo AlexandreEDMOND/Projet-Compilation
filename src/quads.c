@@ -25,14 +25,16 @@ Quad_list *create_list(Quad *quad) {
 }
 
 /* Crée un quad */
-void gencode(char op, char* operande1, char* operande2) {
+void gencode(char op, char* operande1, char* operande2, char* result) {
     Quad * quad;
     NCHK(quad = malloc(sizeof(Quad)));
     NCHK(quad->operand1 = malloc(100));
     NCHK(quad->operand2 = malloc(100));
+    NCHK(quad->result = malloc(100));
     quad->op = op;
     strcpy(quad->operand1, operande1);
     strcpy(quad->operand2, operande2);
+    strcpy(quad->result, result);
     add_quad(quad_list_main, quad);
 }
 
@@ -102,5 +104,12 @@ void print_quad_MIPS(Quad* quad){
         printf("\t\tli $v0, 10          # Code de service pour la sortie de programme\n");
         printf("\t\tsyscall\n");
     
+    }
+    if(quad->op == '='){
+        printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result, quad->operand1);
+    }
+    if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
+        printf("\t\tOpération de type %c entre %s et %s\n", quad->op, quad->operand1, quad->operand2);
+        printf("\t\tStockage dans %s\n\n", quad->result);
     }
 }

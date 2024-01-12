@@ -1,10 +1,13 @@
+#include "symbol_table.h"
 
 // Définit un quad
 typedef struct Quad {
     char op; // = (pour déclaration ou affectation) ou p (pour print)
     char * operand1; 
     char * operand2;
+    char * result;
 } Quad;
+
 
 // Liste de quads
 typedef struct Quad_list {
@@ -18,7 +21,7 @@ Quad_list* init_quad_list();
 
 Quad_list *create_list(Quad *quad);
 
-void gencode(char op, char* operande1, char* operande2);
+void gencode(char op, char* operande1, char* operande2, char* result);
 
 void add_quad(Quad_list *quad_list, Quad *quad);
 

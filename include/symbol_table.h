@@ -26,7 +26,7 @@ void add_symbol(symbol_table *table, char *id, char *data_type, char type);
 
 symbol *get_symbol(symbol_table *table, char *id);
 void set_symbol(symbol_table *table, char *id, char *new_value);
-
+void set_global_variable(symbol_table *table, char *id);
 void free_symbol_table(symbol_table *table);
 
 void do_arithmetiques(char* res, const char* operande1, const char* operande2, char operation);

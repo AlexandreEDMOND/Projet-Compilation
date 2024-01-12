@@ -13,17 +13,12 @@ FILE *output;
 void gen_data(FILE *output,symbol_table *table) {
 	fprintf(output, ".data\n");
     for (int i = 0; i < table->size; i++) {
-        if (table->symbols[i].value !=NULL){
-            if (table->symbols[i].type=='f'){
-            fprintf(output, "\t%s: .float\t %s \n",
-		    table->symbols[i].id, table->symbols[i].value);
-        }
-        
-        if (table->symbols[i].type=='i'){
-            fprintf(output, "\t%s: .word\t %s\n",
-            table->symbols[i].id, table->symbols[i].value);
-            }
-        }        
+        if (table->symbols[i].global_variable!=0){
+            if (table->symbols[i].type=='i'){
+                fprintf(output, "\t%s: .word\t %s\n",
+                table->symbols[i].id, table->symbols[i].value);
+            } 
+        }   
     }
 }
 void gen_quad(Ql* quad_list,symbol_table *table){
@@ -55,7 +50,7 @@ void gen_stack() {
 }
 void gen_mips(symbol_table *table,Ql* quad_list) {
     output= fopen("Fichier.asm/test.asm", "w");
-    //gen_data(output,table);
+    gen_data(output,table);
     gen_txt();
     gen_main();
     gen_quad(quad_list,table);

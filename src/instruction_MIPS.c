@@ -17,8 +17,8 @@ void afficher_print_value(Quad*quad){
 void afficher_op_arith(Quad*quad){
         //Si pas dans un registre mettre dedans 
         //set_registre(table,table->symbols[1].id,"t0");
-        put_int_reg(quad->operand1->value_int,"t0");
+        put_var_reg(quad->operand1->id,"t0");
         //set_registre(table,table->symbols[2].id,"t1");
-        put_int_reg(quad->operand2->value_int,"t1");
+        put_var_reg(quad->operand2->id,"t1");
         add("t2","t0", "t1");//check si le registre est libre  
 }

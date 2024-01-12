@@ -63,6 +63,14 @@ symbol *get_symbol(symbol_table *table, char *id)
 
   return NULL;
 }
+void set_global_variable(symbol_table *table, char *id) {
+    for (int i = 0; i < table->size; i++) {
+        if (strcmp(table->symbols[i].id, id) == 0) {
+            table->symbols[i].global_variable = 1;
+            break;
+        }
+    }
+}
 
 void set_registre(symbol_table *table, char *id, char *reg) {
   // Find the symbol with the given id
@@ -165,12 +173,12 @@ void print_symbol_table(const symbol_table *table)
     }
 
     printf("Table des symboles:\n");
-    printf("ID\tValeur\tType\n");
+    printf("ID\tValeur\tType\tGV\n");
     printf("-------------------------\n");
 
     for (int i = 0; i < table->size; i++)
     {
         symbol *s = &table->symbols[i];
-        printf("%s\t%s\t%c\n", s->id, s->value ? s->value : "NULL", s->type);
+        printf("%s\t%s\t%c\t%i\n", s->id, s->value ? s->value : "NULL", s->type,s->global_variable);
     }
 }

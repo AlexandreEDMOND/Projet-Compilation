@@ -6,3 +6,4 @@ void assignation(symbol_table *table, char *id, char type);
 void assignation_Affectation(symbol_table *table, char *id,char *data_type);
 void operation_arithmetique(char*operande1,char*operande2,char operation,symbol_table *table);
 void assign_quad_print(char *valeur,symbol_table *table);
+void check_var_global(symbol_table *table,char* data_type,char*id);

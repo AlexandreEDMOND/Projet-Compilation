@@ -1,6 +1,7 @@
 #pragma once
 #include "quad.h"
 
+void put_var_reg(char*id,char *reg);
 void put_reg_to_reg(char*reg1, char *reg2);
 void put_int_reg(int value, char *reg);
 void gen_assign(Quad * quad);

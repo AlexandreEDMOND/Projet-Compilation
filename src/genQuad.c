@@ -24,6 +24,7 @@ void assignation_Expression(symbol_table *table, char *id, char *data_type, char
     if (type=='f'){
         add_symbol(table,id,data_type, 'f');
     }
+    check_var_global(table,data_type,id);
     Operand *operand1= createOperand(table,id);
    add_quad(quad_list,gencode('=',operand1,NULL,id)); 
 }
@@ -56,4 +57,16 @@ void operation_arithmetique(char*operande1,char*operande2,char operation,symbol_
     Operand *operand2=createOperand(table,operande2);
     Quad*quad=gencode(operation,operand1,operand2,res);
     add_quad(quad_list,quad);
+}
+
+void check_var_global(symbol_table *table,char* data_type,char*id){
+    int T=0;
+    for (int i=0;i<table->size;i++){
+        if (strcmp(data_type,table->symbols[i].id)==0){
+            T=1;
+        }
+    }
+    if(T==0){
+        set_global_variable(table,id);
+    }
 }

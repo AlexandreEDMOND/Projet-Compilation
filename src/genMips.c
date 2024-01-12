@@ -13,6 +13,9 @@ void gen_assign(Quad * quad) {
     //put_reg_var("t2", quad->result.symbol->position);
 }
 
+void put_var_reg(char*id,char *reg){
+     fprintf(output,"\t\tli\t$%s,\t%s\n", reg, id);
+}
 /* Met un entier dans un registre  */
 void put_int_reg(int value, char *reg) {
     fprintf(output,"\t\tli\t$%s,\t%i\n", reg, value);

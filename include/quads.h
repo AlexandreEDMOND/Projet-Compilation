@@ -35,6 +35,10 @@ void free_quad_list(Quad_list *quad_list);
 
 void print_quad_list(Quad_list *quad_list);
 
+int is_arithmetique_sign(char sign);
+
+void find_max_pile_and_create(Quad_list* quad_list);
+
 void print_quad(Quad * quad);
 
 void print_list_quad_MIPS(Quad_list* quad_list);

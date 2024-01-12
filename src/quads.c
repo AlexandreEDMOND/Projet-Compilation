@@ -92,10 +92,43 @@ void print_quad(Quad * quad) {
 }
 
 void print_list_quad_MIPS(Quad_list* quad_list){
+    find_max_pile_and_create(quad_list);
     for(int i=0; i<quad_list_main->size; i++){
         print_quad_MIPS(quad_list_main->data[i]);
     }
 }
+
+int is_arithmetique_sign(char sign){
+    
+    if (sign == '+' || sign == '-' || sign == '*' || sign == '/') {
+        return 0;
+    }
+    return 1;
+}
+
+
+void find_max_pile_and_create(Quad_list* quad_list){
+    int max_long = 0;
+
+    for(int i=0; i<quad_list_main->size; i++){
+        int longueur = 0;
+        while(is_arithmetique_sign(quad_list_main->data[i + longueur]->op) == 0){
+            longueur++;
+            if(i + longueur == quad_list_main->size){
+                break;
+            }
+        }
+        if(longueur > max_long){
+            max_long = longueur;
+        }
+    }
+    printf("\t\t# On alloue de la memoire pour la pile (longueur = %i)\n", max_long);
+    printf("\t\taddiu	$sp,	$sp,	-%i\n", 4*(max_long+2));
+    printf("\t\tsw		$fp,	%i($sp)\n", 4*(max_long+1));
+    printf("\t\tmove	$fp,	$sp\n\n");
+}
+
+
 
 void print_quad_MIPS(Quad* quad){
     
@@ -122,7 +155,37 @@ void print_quad_MIPS(Quad* quad){
         printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
-        printf("\t\tOpération de type %c entre %s (reg%i) et %s (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->stockage, quad->operand2->valeur , quad->operand2->stockage);
-        printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
+        if(quad->operand1->stockage == 0){
+            printf("\t\tli	$t0,	%s\n", quad->operand1->valeur);
+        }
+        if(quad->operand1->stockage > 0){
+            printf("\t\tlw	$t0,	%i($fp)\n", (quad->operand1->stockage-1)*4);
+        }
+
+        if(quad->operand2->stockage == 0){
+            printf("\t\tli	$t1,	%s\n", quad->operand2->valeur);
+        }
+        if(quad->operand2->stockage > 0){
+            printf("\t\tlw	$t1,	%i($fp)\n", (quad->operand2->stockage-1)*4);
+        }
+        //printf("\t\tOpération de type %c entre %s (reg%i) et %s (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->stockage, quad->operand2->valeur , quad->operand2->stockage);
+        printf("\t\t");
+        switch (quad->op) {
+            case '+':
+                printf("add");
+                break;
+            case '-':
+                printf("sub");
+                break;
+            case '*':
+                printf("mul");
+                break;
+            case '/':
+                printf("div");
+                break;
+        }
+        printf(" $t0,	$t0,	$t1\n");
+        printf("\t\tsw	$t0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
+        //printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
     }
 }

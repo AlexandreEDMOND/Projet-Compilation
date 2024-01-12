@@ -68,7 +68,7 @@ statement:
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
-    gencode('e', "", "", "");
+    gencode_old('e', "", "", "");
   }
   ;
 
@@ -89,7 +89,7 @@ declaration:
         printf("\t\t%s: .word 0\n",$2);
         char str[50];
         sprintf(str, "%i", $4->stockage);
-        gencode('=', $2, $4->valeur, str);
+        gencode_old('=', $2, $4->valeur, str);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
     }
@@ -146,10 +146,10 @@ affichage:
 
     printf("\t\t%s: .asciiz %s\n",string_name, $3);
 
-    gencode('p', string_name, "cst_string", "");
+    gencode_old('p', string_name, "cst_string", "");
     }
   | PRINT OPAR IDENTIFIER CPAR {
-      gencode('p', $3, "id", "");
+      gencode_old('p', $3, "id", "");
     }
   ;
   | PRINT OPAR somme-entiere CPAR {
@@ -159,24 +159,26 @@ affichage:
 
       printf("\t\t%s: .word %i\n",string_name, atoi($3->valeur));
 
-      gencode('p', string_name, "somme-entiere", "");
+      gencode_old('p', string_name, "somme-entiere", "");
     }
   ;
 
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
+                                            printf("Test\n");
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
                                             char str[50];
                                             sprintf(str, "%i", $$->stockage);
-                                            gencode($2, $1->valeur, $3->valeur, str);
+                                            gencode_old($2, $1->valeur, $3->valeur, str);
                                             num_registre++;
                                             }
                     | produit-entier        { $$ = $1; }
                 
 produit-entier      : produit-entier fois-ou-div operande-entier      {
+                                            printf("Test\n");
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
                                             char str[50];
                                             sprintf(str, "%i", $$->stockage);
-                                            gencode($2, $1->valeur, $3->valeur, str);
+                                            gencode_old($2, $1->valeur, $3->valeur, str);
                                             num_registre++;
                                             }
                     | operande-entier       { $$ = $1; }

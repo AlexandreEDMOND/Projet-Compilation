@@ -1,8 +1,4 @@
 #include "quads.h"
-#include "utils.h"
-
-#include <stdlib.h>
-#include <string.h>
 
 #define INIT_QUAD_LIST_CAPACITY 100
 
@@ -24,17 +20,33 @@ Quad_list *create_list(Quad *quad) {
     return quad_list;
 }
 
+void gencode_old(char op, char* operande1, char* operande2, char* result){
+    
+    dinguerie* op1;
+    dinguerie* op2;
+    dinguerie* res;
+    NCHK(op1 = malloc(sizeof(dinguerie)));
+    NCHK(op2 = malloc(sizeof(dinguerie)));
+    NCHK(res = malloc(sizeof(dinguerie)));
+    
+    strcpy(op1->valeur, operande1);
+    strcpy(op2->valeur, operande2);
+    strcpy(res->valeur, result);
+    gencode(op, op1, op2, res);
+
+}
+
 /* Crée un quad */
-void gencode(char op, char* operande1, char* operande2, char* result) {
+void gencode(char op, dinguerie* operande1, dinguerie* operande2, dinguerie* result) {
     Quad * quad;
     NCHK(quad = malloc(sizeof(Quad)));
-    NCHK(quad->operand1 = malloc(100));
-    NCHK(quad->operand2 = malloc(100));
-    NCHK(quad->result = malloc(100));
+    NCHK(quad->operand1 = malloc(sizeof(dinguerie)));
+    NCHK(quad->operand2 = malloc(sizeof(dinguerie)));
+    NCHK(quad->result = malloc(sizeof(dinguerie)));
     quad->op = op;
-    strcpy(quad->operand1, operande1);
-    strcpy(quad->operand2, operande2);
-    strcpy(quad->result, result);
+    quad->operand1 = operande1;
+    quad->operand2 = operande2;
+    quad->result = result;
     add_quad(quad_list_main, quad);
 }
 
@@ -72,10 +84,10 @@ void print_quad(Quad * quad) {
     printf("| OPERATEUR\t");
     printf("%c\n",quad->op);
     printf("\n| OPERANDE 1\t");
-    printf("%s\n",quad->operand1);
+    printf("%s\n",quad->operand1->valeur);
     printf("\n");
     printf("| OPERANDE 2\t");
-    printf("%s\n",quad->operand2);
+    printf("%s\n",quad->operand2->valeur);
     printf("\n");
 }
 
@@ -86,15 +98,16 @@ void print_list_quad_MIPS(Quad_list* quad_list){
 }
 
 void print_quad_MIPS(Quad* quad){
+    
     if(quad->op == 'p'){
-        if(strcmp(quad->operand2, "cst_string") == 0){
+        if(strcmp(quad->operand2->valeur, "cst_string") == 0){
             printf("\t\t# Afficher le texte\n");
             printf("\t\tli $v0, 4           # Code de service pour l'affichage de chaîne\n");
-            printf("\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", quad->operand1);
+            printf("\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", quad->operand1->valeur);
         }
         else{
             printf("\t\t# Afficher d'un int\n");
-            printf("\t\tlw $a0, %s   # Charger la valeur de l'entier depuis la mémoire\n", quad->operand1);
+            printf("\t\tlw $a0, %s   # Charger la valeur de l'entier depuis la mémoire\n", quad->operand1->valeur);
             printf("\t\tli $v0, 1             # Code de service pour afficher un entier\n");
             printf("\t\tsyscall\n\n");
         }
@@ -106,10 +119,10 @@ void print_quad_MIPS(Quad* quad){
     
     }
     if(quad->op == '='){
-        printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result, quad->operand1);
+        printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
-        printf("\t\tOpération de type %c entre %s et %s\n", quad->op, quad->operand1, quad->operand2);
-        printf("\t\tStockage dans %s\n\n", quad->result);
+        printf("\t\tOpération de type %c entre %s et %s\n", quad->op, quad->operand1->valeur, quad->operand2->valeur);
+        printf("\t\tStockage dans %s\n\n", quad->result->valeur);
     }
 }

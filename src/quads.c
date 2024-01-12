@@ -122,7 +122,7 @@ void print_quad_MIPS(Quad* quad){
         printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
-        printf("\t\tOpération de type %c entre %s et %s\n", quad->op, quad->operand1->valeur, quad->operand2->valeur);
-        printf("\t\tStockage dans %s\n\n", quad->result->valeur);
+        printf("\t\tOpération de type %c entre %s (reg%i) et %s (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->stockage, quad->operand2->valeur , quad->operand2->stockage);
+        printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
     }
 }

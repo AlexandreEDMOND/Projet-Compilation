@@ -164,21 +164,15 @@ affichage:
   ;
 
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
-                                            printf("Test\n");
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            char str[50];
-                                            sprintf(str, "%i", $$->stockage);
-                                            gencode_old($2, $1->valeur, $3->valeur, str);
+                                            gencode($2, $1, $3, $$);
                                             num_registre++;
                                             }
                     | produit-entier        { $$ = $1; }
                 
 produit-entier      : produit-entier fois-ou-div operande-entier      {
-                                            printf("Test\n");
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            char str[50];
-                                            sprintf(str, "%i", $$->stockage);
-                                            gencode_old($2, $1->valeur, $3->valeur, str);
+                                            gencode($2, $1, $3, $$);
                                             num_registre++;
                                             }
                     | operande-entier       { $$ = $1; }

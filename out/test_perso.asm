@@ -23,8 +23,9 @@ main:
 		add $t0,	$t0,	$t1
 		sw	$t0,	8($fp)
 
-		On mets la valeur contenu dans 3 dans a
-
+		la  $t0,    a
+		lw  $t1,    8($fp)
+		sw  $t1,    0($t0)
 		# Afficher d'un int
 		lw $a0, a   # Charger la valeur de l'entier depuis la mémoire
 		li $v0, 1             # Code de service pour afficher un entier

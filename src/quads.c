@@ -152,7 +152,10 @@ void print_quad_MIPS(Quad* quad){
     
     }
     if(quad->op == '='){
-        printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
+        printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+        printf("\t\tlw  $t1,    %i($fp)\n", (atoi(quad->result->valeur)-1)*4);
+        printf("\t\tsw  $t1,    0($t0)\n");
+        //printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
         if(quad->operand1->stockage == 0){

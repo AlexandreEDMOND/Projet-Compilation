@@ -92,6 +92,7 @@ declaration:
         gencode_old('=', $2, $4->valeur, str);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
+      num_registre = 0;
     }
   ;
 
@@ -107,6 +108,7 @@ affectation:
     //Modification de la valeur de IDENTIFIER avec la valeur de somme-entiere
     //Comment faire si la valeur de somme-entiere vient d'un calcul arithmétique
       //Faire le calcul avant?
+    num_registre = 0;
   }
 
   | IDENTIFIER unary {
@@ -160,6 +162,7 @@ affichage:
       printf("\t\t%s: .word %i\n",string_name, atoi($3->valeur));
 
       gencode_old('p', string_name, "somme-entiere", "");
+      num_registre = 0;
     }
   ;
 

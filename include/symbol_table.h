@@ -6,6 +6,10 @@ typedef struct
   char* value; //Valeur de la variable (NULL si pas définie)
   // Faire un enum pour le type
   char type; // 'i' : int / 'f' : float / 'm' : matrix
+  char* id; //Nom de la variable
+  char* value; //Valeur de la variable (NULL si pas définie)
+  // Faire un enum pour le type
+  char type; // 'i' : int / 'f' : float / 'm' : matrix
 } symbol;
 
 typedef struct
@@ -15,6 +19,14 @@ typedef struct
   int size;
   int capacity;
 } symbol_table;
+
+typedef struct
+    {
+      char valeur[50];
+      int stockage; // 0 = Valeur brut (4 8 -9) / >0 = Stocker dans la pile / -1 = Variable .data
+      char type;
+  } dinguerie;
+
 
 typedef struct
     {

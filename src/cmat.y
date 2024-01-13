@@ -43,7 +43,7 @@
 %type <charval> datatype unary plus-ou-moins fois-ou-div
 
 %type <alex_le_fou> somme-entiere produit-entier operande-entier
-%type <ctrl_ql> condition; 
+%type <ctrl_ql> condition condition_while; 
 %type <intval> M; // Ces noeuds sont des entiers
 %type<ql>N else-part;
 
@@ -70,10 +70,22 @@ instruction:
   statement SEMICOLON 
   | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);
   T=1;}
+  | WHILE OPAR M condition_while CPAR OBRACE M instructions CBRACE { 
+    $4->Faux->data[$4->Faux->size-1]->operand1->stockage = 1;
+    gencode_while($4,$3,$7);
+    }
   ;
 
-condition :  somme-entiere EQ somme-entiere {$$ = gencode_test('@', $1, $3); }
-          ;
+condition :  somme-entiere EQ somme-entiere {
+  $$ = gencode_test('@', $1, $3);
+   }
+    ;
+
+condition_while :  somme-entiere EQ somme-entiere {
+  $$ = gencode_test_while('@', $1, $3);
+   }
+    ;
+
 else-part           : instructions             { $$ = init_quad_list(); }
                     | /* empty */               { $$ = init_quad_list(); }
 

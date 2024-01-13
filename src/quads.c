@@ -178,14 +178,31 @@ int print_IF_MIPS(Quad *quad, symbol_table *table)
         {
             printf("\t\tli $t4, %s\n", quad->operand2->valeur);
         }
-        printf("\t\tbeq $t3, $t4, if_block   # Si a == c, aller à if_block\n");
+        if (quad->operand1->stockage == 0)
+        {
+            printf("\t\t beq $t3, $t4, if_block   # Si a == c, aller à if_block\n");
+        }
+        else if (quad->operand1->stockage == 1)
+        {
+            printf("\t\t condition:\n");
+            printf("\t\t beq $t3, $t4, while_block   # Si a == c, aller à while_block\n");
+        }
         return 1;
     }
     if (quad->op == 'g')
     {
-        printf("\t\tj else_block             # Sinon, aller à else_block\n");
-        printf("\t\tif_block:\n");
-        return 1;
+        // printf("%i\n", quad->operand1->stockage);
+        switch (quad->operand1->stockage)
+        {
+        case 0:
+            printf("\t\tj else_block             # Sinon, aller à else_block\n");
+            printf("\t\tif_block:\n");
+            return 1;
+        case 1:
+            printf("\t\tj end_while\n");
+            printf("\t\twhile_block:\n");
+            return 1;
+        }
     }
     if (quad->op == '$')
     {
@@ -228,11 +245,16 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
     }
     if (quad->op == 'T')
     {
-        printf("end_if:\n");
-    }
-    if (quad->op == 'T')
-    {
-        printf("end_if:\n");
+        switch (quad->operand1->stockage)
+        {
+        case 0:
+            printf("end_if:\n");
+            break;
+        case 1:
+            printf("\t\tj condition\n");
+            printf("\t\tend_while:\n");
+            break;
+        }
     }
     if (quad->op == 'e')
     {

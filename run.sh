@@ -17,4 +17,6 @@ make
 
 echo "\033[34m ------------------ Lancement du compilateur ------------------ \033[0m"
 
+mkdir -p out
+
 bin/cmat.bin "-o" out/$2 < $1

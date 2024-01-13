@@ -59,6 +59,7 @@ instructions:
 
 instruction:
   statement SEMICOLON
+  | block
   ;
 
 
@@ -203,6 +204,38 @@ plus-ou-moins       : PLUS                                             { $$ = OP
 
 fois-ou-div        : TIMES                                            { $$ = OP_MUL; }
                     | DIVIDE                                           { $$ = OP_DIV; }
+                    ;
+
+
+block:
+  IF OPAR condition CPAR OBRACE instructions CBRACE ELSE OBRACE instructions CBRACE
+  | control OBRACE instructions CBRACE
+  ;
+
+declaration-or-affectation:
+  declaration
+  | affectation
+  ;
+
+control:
+  IF OPAR condition CPAR
+  | WHILE OPAR condition CPAR
+  | FOR OPAR declaration-or-affectation SEMICOLON condition SEMICOLON affectation CPAR
+  ;
+
+condition:
+  condition AND condition
+  | condition OR condition
+  | NOT condition
+  | OPAR condition CPAR
+  | condition EQ condition
+  | condition NE condition
+  | condition GT condition
+  | condition LT condition
+  | condition GE condition
+  | condition LE condition
+  | somme-entiere
+  ;
 
 unary:
   INC {$$ = OP_INC;}

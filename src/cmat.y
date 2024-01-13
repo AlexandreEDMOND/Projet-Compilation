@@ -2,13 +2,20 @@
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
-  
-  #include "symbol_table.h"
+  #include <stdbool.h>
+  #include "gencode.h"
   #include "utils.h" // Définit yyerror et yylex
-
   extern symbol_table* table_of_symbol;
-
+  extern Quad_list* quad_list_main;
+  int compteur_string_const = 0;
+  int num_registre = 0;
 %}
+
+%code requires {
+    #include "quads.h"
+    #include "gencode.h"
+    #include "symbol_table.h"
+}
 
 %union 
 {
@@ -17,10 +24,12 @@
   char *stringval; // déclaration du type associé à IDENTIFIER
   char charval; // Info pour le type de variable stockée en table des symboles
   symbol info_symbol;
+  dinguerie* alex_le_fou;
+  Ctrl_ql* ctrl_ql;
+  Quad_list* ql;
 }
 
-%token <stringval> INT_NUMBER, FLOAT_NUMBER, IDENTIFIER, STRING
-
+%token <stringval> INT_NUMBER FLOAT_NUMBER IDENTIFIER STRING
 %token EQ NE GT LT GE LE AND OR NOT
 %token INC DEC PLUS MINUS TIMES DIVIDE TRANSPOSE ASSIGN
 %token OPAR CPAR OBRACK CBRACK OBRACE CBRACE SEMICOLON COMMA
@@ -29,8 +38,12 @@
 %token INT FLOAT MATRIX
 
 %type <intval> program
-%type <charval> datatype unary arithmetiques
-%type <stringval> expression valeur
+%type <charval> datatype unary plus-ou-moins fois-ou-div
+
+%type <alex_le_fou> somme-entiere produit-entier operande-entier
+%type <ctrl_ql> condition; 
+%type <intval> M; // Ces noeuds sont des entiers
+%type<ql>N else-part;
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -42,7 +55,8 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {printf("Programme correctement compilé\n"); exit(0);}
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {
+  return 1;}
   ;
 
 instructions:
@@ -51,93 +65,153 @@ instructions:
   ;
 
 instruction:
-  statement SEMICOLON
+  statement SEMICOLON 
+  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);}
+  ;
 
+condition :  operande-entier EQ operande-entier {$$ = gencode_test('@', $1, $3); }
+          ;
+else-part           : instructions             { $$ = init_quad_list(); }
+                    | /* empty */               { $$ = init_quad_list(); }
 statement:
   declaration {}
   | affectation {}
   | affichage {}
-  | RETURN expression {}
+  | RETURN somme-entiere {
+    gencode_old('e', "", "", "");
+  }
   ;
 
+// Stockage des variables déclarées
+// MIPS : Modification dans le .data
 declaration:
-  datatype IDENTIFIER {add_symbol(table_of_symbol, $2, NULL, $1);}
-  | datatype IDENTIFIER ASSIGN expression {add_symbol(table_of_symbol, $2, $4, $1);}
+  datatype IDENTIFIER {
+      add_symbol(table_of_symbol, $2, NULL, $1);
+      printf("\t\t%s: .word 0\n",$2);
+    }
+  | datatype IDENTIFIER ASSIGN somme-entiere {
+      add_symbol(table_of_symbol, $2, $4->valeur, $1);
+
+      if($4->stockage == 0){
+        printf("\t\t%s: .word %i\n",$2, atoi($4->valeur));
+      }
+      else{
+        printf("\t\t%s: .word 0\n",$2);
+        char str[50];
+        sprintf(str, "%i", $4->stockage);
+        gencode_old('=', $2, $4->valeur, str);
+        //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
+      }
+      num_registre = 0;
+    }
   ;
+
 
 affectation:
-  IDENTIFIER ASSIGN expression {
+  //MIPS : Il n'y a que l'info de la valeur dans "somme-entiere"
+  //Pouvoir récupérer le type de "somme-entiere"
+  //Yacc fait toute l'arithmétiques mais pas le MIPS avec cette structure
+  //Faire une fonction pour chaque ligne
+  IDENTIFIER ASSIGN somme-entiere {
     symbol* symbole = get_symbol(table_of_symbol, $1);
-    strcpy(symbole->value, $3);
+    strcpy(symbole->value, $3->valeur);
+    //Modification de la valeur de IDENTIFIER avec la valeur de somme-entiere
+    //Comment faire si la valeur de somme-entiere vient d'un calcul arithmétique
+      //Faire le calcul avant?
+    num_registre = 0;
   }
+
   | IDENTIFIER unary {
-    if($2 == '+'){
-      symbol* symbole = get_symbol(table_of_symbol, $1);
-      if(symbole->type == 'i'){
-        int nombre = atoi(symbole->value);
-        nombre++;
-        char str[50];
-        sprintf(str, "%i", nombre);
-        strcpy(symbole->value, str);
-      }
-      if(symbole->type == 'f'){
-        float nombre = atof(symbole->value);
-        nombre++;
-        char str[50];
-        sprintf(str, "%f", nombre);
-        strcpy(symbole->value, str);
-      }
-      
+    //Reviens à faire une affectation avec la valeur de IDENTIFIER avec IDENTIFIER +1 ou -1
+    symbol* symbole = get_symbol(table_of_symbol, $1);
+    float nombre;
+    if(symbole->type == 'i'){
+      nombre = atoi(symbole->value);
     }
+    if(symbole->type == 'f'){
+      nombre = atof(symbole->value);
+    }
+    if($2 == '+'){
+      nombre++;
+    }
+    if($2 == '-'){
+      nombre--;
+    }
+    char str[50];
+    if(symbole->type == 'i'){
+      int conversion = nombre;
+      sprintf(str, "%i", conversion);
+    }
+    if(symbole->type == 'f'){
+      sprintf(str, "%f", nombre);
+    }
+    strcpy(symbole->value, str);
   }
   ;
 
 affichage:
-  PRINTF OPAR STRING CPAR {printf("%s\n", $3);}
-  | PRINT OPAR expression CPAR {
-      printf("%s\n", $3);
+  PRINTF OPAR STRING CPAR {
+
+    char string_name[100];
+    sprintf(string_name, "str_const%i", compteur_string_const);
+    compteur_string_const++;
+
+    printf("\t\t%s: .asciiz %s\n",string_name, $3);
+
+    gencode_old('p', string_name, "cst_string", "");
+    }
+  | PRINT OPAR IDENTIFIER CPAR {
+      gencode_old('p', $3, "id", "");
+    }
+  ;
+  | PRINT OPAR somme-entiere CPAR {
+      char string_name[100];
+      sprintf(string_name, "tempo_var%i", compteur_string_const);
+      compteur_string_const++;
+
+      printf("\t\t%s: .word %i\n",string_name, atoi($3->valeur));
+
+      gencode_old('p', string_name, "somme-entiere", "");
+      num_registre = 0;
     }
   ;
 
-expression:
-  expression arithmetiques expression {
-    char str[50];
-    sprintf(str, "%f", do_arithmetiques($1, $3, $2));
-    strcpy($$, str);
-  }
-  | valeur {strcpy($$, $1);}
-  // Problème avec le signe moins
-  // Voir comment le corriger
-  | MINUS expression %prec UMINUS {
-    float nombre = atof($2);
-    nombre *= -1;
-    char str[50];
-    sprintf(str, "%f", nombre);
-    strcpy($$, str);
-  }
-  | OPAR expression CPAR {$$ = $2;}
-  ;
+somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
+                                            $$ = do_arithmetiques($1, $3, $2, num_registre);
+                                            gencode($2, $1, $3, $$);
+                                            num_registre++;
+                                            }
+                    | produit-entier        { $$ = $1; }
+                
+produit-entier      : produit-entier fois-ou-div operande-entier      {
+                                            $$ = do_arithmetiques($1, $3, $2, num_registre);
+                                            gencode($2, $1, $3, $$);
+                                            num_registre++;
+                                            }
+                    | operande-entier       { $$ = $1; }
 
-valeur:
-  INT_NUMBER {
-    strcpy($$, $1);
-    }
-  | FLOAT_NUMBER {
-    strcpy($$, $1);
-    }
-  | IDENTIFIER {
-    symbol* symbole = get_symbol(table_of_symbol, $1);
-    strcpy($$, symbole->value);
-  }
-  ;
+operande-entier     : INT_NUMBER {
+                      //printf("Je lis %s\n", $1);
+                      strcpy($$->valeur, $1);
+                      $$->stockage = 0;
+                    }
+                    | FLOAT_NUMBER {
+                      //printf("Je lis %s\n", $1);
+                      strcpy($$->valeur, $1);
+                      $$->stockage = 0;
+                    }
+                    | IDENTIFIER {
+                      symbol* symbole = get_symbol(table_of_symbol, $1);
+                      strcpy($$->valeur, symbole->id);
+                      $$->stockage = -1;
+                    }
+                    | OPAR somme-entiere CPAR {$$ = $2;}     
 
-arithmetiques:
-  PLUS {$$ = '+';}
-  | MINUS {$$ = '-';}
-  | TIMES {$$ = '*';}
-  | DIVIDE {$$ = '/';}
-  ;
+plus-ou-moins       : PLUS                                             { $$ = '+'; }
+                    | MINUS                                            { $$ = '-'; }
 
+fois-ou-div        : TIMES                                            { $$ = '*'; }
+                    | DIVIDE                                           { $$ = '/'; }
 
 unary:
   INC {$$ = '+';}
@@ -148,4 +222,8 @@ datatype:
   INT {$$ = 'i';}
   | FLOAT {$$ = 'f';}
   ;
+
+M                   : /*Empty*/                                                         { $$ = nextquad(); }
+N                   : /*Empty*/                                                         { $$ = init_goto();}
+
 %%

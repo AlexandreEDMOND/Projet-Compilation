@@ -1,0 +1,39 @@
+#include "quads.h"
+#include "gencode.h"
+#include "symbol_table.h"
+
+void gencode_if(
+	Ctrl_ql * test_block,  // Contient les quads du test
+	int first_true,
+	Quad_list * list_false,  // Goto vers le premier quad si faux
+	Quad_list * else_part  // Index du premier quad vrai 
+ ) {  // Quads de l'instruction else
+	list_false = concat(else_part, list_false);
+	complete(list_false, nextquad());
+	complete(test_block->Faux, last_quad_idx(list_false)+1);
+	complete(test_block->Vrai, first_true);
+}
+
+Ctrl_ql * gencode_test(
+	char operator, dinguerie * op1, dinguerie * op2) {
+	// On génère le quad, la destination (result) sera déterminée plus tard
+	Ctrl_ql * res;
+	NCHK(res = malloc(sizeof(res)));
+	Quad * t;
+	if(op2 == NULL)
+		t = gencode(operator, op1, empty(), emptyTest());
+	else
+		t = gencode(operator, op1, op2, emptyTest());
+	res->Vrai = create_list(t);
+	// On génère le quad faux, la destination sera déterminée plus tard
+	Quad * f = gencode('g', empty(), empty(), emptyTest());
+	res->Faux = create_list(f);
+	return res;
+}
+Quad_list* concat(Quad_list *ql1, Quad_list *ql2) {
+    Quad_list * ql = ql1;
+    for (int i = 0; i < ql2->size; i++) {
+        add_quad(ql, ql2->data[i]);
+    }
+    return ql;
+}

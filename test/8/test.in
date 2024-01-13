@@ -1,0 +1,25 @@
+int main()
+{
+  float a = -6.5;
+  float b = 1856.75982;
+  float c;
+
+  int d = -86;
+  int e = 69;
+  int f;
+
+  c = a;
+  a = b;
+
+  f = d;
+  d = e;
+
+  print(a);
+  print(b);
+  print(c);
+  print(d);
+  print(e);
+  print(f);
+  
+  return 0;
+}

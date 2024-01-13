@@ -22,6 +22,7 @@ symbol_table *create_symbol_table(int display)
 
 void add_symbol(symbol_table *table, char *id, char *data_type, char type)
 {
+  // Check la taille de la table de symboles
   if (table->size == table->capacity)
   {
     table->capacity *= 2;
@@ -57,7 +58,7 @@ symbol *get_symbol(symbol_table *table, char *id)
       return &table->symbols[i];
     }
   }
-
+  printf("Pas de symbol trouvé pour la recherche de l'id : %s\n", id);
   return NULL;
 }
 
@@ -73,9 +74,13 @@ void free_symbol_table(symbol_table *table)
   free(table);
 }
 
-float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
-  float value_1 = atof(symbole_1);
-  float value_2 = atof(symbole_2);
+//Convertir en symbol
+//Afficher erreur si les types sont différents
+dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int num_registre){
+  float value_1 = atof(q_1->valeur);
+  float value_2 = atof(q_2->valeur);
+  //printf("Calcul entre %f (reg %i) et %f (reg %i) pour %c / Stockage dans (reg %i)\n", value_1, q_1->stockage, value_2, q_2->stockage, operation, num_registre + 1);
+  //printf("%f / %c / %f /", value_1, operation, value_2);
   float result;
 
   switch (operation) {
@@ -102,6 +107,29 @@ float do_arithmetiques(char* symbole_1, char* symbole_2, char operation){
         exit(1);
         break;
   }
-  printf("Nouvelle valeur par %f %c %f : %f\n", value_1, operation, value_2, result);
-  return result;
+
+  char str[50];
+  sprintf(str, "%f", result);
+
+  dinguerie* new_q = malloc(sizeof(dinguerie));
+  strcpy(new_q->valeur, str);
+  new_q->stockage = num_registre + 1;
+
+  return new_q;
+}
+
+dinguerie* empty() {
+    dinguerie* o = malloc(sizeof(dinguerie));
+    if (o != NULL) {
+        *o = (dinguerie){"lol",0,'t', 0};
+    }
+    return o;
+}
+
+dinguerie* emptyTest() {
+    dinguerie* o = malloc(sizeof(dinguerie));
+    if (o != NULL) {
+        *o = (dinguerie){"prout",0,'t', 0};
+    }
+    return o;
 }

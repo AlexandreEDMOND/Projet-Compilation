@@ -1,1 +1,2 @@
-Déclaration, Affectation
+Déclaration - Int sans valeur
+

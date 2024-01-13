@@ -1,0 +1,3 @@
+Déclaration - Float avec valeur
+
+

@@ -12,18 +12,26 @@ run_test() {
   test_folder=$1
   test_number=$2
   input_file="$test_folder/test.in"
+  intermediar_file="$test_folder/test_MIPS.asm"
   output_file="$test_folder/test.out"
   expected_output_file="$test_folder/ref.out"
 
   title "Test $test_number"
   echo "\033[33mDescription: $(cat $test_folder/description.txt) \033[0m"
-  $PROGRAM < $input_file > $output_file
+  # On lance le programme
+  $PROGRAM "-o" $intermediar_file < $input_file
+
+  # Le output_file est un fichier test.out où est redirigée la sortie des affichage
+  # Pour la génération d'un code MIPS, il faut ensuite le compiler et rediriger sa sortie vers un autre fichier
+  # On poura ensuite le comparer  au fichier expected_output_file
+  "spim" "-file" $intermediar_file > $output_file
 
   if diff -q $output_file $expected_output_file; then
     echo "\033[32mVALIDE\033[0m"
   else
     echo "\033[31mERREUR\033[0m"
     diff $output_file $expected_output_file
+    exit 1
   fi
 }
 
@@ -34,6 +42,8 @@ compil() {
   title "Compilation"
   make
 }
+
+compil
 
 # Si un numéro de test est fourni en paramètre
 if [ $# -eq 1 ]; then

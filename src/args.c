@@ -7,6 +7,7 @@ args_options *parse_args(int argc, char *argv[])
 {
   args_options *options;
   NCHK(options = malloc(sizeof(args_options)));
+  options->output_file = NULL;
 
   // Parcours des arguments
   for (int i = 1; i < argc; i++)

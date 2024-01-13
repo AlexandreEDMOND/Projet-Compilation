@@ -1,9 +1,11 @@
 int main()
 {
-  float a = 1.0/8.0;
-  int c = 85;
+  int a = 3 + 1.0/8.0 - 8 * 9;
+  float c = 3 + 1.0/8.0 - 8 * 9;
+  a = 8.0;
+  c = 8;
   print(a);
+  printf("\n");
   print(c);
-  printf("\nOk incroyable\n");
   return 0;
 }

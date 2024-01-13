@@ -95,7 +95,14 @@ declaration:
         printf("\t\t%s: .word 0\n",$2);
         char str[50];
         sprintf(str, "%i", $4->stockage);
-        gencode_old('=', $2, $4->valeur, str);
+
+        dinguerie* op1;
+        NCHK(op1 = malloc(sizeof(dinguerie)));
+        
+        strcpy(op1->valeur, $2);
+        op1->type = $1;
+
+        gencode('=', op1, $4, NULL);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
       num_registre = 0;
@@ -113,6 +120,7 @@ affectation:
     NCHK(op1 = malloc(sizeof(dinguerie)));
     strcpy(op1->valeur, $1);
     op1->stockage = -1;
+    op1->type = symbole->type;
     gencode('=', op1, $3,NULL);
 
     num_registre = 0;
@@ -184,6 +192,7 @@ affichage:
   ;
 
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
+                                            //printf("%i %c %i %c \n", $1->stockage, $1->type,$3->stockage, $3->type);
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
                                             gencode($2, $1, $3, $$);
                                             num_registre++;
@@ -199,15 +208,21 @@ produit-entier      : produit-entier fois-ou-div operande-entier      {
 
 operande-entier     : INT_NUMBER {
                       //printf("Je lis %s\n", $1);
-                      strcpy($$->valeur, $1);
-                      $$->stockage = 0;
-                      $$->type = 'i';
+                      dinguerie* op1;
+                      NCHK(op1 = malloc(sizeof(dinguerie)));
+                      strcpy(op1->valeur, $1);
+                      op1->stockage = 0;
+                      op1->type = 'i';
+                      $$ = op1;
                     }
                     | FLOAT_NUMBER {
                       //printf("Je lis %s\n", $1);
-                      strcpy($$->valeur, $1);
-                      $$->stockage = 0;
-                      $$->type = 'f';
+                      dinguerie* op1;
+                      NCHK(op1 = malloc(sizeof(dinguerie)));
+                      strcpy(op1->valeur, $1);
+                      op1->stockage = 0;
+                      op1->type = 'f';
+                      $$ = op1;
                     }
                     | IDENTIFIER {
                       symbol* symbole = get_symbol(table_of_symbol, $1);

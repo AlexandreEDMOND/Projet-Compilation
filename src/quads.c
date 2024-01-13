@@ -47,6 +47,7 @@ void gencode(char op, dinguerie* operande1, dinguerie* operande2, dinguerie* res
     quad->operand1 = operande1;
     quad->operand2 = operande2;
     quad->result = result;
+    
     add_quad(quad_list_main, quad);
 }
 
@@ -86,12 +87,15 @@ void print_quad(Quad * quad) {
     printf("| OPERANDE 1\n");
     printf("%s\n",quad->operand1->valeur);
     printf("%i\n",quad->operand1->stockage);
+    printf("%c\n",quad->operand1->type);
     printf("| OPERANDE 2\n");
     printf("%s\n",quad->operand2->valeur);
     printf("%i\n",quad->operand2->stockage);
+    printf("%c\n",quad->operand2->type);
     printf("| RESULT\n");
     printf("%s\n",quad->result->valeur);
     printf("%i\n",quad->result->stockage);
+    printf("%c\n",quad->result->type);
     printf("\n");
 }
 
@@ -170,98 +174,89 @@ void print_quad_MIPS(Quad* quad){
     
     }
     if(quad->op == '='){
-        if(quad->result == NULL){
-            // On charge une valeur brut dans une variable de .data
-            if(quad->operand2->stockage == 0){
+        // On charge une valeur brut dans une variable de .data
+        if(quad->operand2->stockage == 0){
+            if(quad->operand1->type == 'i'){
                 printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
                 printf("\t\tla  $t1,    %s\n", quad->operand2->valeur);
                 printf("\t\tsw  $t1,    0($t0)\n\n");
             }
-            if(quad->operand2->stockage > 0){
+            else{
                 printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
-                printf("\t\tlw  $t1,    %i($fp)\n", (quad->operand2->stockage-1)*4);
+                printf("\t\tlwc1  $f0,    %i($fp)\n", (quad->operand2->stockage-1)*4);
+                printf("\t\ts.s  $f0,    0($t0)\n\n");
+            }
+        }
+        if(quad->operand2->stockage > 0){
+            if(quad->operand1->type == 'i'){
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tlwc1  $f0,  %i($fp)\n", (quad->operand2->stockage-1)*4);
+                printf("\t\tcvt.w.s $f0, $f0\n");
+                printf("\t\tmfc1 $t1, $f0\n");
                 printf("\t\tsw  $t1,    0($t0)\n\n");
             }
-
-        }
-        else{
-            printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
-            printf("\t\tlw  $t1,    %i($fp)\n", (atoi(quad->result->valeur)-1)*4);
-            printf("\t\tsw  $t1,    0($t0)\n\n");
+            else{
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tlwc1  $f0,    %i($fp)\n", (quad->operand2->stockage-1)*4);
+                printf("\t\ts.s  $f0,    0($t0)\n\n");
+            }
         }
         
-        //printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
+        
+        printf("\t\t# On mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
         if(quad->operand1->stockage == 0){
             if(quad->operand1->type == 'i'){
                 printf("\t\tli	$t0,	%s\n", quad->operand1->valeur);
+                printf("\t\tmtc1 $t0, $f0\n");
+                printf("\t\tcvt.s.w $f0, $f0\n");
             }
             else{
                 printf("\t\tli.s    $f0,	%s\n", quad->operand1->valeur);
             }
         }
         if(quad->operand1->stockage > 0){
-            printf("\t\tlw	$t0,	%i($fp)\n", (quad->operand1->stockage-1)*4);
+            printf("\t\tlwc1	$f0,	%i($fp)\n", (quad->operand1->stockage-1)*4);
         }
         if(quad->operand1->stockage == -1){
-            printf("\t\tlw	$t0,	%s\n", quad->operand1->valeur);
+            printf("\t\tlwc1	$f0,	%s\n", quad->operand1->valeur);
         }
 
         if(quad->operand2->stockage == 0){
             if(quad->operand2->type == 'i'){
                 printf("\t\tli	$t1,	%s\n", quad->operand2->valeur);
+                printf("\t\tmtc1 $t1, $f1\n");
+                printf("\t\tcvt.s.w $f1, $f1\n");
             }
             else{
                 printf("\t\tli.s    $f1,	%s\n", quad->operand2->valeur);
             }
         }
         if(quad->operand2->stockage > 0){
-            printf("\t\tlw	$t1,	%i($fp)\n", (quad->operand2->stockage-1)*4);
+            printf("\t\tlwc1	$f1,	%i($fp)\n", (quad->operand2->stockage-1)*4);
         }
         if(quad->operand2->stockage == -1){
-            printf("\t\tlw	$t1,	%s\n", quad->operand2->valeur);
+            printf("\t\tlwc1	$f1,	%s\n", quad->operand2->valeur);
         }
-        //printf("\t\tOpération de type %c entre %s (reg%i) et %s (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->stockage, quad->operand2->valeur , quad->operand2->stockage);
+        printf("\t\t# Opération de type %c entre %s (type %c) (reg%i) et %s (type %c) (reg%i)\n", quad->op, quad->operand1->valeur,  quad->operand1->type, quad->operand1->stockage, quad->operand2->valeur, quad->operand2->type , quad->operand2->stockage);
         printf("\t\t");
         switch (quad->op) {
             case '+':
-                printf("add");
+                printf("add.s");
                 break;
             case '-':
-                printf("sub");
+                printf("sub.s");
                 break;
             case '*':
-                printf("mul");
+                printf("mul.s");
                 break;
             case '/':
-                printf("div");
+                printf("div.s");
                 break;
         }
-        //printf("%c et %c\n", quad->operand1->type, quad->operand2->type);
-        if(quad->operand1->type == 'f' || quad->operand2->type == 'f'){
-            printf(".s");
-            printf(" $f0,   ");
-            if(quad->operand1->type == 'i'){
-                printf("$t0,    ");
-            }
-            else{
-                printf("$f0,    ");
-            }
-            if(quad->operand2->type == 'i'){
-                printf("$t1\n");
-            }
-            else{
-                printf("$f1\n");
-            }
-
-            printf("\t\ts.s	$f0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
-        }
-        //Si c'est une opération entre 2 int
-        else{
-            printf(" $t0,	$t0,	$t1\n");
-            printf("\t\tsw	$t0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
-        }
+        printf(" $f0,   $f0,    $f1\n");
+        printf("\t\ts.s	$f0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
         
         //printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
     }

@@ -121,6 +121,5 @@ dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int 
   else{
     new_q->type = 'i';
   }
-
   return new_q;
 }

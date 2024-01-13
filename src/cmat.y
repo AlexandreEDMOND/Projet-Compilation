@@ -7,6 +7,7 @@
   #include "symbol_table.h"
   #include "quads.h"
   #include "utils.h" // Définit yyerror et yylex
+  #include "const.h"
 
   extern symbol_table* table_of_symbol;
   extern Quad_list* quad_list;
@@ -34,8 +35,7 @@
 %token PRINTF PRINT PRINTMAT MAIN
 %token INT FLOAT MATRIX
 
-%type <intval> program
-%type <charval> datatype unary plus-ou-moins fois-ou-div
+%type <intval> program datatype unary plus-ou-moins fois-ou-div
 
 %type <alex_le_fou> somme-entiere produit-entier operande-entier
 
@@ -43,7 +43,6 @@
 %left TIMES DIVIDE
 %right TRANSPOSE
 %right UMINUS
-%nonassoc EQUAL NOTEQUAL GREATERTHAN LESSTHAN GREATERTHANEQUAL LESSTHANEQUAL
 
 %start program
 
@@ -69,7 +68,7 @@ statement:
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
-    gencode_old('e', "", "", "");
+    gencode_old(OP_EXIT, "", "", "");
   }
   ;
 
@@ -90,7 +89,7 @@ declaration:
         printf("\t\t%s: .word 0\n",$2);
         char str[50];
         sprintf(str, "%i", $4->stockage);
-        gencode_old('=', $2, $4->valeur, str);
+        gencode_old(OP_ASSIGN, $2, $4->valeur, str);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
       num_registre = 0;
@@ -108,7 +107,7 @@ affectation:
     NCHK(op1 = malloc(sizeof(dinguerie)));
     strcpy(op1->valeur, $1);
     op1->stockage = -1;
-    gencode('=', op1, $3,NULL);
+    gencode(OP_ASSIGN, op1, $3,NULL);
 
     num_registre = 0;
   }
@@ -117,24 +116,24 @@ affectation:
     //Reviens à faire une affectation avec la valeur de IDENTIFIER avec IDENTIFIER +1 ou -1
     symbol* symbole = get_symbol(table_of_symbol, $1);
     float nombre;
-    if(symbole->type == 'i'){
+    if(symbole->type == DATATYPE_INT){
       nombre = atoi(symbole->value);
     }
-    if(symbole->type == 'f'){
+    if(symbole->type == DATATYPE_FLOAT){
       nombre = atof(symbole->value);
     }
-    if($2 == '+'){
+    if($2 == OP_INC){
       nombre++;
     }
-    if($2 == '-'){
+    if($2 == OP_DEC){
       nombre--;
     }
     char str[50];
-    if(symbole->type == 'i'){
+    if(symbole->type == DATATYPE_INT){
       int conversion = nombre;
       sprintf(str, "%i", conversion);
     }
-    if(symbole->type == 'f'){
+    if(symbole->type == DATATYPE_FLOAT){
       sprintf(str, "%f", nombre);
     }
     strcpy(symbole->value, str);
@@ -150,10 +149,10 @@ affichage:
 
     printf("\t\t%s: .asciiz %s\n",string_name, $3);
 
-    gencode_old('p', string_name, "cst_string", "");
+    gencode_old(OP_PRINT, string_name, "cst_string", "");
     }
   | PRINT OPAR IDENTIFIER CPAR {
-      gencode_old('p', $3, "id", "");
+      gencode_old(OP_PRINT, $3, "id", "");
     }
   ;
   | PRINT OPAR somme-entiere CPAR {
@@ -163,7 +162,7 @@ affichage:
 
       printf("\t\t%s: .word %i\n",string_name, atoi($3->valeur));
 
-      gencode_old('p', string_name, "somme-entiere", "");
+      gencode_old(OP_PRINT, string_name, "somme-entiere", "");
       num_registre = 0;
     }
   ;
@@ -199,19 +198,19 @@ operande-entier     : INT_NUMBER {
                     }
                     | OPAR somme-entiere CPAR {$$ = $2;}     
 
-plus-ou-moins       : PLUS                                             { $$ = '+'; }
-                    | MINUS                                            { $$ = '-'; }
+plus-ou-moins       : PLUS                                             { $$ = OP_ADD; }
+                    | MINUS                                            { $$ = OP_SUB; }
 
-fois-ou-div        : TIMES                                            { $$ = '*'; }
-                    | DIVIDE                                           { $$ = '/'; }
+fois-ou-div        : TIMES                                            { $$ = OP_MUL; }
+                    | DIVIDE                                           { $$ = OP_DIV; }
 
 unary:
-  INC {$$ = '+';}
-  | DEC {$$ = '-';}
+  INC {$$ = OP_INC;}
+  | DEC {$$ = OP_DEC;}
   ;
 
 datatype:
-  INT {$$ = 'i';}
-  | FLOAT {$$ = 'f';}
+  INT {$$ = DATATYPE_INT;}
+  | FLOAT {$$ = DATATYPE_FLOAT;}
   ;
 %%

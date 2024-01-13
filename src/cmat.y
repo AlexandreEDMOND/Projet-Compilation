@@ -63,6 +63,7 @@ instruction:
   ;
 
 
+
 statement:
   declaration {}
   | affectation {}
@@ -187,7 +188,7 @@ operande-entier     : INT_NUMBER {
                     }
                     | IDENTIFIER {
                       symbol* symbole = get_symbol(table_of_symbol, $1);
-                      strcpy($$->valeur, symbole->value);
+                      strcpy($$->valeur, symbole->id);
                       $$->stockage = -1;
                     }
                     | OPAR somme-entiere CPAR {$$ = $2;}     

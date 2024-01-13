@@ -1,6 +1,11 @@
+
 int main()
 {
-  int a = (17 + 3) * (29 - 42) + 8 - 14 + (36 * 5) - (19 + 11) + 25 - 7 + (33 * 2) - 47;
+  float a = 6*8 - 6 + 8 / 9;
+  float c = 7/2;
+  float d = a + c * 9 + 6;
   print(a);
+  print(c);
+  print(d);
   return 0;
 }

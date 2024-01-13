@@ -81,13 +81,17 @@ void print_quad_list(Quad_list *quad_list) {
 
 /* Affiche un quad */
 void print_quad(Quad * quad) {
-    printf("| OPERATEUR\t");
+    printf("| OPERATEUR\n");
     printf("%c\n",quad->op);
-    printf("\n| OPERANDE 1\t");
+    printf("| OPERANDE 1\n");
     printf("%s\n",quad->operand1->valeur);
-    printf("\n");
-    printf("| OPERANDE 2\t");
+    printf("%i\n",quad->operand1->stockage);
+    printf("| OPERANDE 2\n");
     printf("%s\n",quad->operand2->valeur);
+    printf("%i\n",quad->operand2->stockage);
+    printf("| RESULT\n");
+    printf("%s\n",quad->result->valeur);
+    printf("%i\n",quad->result->stockage);
     printf("\n");
 }
 
@@ -122,10 +126,13 @@ void find_max_pile_and_create(Quad_list* quad_list){
             max_long = longueur;
         }
     }
-    printf("\t\t# On alloue de la memoire pour la pile (longueur = %i)\n", max_long);
-    printf("\t\taddiu	$sp,	$sp,	-%i\n", 4*(max_long+2));
-    printf("\t\tsw		$fp,	%i($sp)\n", 4*(max_long+1));
-    printf("\t\tmove	$fp,	$sp\n\n");
+    if(max_long > 0){
+        printf("\t\t# On alloue de la memoire pour la pile (longueur = %i)\n", max_long);
+        printf("\t\taddiu	$sp,	$sp,	-%i\n", 4*(max_long+2));
+        printf("\t\tsw		$fp,	%i($sp)\n", 4*(max_long+1));
+        printf("\t\tmove	$fp,	$sp\n\n");
+    }
+    
 }
 
 
@@ -164,12 +171,18 @@ void print_quad_MIPS(Quad* quad){
         if(quad->operand1->stockage > 0){
             printf("\t\tlw	$t0,	%i($fp)\n", (quad->operand1->stockage-1)*4);
         }
+        if(quad->operand1->stockage == -1){
+            printf("\t\tlw	$t0,	%s\n", quad->operand1->valeur);
+        }
 
         if(quad->operand2->stockage == 0){
             printf("\t\tli	$t1,	%s\n", quad->operand2->valeur);
         }
         if(quad->operand2->stockage > 0){
             printf("\t\tlw	$t1,	%i($fp)\n", (quad->operand2->stockage-1)*4);
+        }
+        if(quad->operand2->stockage == -1){
+            printf("\t\tlw	$t1,	%s\n", quad->operand2->valeur);
         }
         //printf("\t\tOpération de type %c entre %s (reg%i) et %s (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->stockage, quad->operand2->valeur , quad->operand2->stockage);
         printf("\t\t");

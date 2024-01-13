@@ -115,6 +115,12 @@ dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int 
   strcpy(new_q->valeur, str);
   new_q->stockage = num_registre + 1;
 
+  if(q_1->type == 'f' || q_2->type == 'f'){
+    new_q->type = 'f';
+  }
+  else{
+    new_q->type = 'i';
+  }
   return new_q;
 }
 

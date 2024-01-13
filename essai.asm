@@ -1,32 +1,27 @@
 .data
-my_stack: .space 1024  # Réservez de l'espace pour la pile
+float1: .float 3.14
+float2: .float 2.71
+result: .float 0.0  # Espace pour stocker le résultat
 
 .text
+.globl main
+
 main:
-    # Initialisation de la pile
-    la $sp, my_stack  # Charge l'adresse de début de la pile dans $sp
+    # Charger les valeurs en virgule flottante dans les registres FPU
+    lwc1 $f0, float1   # Charger float1 dans $f0
+    lwc1 $f2, float2   # Charger float2 dans $f2
 
-    # Empilez 1 et 2
-    li $t0, 657
-    sw $t0, 0($sp)
-    addi $sp, $sp, -4
+    # Effectuer l'addition
+    add.s $f4, $f0, $f2  # Additionner $f0 et $f2, stocker le résultat dans $f4
 
-    li $t1, 343
-    sw $t1, 0($sp)
-    addi $sp, $sp, -4
+    # Stocker le résultat dans la mémoire (facultatif)
+    swc1 $f4, result   # Stocker le résultat dans la mémoire à l'adresse result
 
-    # Dépilez les valeurs de la pile
-    lw $t0, 4($sp)
-    lw $t1, 8($sp)
-
-    # Effectuez l'opération arithmétique
-    sub $t2, $t0, $t1  # Addition : $t2 = 343 + 657
-
-    # Affichez le résultat
-    move $a0, $t2
-    li $v0, 1
+    mov.s $f12, $f4
+    li $v0, 2  # Code de l'appel système pour printf
     syscall
 
-    # Fin du programme
+
+    # Terminer le programme
     li $v0, 10
     syscall

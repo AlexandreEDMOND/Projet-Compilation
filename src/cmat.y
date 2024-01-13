@@ -186,6 +186,11 @@ operande-entier     : INT_NUMBER {
                       strcpy($$->valeur, $1);
                       $$->stockage = 0;
                     }
+                    | FLOAT_NUMBER {
+                      //printf("Je lis %s\n", $1);
+                      strcpy($$->valeur, $1);
+                      $$->stockage = 0;
+                    }
                     | IDENTIFIER {
                       symbol* symbole = get_symbol(table_of_symbol, $1);
                       strcpy($$->valeur, symbole->id);

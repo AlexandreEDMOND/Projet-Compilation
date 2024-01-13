@@ -21,6 +21,7 @@ typedef struct
     {
       char valeur[50];
       int stockage; // 0 = Valeur brut (4 8 -9) / >0 = Stocker dans la pile / -1 = Variable .data
+      char type;
   } dinguerie;
 
 

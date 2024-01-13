@@ -34,7 +34,7 @@ main:
 		lw  $t1,    12($fp)
 		sw  $t1,    0($t0)
 
-		li	$t0,	7
+		li	$t0,	7.0
 		li	$t1,	2
 		div $t0,	$t0,	$t1
 		sw	$t0,	0($fp)

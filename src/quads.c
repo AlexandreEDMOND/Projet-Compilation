@@ -146,10 +146,21 @@ void print_quad_MIPS(Quad* quad){
             printf("\t\tla $a0, %s     # Charger l'adresse de la chaîne à afficher dans $a0\n\t\tsyscall\n\n", quad->operand1->valeur);
         }
         else{
-            printf("\t\t# Afficher d'un int\n");
-            printf("\t\tlw $a0, %s   # Charger la valeur de l'entier depuis la mémoire\n", quad->operand1->valeur);
-            printf("\t\tli $v0, 1             # Code de service pour afficher un entier\n");
-            printf("\t\tsyscall\n\n");
+            if(quad->operand1->type == 'i'){
+                printf("\t\t# Afficher d'un int\n");
+                printf("\t\tlw $a0, %s   # Charger la valeur de l'entier depuis la mémoire\n", quad->operand1->valeur);
+                printf("\t\tli $v0, 1             # Code de service pour afficher un entier\n");
+                printf("\t\tsyscall\n\n");
+            }
+            if(quad->operand1->type == 'f'){
+                printf("\t\t# Afficher d'un float\n");
+                printf("\t\tlwc1 $f0, %s   # Charger la valeur du flottant depuis la mémoire\n", quad->operand1->valeur);
+                printf("\t\tmov.s $f12, $f0\n");
+                printf("\t\tli $v0, 2             # Code de service pour afficher un flottant\n");
+                printf("\t\tsyscall\n\n");
+            }
+            
+            
         }
     }
     if(quad->op == 'e'){
@@ -183,7 +194,12 @@ void print_quad_MIPS(Quad* quad){
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){
         if(quad->operand1->stockage == 0){
-            printf("\t\tli	$t0,	%s\n", quad->operand1->valeur);
+            if(quad->operand1->type == 'i'){
+                printf("\t\tli	$t0,	%s\n", quad->operand1->valeur);
+            }
+            else{
+                printf("\t\tli.s    $f0,	%s\n", quad->operand1->valeur);
+            }
         }
         if(quad->operand1->stockage > 0){
             printf("\t\tlw	$t0,	%i($fp)\n", (quad->operand1->stockage-1)*4);
@@ -193,7 +209,12 @@ void print_quad_MIPS(Quad* quad){
         }
 
         if(quad->operand2->stockage == 0){
-            printf("\t\tli	$t1,	%s\n", quad->operand2->valeur);
+            if(quad->operand2->type == 'i'){
+                printf("\t\tli	$t1,	%s\n", quad->operand2->valeur);
+            }
+            else{
+                printf("\t\tli.s    $f1,	%s\n", quad->operand2->valeur);
+            }
         }
         if(quad->operand2->stockage > 0){
             printf("\t\tlw	$t1,	%i($fp)\n", (quad->operand2->stockage-1)*4);
@@ -217,8 +238,31 @@ void print_quad_MIPS(Quad* quad){
                 printf("div");
                 break;
         }
-        printf(" $t0,	$t0,	$t1\n");
-        printf("\t\tsw	$t0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
+        //printf("%c et %c\n", quad->operand1->type, quad->operand2->type);
+        if(quad->operand1->type == 'f' || quad->operand2->type == 'f'){
+            printf(".s");
+            printf(" $f0,   ");
+            if(quad->operand1->type == 'i'){
+                printf("$t0,    ");
+            }
+            else{
+                printf("$f0,    ");
+            }
+            if(quad->operand2->type == 'i'){
+                printf("$t1\n");
+            }
+            else{
+                printf("$f1\n");
+            }
+
+            printf("\t\ts.s	$f0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
+        }
+        //Si c'est une opération entre 2 int
+        else{
+            printf(" $t0,	$t0,	$t1\n");
+            printf("\t\tsw	$t0,	%i($fp)\n\n", (quad->result->stockage-1)*4);
+        }
+        
         //printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
     }
 }

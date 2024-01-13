@@ -69,7 +69,7 @@ statement:
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
-    gencode_old('e', "", "", "");
+    gencode('e', NULL, NULL, NULL);
   }
   ;
 
@@ -84,7 +84,12 @@ declaration:
       add_symbol(table_of_symbol, $2, $4->valeur, $1);
 
       if($4->stockage == 0){
-        printf("\t\t%s: .word %i\n",$2, atoi($4->valeur));
+        if($1 == 'i'){
+          printf("\t\t%s: .word %i\n",$2, atoi($4->valeur));
+        }
+        if($1 == 'f'){
+          printf("\t\t%s: .float %f\n",$2, atof($4->valeur));
+        }
       }
       else{
         printf("\t\t%s: .word 0\n",$2);
@@ -153,7 +158,17 @@ affichage:
     gencode_old('p', string_name, "cst_string", "");
     }
   | PRINT OPAR IDENTIFIER CPAR {
-      gencode_old('p', $3, "id", "");
+      symbol* symbole = get_symbol(table_of_symbol, $3);
+      dinguerie* op1;
+      dinguerie* op2;
+      NCHK(op1 = malloc(sizeof(dinguerie)));
+      NCHK(op2 = malloc(sizeof(dinguerie)));
+      
+      strcpy(op1->valeur, $3);
+      op1->stockage = -1;
+      op1->type = symbole->type;
+      strcpy(op2->valeur, "id");
+      gencode('p', op1, op2, NULL);
     }
   ;
   | PRINT OPAR somme-entiere CPAR {
@@ -186,16 +201,19 @@ operande-entier     : INT_NUMBER {
                       //printf("Je lis %s\n", $1);
                       strcpy($$->valeur, $1);
                       $$->stockage = 0;
+                      $$->type = 'i';
                     }
                     | FLOAT_NUMBER {
                       //printf("Je lis %s\n", $1);
                       strcpy($$->valeur, $1);
                       $$->stockage = 0;
+                      $$->type = 'f';
                     }
                     | IDENTIFIER {
                       symbol* symbole = get_symbol(table_of_symbol, $1);
                       strcpy($$->valeur, symbole->id);
                       $$->stockage = -1;
+                      $$->type = symbole->type;
                     }
                     | OPAR somme-entiere CPAR {$$ = $2;}     
 

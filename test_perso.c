@@ -1,7 +1,8 @@
 
 int main()
 {
-  int a = 2;
+  int a = 2 + 3;
+  print(a);
   int c = 3;
   if (a == 5)
   {

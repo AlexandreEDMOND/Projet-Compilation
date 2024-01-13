@@ -11,6 +11,3 @@ src/cmat.tab.c
 # Fichier headers générés à la compilation
 include/cmat.lex.h
 include/cmat.tab.h
-
-# Output
-out/

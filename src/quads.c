@@ -159,9 +159,26 @@ void print_quad_MIPS(Quad* quad){
     
     }
     if(quad->op == '='){
-        printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
-        printf("\t\tlw  $t1,    %i($fp)\n", (atoi(quad->result->valeur)-1)*4);
-        printf("\t\tsw  $t1,    0($t0)\n\n");
+        if(quad->result == NULL){
+            // On charge une valeur brut dans une variable de .data
+            if(quad->operand2->stockage == 0){
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tla  $t1,    %s\n", quad->operand2->valeur);
+                printf("\t\tsw  $t1,    0($t0)\n\n");
+            }
+            if(quad->operand2->stockage > 0){
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tlw  $t1,    %i($fp)\n", (quad->operand2->stockage-1)*4);
+                printf("\t\tsw  $t1,    0($t0)\n\n");
+            }
+
+        }
+        else{
+            printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+            printf("\t\tlw  $t1,    %i($fp)\n", (atoi(quad->result->valeur)-1)*4);
+            printf("\t\tsw  $t1,    0($t0)\n\n");
+        }
+        
         //printf("\t\tOn mets la valeur contenu dans %s dans %s\n\n", quad->result->valeur, quad->operand1->valeur);
     }
     if(quad->op == '+' || quad->op == '-' || quad->op == '*' || quad->op == '/'){

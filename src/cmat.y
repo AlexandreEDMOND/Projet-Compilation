@@ -99,16 +99,17 @@ declaration:
 
 
 affectation:
-  //MIPS : Il n'y a que l'info de la valeur dans "somme-entiere"
-  //Pouvoir récupérer le type de "somme-entiere"
-  //Yacc fait toute l'arithmétiques mais pas le MIPS avec cette structure
-  //Faire une fonction pour chaque ligne
+  
   IDENTIFIER ASSIGN somme-entiere {
     symbol* symbole = get_symbol(table_of_symbol, $1);
     strcpy(symbole->value, $3->valeur);
-    //Modification de la valeur de IDENTIFIER avec la valeur de somme-entiere
-    //Comment faire si la valeur de somme-entiere vient d'un calcul arithmétique
-      //Faire le calcul avant?
+
+    dinguerie* op1;
+    NCHK(op1 = malloc(sizeof(dinguerie)));
+    strcpy(op1->valeur, $1);
+    op1->stockage = -1;
+    gencode('=', op1, $3,NULL);
+
     num_registre = 0;
   }
 

@@ -1,5 +1,5 @@
 #include "quads.h"
-
+#include "symbol_table.h"
 #define INIT_QUAD_LIST_CAPACITY 100
 
 extern Quad_list* quad_list_main;
@@ -97,10 +97,10 @@ void print_quad(Quad * quad) {
     printf("\n");
 }
 
-void print_list_quad_MIPS(Quad_list* quad_list){
+void print_list_quad_MIPS(Quad_list* quad_list,symbol_table*table){
     find_max_pile_and_create(quad_list);
     for(int i=0; i<quad_list_main->size; i++){
-        print_quad_MIPS(quad_list_main->data[i]);
+        print_quad_MIPS(quad_list_main->data[i],table);
     }
 }
 
@@ -137,29 +137,39 @@ void find_max_pile_and_create(Quad_list* quad_list){
     
 }
 
-int print_IF_MIPS(Quad*quad){
-    int T=0;
+int print_IF_MIPS(Quad*quad,symbol_table*table){
     if (quad->op=='@'){
-        T=1;
+        int A=0;
         printf("\t\tlw $t3, %s\n",quad->operand1->valeur);
-        printf("\t\tlw $t4, %s\n",quad->operand2->valeur);
+        for (int i=0;i<table->size;i++){
+            if (quad->operand2->valeur==table->symbols[i].id){
+                A=1;
+            }
+        }
+        if (A==1){
+            printf("\t\tlw $t4, %s\n",quad->operand2->valeur);
+        }
+        else{
+            printf("\t\tli $t4, %s\n",quad->operand2->valeur);
+        }
         printf("\t\tbeq $t3, $t4, if_block   # Si a == c, aller à if_block\n");
+        return 1;
     }
     if (quad->op=='g'){
-        T=1;
        printf("\t\tj else_block             # Sinon, aller à else_block\n");
        printf("\t\tif_block:\n");
+       return 1;
     }
     if (quad->op=='$'){
-        T=1;
         printf("\t\tj end_if             # end_if\n");
         printf("\t\telse_block:             #aller à else_block\n");
+        return 1;
     }
-    return T;
+    return 0;
 }
 
-void print_quad_MIPS(Quad* quad){
-    print_IF_MIPS(quad);
+void print_quad_MIPS(Quad*quad,symbol_table*table){
+    print_IF_MIPS(quad,table);
     if(quad->op == 'p'){
         if(strcmp(quad->operand2->valeur, "cst_string") == 0){
             printf("\t\t# Afficher le texte\n");
@@ -173,8 +183,10 @@ void print_quad_MIPS(Quad* quad){
             printf("\t\tsyscall\n\n");
         }
     }
+    if (quad->op=='T'){
+        printf("end_if:\n");   
+    }
     if(quad->op == 'e'){
-        printf("\t\tend_if:\n");
         printf("\t\t# Terminer le programme\n");
         printf("\t\tli $v0, 10          # Code de service pour la sortie de programme\n");
         printf("\t\tsyscall\n");

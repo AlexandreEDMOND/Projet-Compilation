@@ -13,3 +13,8 @@ Ctrl_ql * gencode_test(
 	char operator, dinguerie * op1, dinguerie * op2);
     
 Quad_list* concat(Quad_list *ql1, Quad_list *ql2);
+void gencode_or(
+	Ctrl_ql * test_expr, Ctrl_ql * test_expr2, int first_true, Ctrl_ql * res) ;
+    void gencode_and(
+	Ctrl_ql * test_expr, Ctrl_ql * test_expr2, int first_true, Ctrl_ql * res);
+    void gencode_not(Ctrl_ql * test_expr, Ctrl_ql * res);

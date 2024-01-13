@@ -47,12 +47,12 @@ void find_max_pile_and_create(Quad_list* quad_list);
 
 void print_quad(Quad * quad);
 
-void print_list_quad_MIPS(Quad_list* quad_list);
+void print_list_quad_MIPS(Quad_list* quad_list,symbol_table*table);
 
-void print_quad_MIPS(Quad* quad);
+void print_quad_MIPS(Quad*quad,symbol_table*table);
 
 void complete(Quad_list *ql, int idx); 
 int last_quad_idx(Quad_list *ql); 
 int nextquad();
 Quad_list *init_goto();
-int print_IF_MIPS(Quad*quad);
+int print_IF_MIPS(Quad*quad,symbol_table*table);

@@ -37,3 +37,22 @@ Quad_list* concat(Quad_list *ql1, Quad_list *ql2) {
     }
     return ql;
 }
+
+void gencode_or(
+	Ctrl_ql * test_expr, Ctrl_ql * test_expr2, int first_true, Ctrl_ql * res) {
+	complete(test_expr->Faux, first_true);
+	res->Faux = test_expr2->Faux;
+	res->Vrai = concat(test_expr->Vrai, test_expr2->Vrai);
+}
+void gencode_and(
+	Ctrl_ql * test_expr, Ctrl_ql * test_expr2, int first_true, Ctrl_ql * res) {
+	complete(test_expr->Vrai, first_true);
+	res->Faux = concat(test_expr->Faux, test_expr2->Faux);
+	res->Vrai = test_expr2->Vrai;
+}
+
+/* Génère le code relatif à une opération NOT */
+void gencode_not(Ctrl_ql * test_expr, Ctrl_ql * res) {
+	res->Faux= test_expr->Vrai;
+	res->Vrai= test_expr->Faux;
+}

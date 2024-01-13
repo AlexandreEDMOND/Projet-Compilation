@@ -9,6 +9,7 @@
   extern Quad_list* quad_list_main;
   int compteur_string_const = 0;
   int num_registre = 0;
+  int T=0;
 %}
 
 %code requires {
@@ -27,6 +28,7 @@
   dinguerie* alex_le_fou;
   Ctrl_ql* ctrl_ql;
   Quad_list* ql;
+
 }
 
 %token <stringval> INT_NUMBER FLOAT_NUMBER IDENTIFIER STRING
@@ -66,18 +68,24 @@ instructions:
 
 instruction:
   statement SEMICOLON 
-  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);}
+  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);
+  T=1;}
   ;
 
-condition :  operande-entier EQ operande-entier {$$ = gencode_test('@', $1, $3); }
+condition :  somme-entiere EQ somme-entiere {$$ = gencode_test('@', $1, $3); }
           ;
 else-part           : instructions             { $$ = init_quad_list(); }
                     | /* empty */               { $$ = init_quad_list(); }
+
+            
 statement:
   declaration {}
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
+    if (T==1){
+      gencode_old('T',"","","");
+    }
     gencode_old('e', "", "", "");
   }
   ;

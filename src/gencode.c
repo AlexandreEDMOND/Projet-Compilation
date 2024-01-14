@@ -3,6 +3,8 @@
 #include "symbol_table.h"
 #include "const.h"
 
+extern Quad_list *quad_list_main;
+
 void gencode_if(
 		Ctrl_ql *test_block, // Contient les quads du test
 		int first_true,
@@ -29,7 +31,8 @@ Quad_list *gencode_while(
 		int first_true,
 		int compteur_global)
 { // Index du premier quad vrai
-	gencode('g', empty(), empty(), integer(first_cond));
+	gencode('j', empty(), empty(), integer(first_cond), 1);
+	quad_list_main->data[last_quad_idx(quad_list_main)]->idxIF = compteur_global;
 	complete(test_block->Faux, nextquad());
 	complete(test_block->Vrai, first_true);
 	for (int i = 0; i < test_block->Vrai->size; i++)
@@ -50,12 +53,12 @@ Ctrl_ql *gencode_test(
 	NCHK(res = malloc(sizeof(res)));
 	Quad *t;
 	if (op2 == NULL)
-		t = gencode(operator, op1, empty(), emptyTest());
+		t = gencode(operator, op1, empty(), emptyTest(), type);
 	else
-		t = gencode(operator, op1, op2, emptyTest());
+		t = gencode(operator, op1, op2, emptyTest(), type);
 	res->Vrai = create_list(t);
 	// On génère le quad faux, la destination sera déterminée plus tard
-	Quad *f = gencode('g', empty(), empty(), emptyTest());
+	Quad *f = gencode('g', empty(), empty(), emptyTest(), type);
 	f->type = type;
 	t->type = type;
 	res->Faux = create_list(f);

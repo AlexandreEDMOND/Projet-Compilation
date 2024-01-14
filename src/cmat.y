@@ -71,7 +71,7 @@ instruction:
   statement SEMICOLON 
   | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12,compteur_global);
   compteur_global++;}
-  | WHILE OPAR M condition_while CPAR OBRACE M instructions CBRACE { gencode_while($4,$3,$7,compteur_global); }
+  | WHILE OPAR M condition_while CPAR OBRACE M instructions CBRACE { gencode_while($4,$3,$7,compteur_global); compteur_global++; }
   ;
 
 condition :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3, compteur_global, 0); }
@@ -124,7 +124,7 @@ declaration:
         strcpy(op1->valeur, $2);
         op1->type = $1;
 
-        gencode('=', op1, $4, NULL);
+        gencode('=', op1, $4, NULL, 0);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
       num_registre = 0;
@@ -146,7 +146,7 @@ affectation:
     strcpy(op1->valeur, $1);
     op1->stockage = -1;
     op1->type = symbole->type;
-    gencode('=', op1, $3,NULL);
+    gencode('=', op1, $3,NULL, 0);
 
     num_registre = 0;
   }
@@ -201,7 +201,7 @@ affichage:
       op1->stockage = -1;
       op1->type = symbole->type;
       strcpy(op2->valeur, "id");
-      gencode('p', op1, op2, NULL);
+      gencode('p', op1, op2, NULL, 0);
     }
   ;
   | PRINT OPAR somme-entiere CPAR {
@@ -219,14 +219,14 @@ affichage:
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
                                             //printf("%i %c %i %c \n", $1->stockage, $1->type,$3->stockage, $3->type);
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            gencode($2, $1, $3, $$);
+                                            gencode($2, $1, $3, $$, 0);
                                             num_registre++;
                                             }
                     | produit-entier        { $$ = $1; }
                 
 produit-entier      : produit-entier fois-ou-div operande-entier      {
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            gencode($2, $1, $3, $$);
+                                            gencode($2, $1, $3, $$, 0);
                                             num_registre++;
                                             }
                     | operande-entier       { $$ = $1; }

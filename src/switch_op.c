@@ -43,7 +43,7 @@ void gen_MIPS_EQ(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition:\n");
+            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tbeq $t3, $t4, while_block%i   # Si a == c, aller à while_block\n", quad->idxIF);
         }
     }

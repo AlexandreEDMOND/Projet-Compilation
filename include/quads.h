@@ -36,7 +36,7 @@ Quad_list *init_quad_list();
 
 Quad_list *create_list(Quad *quad);
 
-Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result);
+Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result, int type);
 
 void gencode_old(char op, char *operande1, char *operande2, char *result);
 

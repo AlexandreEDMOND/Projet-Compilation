@@ -36,11 +36,11 @@ void gencode_old(char op, char *operande1, char *operande2, char *result)
     strcpy(op1->valeur, operande1);
     strcpy(op2->valeur, operande2);
     strcpy(res->valeur, result);
-    gencode(op, op1, op2, res);
+    gencode(op, op1, op2, res, 0);
 }
 
 /* Crée un quad */
-Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result)
+Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result, int type)
 {
     Quad *quad;
     NCHK(quad = malloc(sizeof(Quad)));
@@ -52,6 +52,7 @@ Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *re
     quad->operand2 = operande2;
     quad->result = result;
     quad->idx = nextquad();
+    quad->type = type;
     add_quad(quad_list_main, quad);
     return quad;
 }
@@ -166,6 +167,12 @@ void print_IF_MIPS(Quad *quad, symbol_table *table)
     gen_MIPS_INFEGAL(quad, table);
     gen_MIPS_SUPEGAL(quad, table);
     gen_MIPS_NEQ(quad, table);
+
+    if (quad->op == 'j')
+    {
+        printf("\t\tj condition%i             # Sinon, aller à else_block\n", quad->idxIF);
+        printf("\t\tend_while%i:\n", quad->idxIF);
+    }
 
     if (quad->op == 'g')
     {
@@ -364,7 +371,7 @@ int nextquad()
 }
 Quad_list *init_goto(int compteur_global)
 {
-    Quad_list *list = create_list(gencode('$', empty(), empty(), empty()));
+    Quad_list *list = create_list(gencode('$', empty(), empty(), empty(), 0));
     for (int i = 0; i < list->size; i++)
     {
         list->data[i]->idxIF = compteur_global;
@@ -373,7 +380,7 @@ Quad_list *init_goto(int compteur_global)
 }
 Quad_list *init_goto2(int compteur_global)
 {
-    Quad_list *list = create_list(gencode('^', empty(), empty(), empty()));
+    Quad_list *list = create_list(gencode('^', empty(), empty(), empty(), 0));
     for (int i = 0; i < list->size; i++)
     {
         list->data[i]->idxIF = compteur_global;

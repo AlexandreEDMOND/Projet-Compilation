@@ -2,7 +2,7 @@
 int main()
 {
   int a = 6;
-  while (a == 5)
+  while (a <= 6)
   {
     print(a);
   }

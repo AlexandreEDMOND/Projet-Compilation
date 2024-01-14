@@ -14,6 +14,9 @@ void gen_MIPS_EQ(Quad *quad, symbol_table *table)
                 A = 1;
             }
         }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
+        }
         if (A == 1)
         {
             printf("\t\tlw $t3, %s\n", quad->operand1->valeur);
@@ -43,7 +46,6 @@ void gen_MIPS_EQ(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tbeq $t3, $t4, while_block%i   # Si a == c, aller à while_block\n", quad->idxIF);
         }
     }
@@ -61,6 +63,9 @@ void gen_MIPS_SUP(Quad *quad, symbol_table *table)
             {
                 A = 1;
             }
+        }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
         }
         if (A == 1)
         {
@@ -91,7 +96,6 @@ void gen_MIPS_SUP(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tbgt $t3, $t4, while_block%i   # Si a > 5, aller à while_block\n", quad->idxIF);
         }
     }
@@ -109,6 +113,9 @@ void gen_MIPS_MIN(Quad *quad, symbol_table *table)
             {
                 A = 1;
             }
+        }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
         }
         if (A == 1)
         {
@@ -139,7 +146,6 @@ void gen_MIPS_MIN(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tblt $t3, $t4, while_block%i   # Si a > 5, aller à while_block\n", quad->idxIF);
         }
     }
@@ -157,6 +163,9 @@ void gen_MIPS_INFEGAL(Quad *quad, symbol_table *table)
             {
                 A = 1;
             }
+        }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
         }
         if (A == 1)
         {
@@ -187,7 +196,6 @@ void gen_MIPS_INFEGAL(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tble $t3, $t4, while_block%i   # Si a > 5, aller à while_block\n", quad->idxIF);
         }
     }
@@ -205,6 +213,9 @@ void gen_MIPS_SUPEGAL(Quad *quad, symbol_table *table)
             {
                 A = 1;
             }
+        }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
         }
         if (A == 1)
         {
@@ -235,7 +246,6 @@ void gen_MIPS_SUPEGAL(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tbge $t3, $t4, while_block%i   # Si a > 5, aller à while_block\n", quad->idxIF);
         }
     }
@@ -253,6 +263,9 @@ void gen_MIPS_NEQ(Quad *quad, symbol_table *table)
             {
                 A = 1;
             }
+        }
+        if( quad->type == 1){ 
+            printf("\t\tcondition%i:\n", quad->idxIF);
         }
         if (A == 1)
         {
@@ -283,7 +296,6 @@ void gen_MIPS_NEQ(Quad *quad, symbol_table *table)
         }
         else if (quad->type == 1)
         {
-            printf("\t\tcondition%i:\n", quad->idxIF);
             printf("\t\tbne $t3, $t4, while_block%i   # Si a > 5, aller à while_block\n", quad->idxIF);
         }
     }

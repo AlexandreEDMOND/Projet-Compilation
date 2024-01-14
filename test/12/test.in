@@ -1,0 +1,15 @@
+int main()
+{
+  int a = 5;
+  if (a == 6)
+  {
+    printf("ok IF");
+  }
+  else
+  {
+    printf("ok ELSE");
+  }
+  int v=1;
+  print(v);
+  return 0;
+}

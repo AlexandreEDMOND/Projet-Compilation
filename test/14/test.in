@@ -1,0 +1,19 @@
+int main()
+{
+  int a = 6;
+  int c=2;
+  if (a == 6)
+  {
+    if(c!=2){
+      printf("ok IF1");
+    }
+    else{
+      printf("ok ELSE1");
+    }
+  }
+  else
+  {
+    printf("ok ELSE2");
+  }
+  return 0;
+}

@@ -1,0 +1,23 @@
+int main()
+{
+  int a = 5;
+  int c=2;
+  if (a == 6)
+  {
+    printf("ok IF1");
+  }
+  else
+  {
+    printf("ok ELSE1");
+  }
+  if (c == 2)
+  {
+    printf("ok IF2");
+  }
+  else
+  {
+    printf("ok ELSE2");
+  }
+  
+  return 0;
+}

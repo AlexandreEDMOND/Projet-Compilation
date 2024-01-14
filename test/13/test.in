@@ -1,0 +1,13 @@
+int main()
+{
+  int a = 6;
+  if (a == 6)
+  {
+    printf("ok IF");
+  }
+  else
+  {
+    printf("ok ELSE");
+  }
+  return 0;
+}

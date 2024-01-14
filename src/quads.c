@@ -216,6 +216,31 @@ int print_IF_MIPS(Quad *quad, symbol_table *table)
 void print_quad_MIPS(Quad *quad, symbol_table *table)
 {
     print_IF_MIPS(quad, table);
+    if (quad->op == 'I'){
+        // ++
+        if (quad->operand1->type == 'i'){
+            printf("\t\tlw    $t0,    %s\n", quad->operand1->valeur);
+            printf("\t\tli    $t1,	  1\n");
+            if (quad->operand1->stockage == 0){
+                printf("\t\tadd   $t0,   $t0,    $t1\n");
+            }
+            if (quad->operand1->stockage == 1){
+                printf("\t\tsub   $t0,   $t0,    $t1\n");
+            }
+            printf("\t\tsw $t0, %s\n\n", quad->operand1->valeur);
+        }
+        if (quad->operand1->type == 'f'){
+            printf("\t\tl.s   $f0,    %s\n", quad->operand1->valeur);
+            printf("\t\tli.s  $f1,	  1.0\n");
+            if (quad->operand1->stockage == 0){
+                printf("add.s   $f0,   $f0,    $f1\n");
+            }
+            if (quad->operand1->stockage == 1){
+                printf("sub.s   $f0,   $f0,    $f1\n");
+            }
+            printf("\t\ts.s    $f0,    %s\n\n", quad->operand1->valeur);
+        }
+    }
     if (quad->op == 'p')
     {
         if (strcmp(quad->operand2->valeur, "cst_string") == 0)
@@ -276,7 +301,7 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
             else
             {
                 printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
-                printf("\t\tlwc1  $f0,    %i($fp)\n", (quad->operand2->stockage - 1) * 4);
+                printf("\t\tli.s  $f0,    %s\n", quad->operand2->valeur);
                 printf("\t\ts.s  $f0,    0($t0)\n\n");
             }
         }
@@ -294,6 +319,21 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
             {
                 printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
                 printf("\t\tlwc1  $f0,    %i($fp)\n", (quad->operand2->stockage - 1) * 4);
+                printf("\t\ts.s  $f0,    0($t0)\n\n");
+            }
+        }
+        if (quad->operand2->stockage == -1)
+        {
+            if (quad->operand1->type == 'i')
+            {
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tlw  $t1,    %s\n", quad->operand2->valeur);
+                printf("\t\tsw  $t1,    0($t0)\n\n");
+            }
+            else
+            {
+                printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
+                printf("\t\tlwc1  $f0,    %s\n", quad->operand2->valeur);
                 printf("\t\ts.s  $f0,    0($t0)\n\n");
             }
         }

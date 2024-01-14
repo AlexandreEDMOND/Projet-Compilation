@@ -1,7 +1,7 @@
 int main()
 {
   float a = -6.5;
-  float b = 1856.75982;
+  float g = 1856.75982;
   float c;
 
   int d = -86;
@@ -9,17 +9,23 @@ int main()
   int f;
 
   c = a;
-  a = b;
+  a = g;
 
   f = d;
   d = e;
 
   print(a);
-  print(b);
+  printf("\n");
+  print(g);
+  printf("\n");
   print(c);
+  printf("\n");
   print(d);
+  printf("\n");
   print(e);
+  printf("\n");
   print(f);
+  printf("\n");
   
   return 0;
 }

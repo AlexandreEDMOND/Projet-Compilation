@@ -1,18 +1,18 @@
 int main()
 {
   float a = -6.5;
-  float b = 1856.75982;
+  float e = 1856.75982;
 
   int c = -86;
   int d = 69;
 
   a++;
-  b--;
+  e--;
   c--;
   d++;
 
   print(a);
-  print(b);
+  print(e);
   print(c);
   print(d);
   

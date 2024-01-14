@@ -188,6 +188,18 @@ affectation:
       sprintf(str, "%f", nombre);
     }
     strcpy(symbole->value, str);
+
+    dinguerie* op1;
+    NCHK(op1 = malloc(sizeof(dinguerie)));
+    strcpy(op1->valeur, $1);
+    op1->type = symbole->type;
+    if($2 == '+'){
+      op1->stockage = 0;
+    }
+    if($2 == '-'){
+      op1->stockage = 1;
+    }
+    gencode('I', op1, NULL, NULL);
   }
   ;
 

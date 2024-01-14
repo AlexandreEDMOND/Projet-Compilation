@@ -111,7 +111,8 @@ dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int 
   char str[50];
   sprintf(str, "%f", result);
 
-  dinguerie* new_q = malloc(sizeof(dinguerie));
+  dinguerie* new_q;
+  NCHK(new_q = malloc(sizeof(dinguerie)));
   strcpy(new_q->valeur, str);
   new_q->stockage = num_registre + 1;
 

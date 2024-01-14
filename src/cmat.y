@@ -135,6 +135,7 @@ declaration:
         
         strcpy(op1->valeur, $2);
         op1->type = $1;
+        //op1->stockage = $4->stockage;
 
         gencode('=', op1, $4, NULL);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
@@ -315,9 +316,12 @@ operande-entier     : INT_NUMBER {
                     }
                     | IDENTIFIER {
                       symbol* symbole = get_symbol(table_of_symbol, $1);
-                      strcpy($$->valeur, symbole->id);
-                      $$->stockage = -1;
-                      $$->type = symbole->type;
+                      dinguerie* op1;
+                      NCHK(op1 = malloc(sizeof(dinguerie)));
+                      strcpy(op1->valeur, symbole->id);
+                      op1->stockage = -1;
+                      op1->type = symbole->type;
+                      $$ = op1;
                     }
                     | OPAR somme-entiere CPAR {$$ = $2;}     
 

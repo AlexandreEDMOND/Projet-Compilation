@@ -292,7 +292,7 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
         // On charge une valeur brut dans une variable de .data
         if (quad->operand2->stockage == 0)
         {
-            if (quad->operand1->type == 'i')
+            if (quad->operand2->type == 'i')
             {
                 printf("\t\tla  $t0,    %s\n", quad->operand1->valeur);
                 printf("\t\tla  $t1,    %s\n", quad->operand2->valeur);
@@ -361,7 +361,16 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
         }
         if (quad->operand1->stockage == -1)
         {
-            printf("\t\tlwc1	$f0,	%s\n", quad->operand1->valeur);
+            if (quad->operand1->type == 'i')
+            {
+                printf("\t\tlw	$t0,	%s\n", quad->operand1->valeur);
+                printf("\t\tmtc1 $t0, $f0\n");
+                printf("\t\tcvt.s.w $f0, $f0\n");
+            }
+            else
+            {
+                printf("\t\tlwc1    $f0,	%s\n", quad->operand1->valeur);
+            }
         }
 
         if (quad->operand2->stockage == 0)
@@ -383,7 +392,16 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
         }
         if (quad->operand2->stockage == -1)
         {
-            printf("\t\tlwc1	$f1,	%s\n", quad->operand2->valeur);
+            if (quad->operand2->type == 'i')
+            {
+                printf("\t\tlw	$t1,	%s\n", quad->operand2->valeur);
+                printf("\t\tmtc1 $t1, $f1\n");
+                printf("\t\tcvt.s.w $f1, $f1\n");
+            }
+            else
+            {
+                printf("\t\tlwc1    $f1,	%s\n", quad->operand2->valeur);
+            }
         }
         printf("\t\t# Opération de type %c entre %s (type %c) (reg%i) et %s (type %c) (reg%i)\n", quad->op, quad->operand1->valeur, quad->operand1->type, quad->operand1->stockage, quad->operand2->valeur, quad->operand2->type, quad->operand2->stockage);
         printf("\t\t");

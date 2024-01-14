@@ -10,7 +10,6 @@ extern int yyparse();
 symbol_table *table_of_symbol;
 Quad_list *quad_list_main;
 int compteur_quads = 0;
-
 int main(int argc, char *argv[])
 {
 

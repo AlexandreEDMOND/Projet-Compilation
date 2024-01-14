@@ -1,7 +1,8 @@
 #include "quads.h"
 #include "symbol_table.h"
+#include "switch_op.h"
+#include "const.h"
 #define INIT_QUAD_LIST_CAPACITY 100
-
 extern Quad_list *quad_list_main;
 
 Quad_list *init_quad_list()
@@ -35,11 +36,11 @@ void gencode_old(char op, char *operande1, char *operande2, char *result)
     strcpy(op1->valeur, operande1);
     strcpy(op2->valeur, operande2);
     strcpy(res->valeur, result);
-    gencode(op, op1, op2, res);
+    gencode(op, op1, op2, res, 0);
 }
 
 /* Crée un quad */
-Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result)
+Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *result, int type)
 {
     Quad *quad;
     NCHK(quad = malloc(sizeof(Quad)));
@@ -51,6 +52,7 @@ Quad *gencode(char op, dinguerie *operande1, dinguerie *operande2, dinguerie *re
     quad->operand2 = operande2;
     quad->result = result;
     quad->idx = nextquad();
+    quad->type = type;
     add_quad(quad_list_main, quad);
     return quad;
 }
@@ -157,85 +159,83 @@ void find_max_pile_and_create(Quad_list *quad_list)
     }
 }
 
-int print_IF_MIPS(Quad *quad, symbol_table *table)
+void print_IF_MIPS(Quad *quad, symbol_table *table)
 {
-    if (quad->op == '@')
+    gen_MIPS_EQ(quad, table);
+    gen_MIPS_SUP(quad, table);
+    gen_MIPS_MIN(quad, table);
+    gen_MIPS_INFEGAL(quad, table);
+    gen_MIPS_SUPEGAL(quad, table);
+    gen_MIPS_NEQ(quad, table);
+
+    if (quad->op == 'j')
     {
-        int A = 0;
-        printf("\t\tlw $t3, %s\n", quad->operand1->valeur);
-        for (int i = 0; i < table->size; i++)
-        {
-            if (quad->operand2->valeur == table->symbols[i].id)
-            {
-                A = 1;
-            }
-        }
-        if (A == 1)
-        {
-            printf("\t\tlw $t4, %s\n", quad->operand2->valeur);
-        }
-        else
-        {
-            printf("\t\tli $t4, %s\n", quad->operand2->valeur);
-        }
-        if (quad->operand1->stockage == 0)
-        {
-            printf("\t\t beq $t3, $t4, if_block   # Si a == c, aller à if_block\n");
-        }
-        else if (quad->operand1->stockage == 1)
-        {
-            printf("\t\t condition:\n");
-            printf("\t\t beq $t3, $t4, while_block   # Si a == c, aller à while_block\n");
-        }
-        return 1;
+        printf("\t\tj condition%i             # Sinon, aller à else_block\n", quad->idxIF);
+        printf("\t\tend_while%i:\n", quad->idxIF);
     }
+
     if (quad->op == 'g')
     {
-        // printf("%i\n", quad->operand1->stockage);
-        switch (quad->operand1->stockage)
+        if (quad->type == 1)
         {
-        case 0:
-            printf("\t\tj else_block             # Sinon, aller à else_block\n");
-            printf("\t\tif_block:\n");
-            return 1;
-        case 1:
-            printf("\t\tj end_while\n");
-            printf("\t\twhile_block:\n");
-            return 1;
+            printf("\t\tj end_while%i             # Sinon, aller à else_block\n", quad->idxIF);
+            printf("\t\twhile_block%i:\n", quad->idxIF);
+        }
+        else if (quad->type == 0)
+        {
+            printf("\t\tj else_block%i             # Sinon, aller à else_block\n", quad->idxIF);
+            printf("\t\tif_block%i:\n", quad->idxIF);
         }
     }
     if (quad->op == '$')
     {
-        printf("\t\tj end_if             # end_if\n");
-        printf("\t\telse_block:             #aller à else_block\n");
-        return 1;
+        if (quad->type == 1)
+        {
+            printf("\t\tj end_while%i             # end_if\n", quad->idxIF);
+            printf("\t\telse_block%i:            #aller à else_block\n", quad->idxIF);
+        }
+        else if (quad->type == 0)
+        {
+            printf("\t\tj end_if%i             # end_if\n", quad->idxIF);
+            printf("\t\telse_block%i:            #aller à else_block\n", quad->idxIF);
+        }
     }
-    return 0;
+    if (quad->op == '^')
+    {
+        printf("\t\tend_if%i:\n", quad->idxIF);
+    }
 }
 
 void print_quad_MIPS(Quad *quad, symbol_table *table)
 {
     print_IF_MIPS(quad, table);
-    if (quad->op == 'I'){
+    if (quad->op == 'I')
+    {
         // ++
-        if (quad->operand1->type == 'i'){
+        if (quad->operand1->type == 'i')
+        {
             printf("\t\tlw    $t0,    %s\n", quad->operand1->valeur);
             printf("\t\tli    $t1,	  1\n");
-            if (quad->operand1->stockage == 0){
+            if (quad->operand1->stockage == 0)
+            {
                 printf("\t\tadd   $t0,   $t0,    $t1\n");
             }
-            if (quad->operand1->stockage == 1){
+            if (quad->operand1->stockage == 1)
+            {
                 printf("\t\tsub   $t0,   $t0,    $t1\n");
             }
             printf("\t\tsw $t0, %s\n\n", quad->operand1->valeur);
         }
-        if (quad->operand1->type == 'f'){
+        if (quad->operand1->type == 'f')
+        {
             printf("\t\tl.s   $f0,    %s\n", quad->operand1->valeur);
             printf("\t\tli.s  $f1,	  1.0\n");
-            if (quad->operand1->stockage == 0){
+            if (quad->operand1->stockage == 0)
+            {
                 printf("add.s   $f0,   $f0,    $f1\n");
             }
-            if (quad->operand1->stockage == 1){
+            if (quad->operand1->stockage == 1)
+            {
                 printf("sub.s   $f0,   $f0,    $f1\n");
             }
             printf("\t\ts.s    $f0,    %s\n\n", quad->operand1->valeur);
@@ -266,19 +266,6 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
                 printf("\t\tli $v0, 2             # Code de service pour afficher un flottant\n");
                 printf("\t\tsyscall\n\n");
             }
-        }
-    }
-    if (quad->op == 'T')
-    {
-        switch (quad->operand1->stockage)
-        {
-        case 0:
-            printf("end_if:\n");
-            break;
-        case 1:
-            printf("\t\tj condition\n");
-            printf("\t\tend_while:\n");
-            break;
         }
     }
     if (quad->op == 'e')
@@ -429,7 +416,21 @@ int nextquad()
 {
     return quad_list_main->size;
 }
-Quad_list *init_goto()
+Quad_list *init_goto(int compteur_global)
 {
-    return create_list(gencode('$', empty(), empty(), empty()));
+    Quad_list *list = create_list(gencode('$', empty(), empty(), empty(), 0));
+    for (int i = 0; i < list->size; i++)
+    {
+        list->data[i]->idxIF = compteur_global;
+    }
+    return list;
+}
+Quad_list *init_goto2(int compteur_global)
+{
+    Quad_list *list = create_list(gencode('^', empty(), empty(), empty(), 0));
+    for (int i = 0; i < list->size; i++)
+    {
+        list->data[i]->idxIF = compteur_global;
+    }
+    return list;
 }

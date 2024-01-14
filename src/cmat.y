@@ -9,7 +9,7 @@
   extern Quad_list* quad_list_main;
   int compteur_string_const = 0;
   int num_registre = 0;
-  int T=0;
+  int compteur_global=1;
 %}
 
 %code requires {
@@ -45,7 +45,8 @@
 %type <alex_le_fou> somme-entiere produit-entier operande-entier
 %type <ctrl_ql> condition condition_while; 
 %type <intval> M; // Ces noeuds sont des entiers
-%type<ql>N else-part;
+%type<ql>N else-part V;
+%type<charval> comparaison;
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -68,36 +69,28 @@ instructions:
 
 instruction:
   statement SEMICOLON 
-  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);
-  T=1;}
-  | WHILE OPAR M condition_while CPAR OBRACE M instructions CBRACE { 
-    $4->Faux->data[$4->Faux->size-1]->operand1->stockage = 1;
-    gencode_while($4,$3,$7);
-    }
+  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12,compteur_global);
+  compteur_global++;}
+  | WHILE OPAR M condition_while CPAR OBRACE M instructions CBRACE { gencode_while($4,$3,$7,compteur_global); compteur_global++; }
   ;
 
-condition :  somme-entiere EQ somme-entiere {
-  $$ = gencode_test('@', $1, $3);
-   }
-    ;
-
-condition_while :  somme-entiere EQ somme-entiere {
-  $$ = gencode_test_while('@', $1, $3);
-   }
-    ;
-
-else-part           : instructions             { $$ = init_quad_list(); }
+condition :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3, compteur_global, 0); }
+condition_while :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3, compteur_global, 1); }
+          ;
+else-part           : instructions V           { $$ = init_quad_list(); }
                     | /* empty */               { $$ = init_quad_list(); }
-
+comparaison: EQ {$$='@';}
+            | NE {$$='!';}
+            | GT {$$='>';}
+            | LT {$$='<';}
+            |GE {$$='k';}
+            |LE {$$='h';}
             
 statement:
   declaration {}
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
-    if (T==1){
-      gencode_old('T',"","","");
-    }
     gencode_old('e', "", "", "");
   }
   ;
@@ -136,11 +129,11 @@ declaration:
         strcpy(op1->valeur, $2);
         op1->type = $1;
 
-        gencode('=', op1, $4, NULL);
+        gencode('=', op1, $4, NULL, 0);
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
       num_registre = 0;
-    }
+    }  
   ;
 
 
@@ -158,7 +151,7 @@ affectation:
     strcpy(op1->valeur, $1);
     op1->stockage = -1;
     op1->type = symbole->type;
-    gencode('=', op1, $3,NULL);
+    gencode('=', op1, $3,NULL, 0);
 
     num_registre = 0;
   }
@@ -225,7 +218,7 @@ affichage:
       op1->stockage = -1;
       op1->type = symbole->type;
       strcpy(op2->valeur, "id");
-      gencode('p', op1, op2, NULL);
+      gencode('p', op1, op2, NULL, 0);
     }
   ;
   | PRINT OPAR somme-entiere CPAR {
@@ -243,14 +236,14 @@ affichage:
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
                                             //printf("%i %c %i %c \n", $1->stockage, $1->type,$3->stockage, $3->type);
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            gencode($2, $1, $3, $$);
+                                            gencode($2, $1, $3, $$, 0);
                                             num_registre++;
                                             }
                     | produit-entier        { $$ = $1; }
                 
 produit-entier      : produit-entier fois-ou-div operande-entier      {
                                             $$ = do_arithmetiques($1, $3, $2, num_registre);
-                                            gencode($2, $1, $3, $$);
+                                            gencode($2, $1, $3, $$, 0);
                                             num_registre++;
                                             }
                     | operande-entier       { $$ = $1; }
@@ -338,6 +331,7 @@ datatype:
   ;
 
 M                   : /*Empty*/                                                         { $$ = nextquad(); }
-N                   : /*Empty*/                                                         { $$ = init_goto();}
+N                   : /*Empty*/                                                         { $$ = init_goto(compteur_global);}
+V                   : /*Empty*/                                                         { $$ = init_goto2(compteur_global);}
 
 %%

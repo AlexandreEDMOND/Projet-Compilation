@@ -26,6 +26,7 @@
   char charval; // Info pour le type de variable stockée en table des symboles
   symbol info_symbol;
   dinguerie* alex_le_fou;
+  Quad* quad;
   Ctrl_ql* ctrl_ql;
   Quad_list* ql;
 
@@ -46,6 +47,7 @@
 %type <ctrl_ql> condition; 
 %type <intval> M; // Ces noeuds sont des entiers
 %type<ql>N else-part;
+%type <quad> instruction statement declaration affectation affichage loop_for instructions
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -94,8 +96,33 @@ statement:
 // MIPS : Modification dans le .data
 declaration:
   datatype IDENTIFIER {
+    printf("DECLARATION \n");
       add_symbol(table_of_symbol, $2, NULL, $1);
       printf("\t\t%s: .word 0\n",$2);
+    Quad * q;
+    NCHK(q = malloc(sizeof(Quad)));
+    q->op = '=';
+    dinguerie* op1;
+    dinguerie* op2;
+    dinguerie* res;
+    NCHK(op1 = malloc(sizeof(dinguerie)));
+    NCHK(op2 = malloc(sizeof(dinguerie)));
+    NCHK(res = malloc(sizeof(dinguerie)));
+    strcpy(op1->valeur, $2);
+    op1->stockage = -1;
+    op1->type = $1;
+    strcpy(op2->valeur, "id");
+    strcpy(res->valeur, $2);
+    res->stockage = -1;
+    res->type = $1;
+    q->operand1 = op1;
+    q->operand2 = op2;
+    q->result = res;
+    q->idx = nextquad();
+
+    $$ = q;
+
+
     }
   | datatype IDENTIFIER ASSIGN somme-entiere {
       add_symbol(table_of_symbol, $2, $4->valeur, $1);
@@ -210,6 +237,15 @@ affichage:
       num_registre = 0;
     }
   ;
+
+loop_for:
+  FOR OPAR declaration SEMICOLON condition SEMICOLON affectation CPAR OBRACE instructions CBRACE
+
+{gencode_for($3,$5,$7,$10);}
+  ;
+
+
+
 
 somme-entiere		: somme-entiere plus-ou-moins produit-entier           {
                                             //printf("%i %c %i %c \n", $1->stockage, $1->type,$3->stockage, $3->type);

@@ -38,6 +38,38 @@ Quad_list* concat(Quad_list *ql1, Quad_list *ql2) {
     return ql;
 }
 
+// loop_for:
+//   FOR OPAR declaration SEMICOLON condition SEMICOLON affectation CPAR OBRACE instructions CBRACE
+
+// {gencode_for($3,$5,$7,$10);}
+//   ;
+void gencode_for(
+	Quad * declaration, Ctrl_ql * condition, Quad * affectation, Quad_list * instructions) {
+	// On génère le quad, la destination (result) sera déterminée plus tard
+	Quad * t;
+	t = gencode('g', empty(), empty(), emptyTest());
+	Quad_list * list_false = create_list(t);
+	// On génère le quad faux, la destination sera déterminée plus tard
+	Quad * f = gencode('g', empty(), empty(), emptyTest());
+	Quad_list * list_true = create_list(f);
+	complete(list_false, nextquad());
+	complete(list_true, nextquad());
+	complete(condition->Faux, last_quad_idx(list_false)+1);
+	complete(condition->Vrai, last_quad_idx(list_true)+1);
+	complete(instructions, last_quad_idx(list_true)+1);
+	
+	complete(instructions, nextquad());
+	complete(condition->Vrai, nextquad());
+	complete(condition->Faux, nextquad());
+	complete(list_false, nextquad());
+	complete(list_true, nextquad());
+
+}
+
+
+	
+
+
 void gencode_or(
 	Ctrl_ql * test_expr, Ctrl_ql * test_expr2, int first_true, Ctrl_ql * res) {
 	complete(test_expr->Faux, first_true);

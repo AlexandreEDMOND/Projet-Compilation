@@ -346,7 +346,7 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
         // printf("\t\tStockage de %s dans %i\n\n",  quad->result->valeur ,quad->result->stockage);
     }
 }
-
+/* Complète les quads incomplets avec l'index idx */
 void complete(Quad_list *ql, int idx)
 {
     for (int i = 0; i < ql->size; i++)

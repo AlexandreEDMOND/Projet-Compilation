@@ -1,18 +1,9 @@
 
 int main()
 {
-  int a = 2 + 3;
-  print(a);
-  int c = 3;
-  if (a == 5)
+  for(int i = 0; i < 10; i++)
   {
-    int f = 5 + 3;
-    print(f);
-  }
-  else
-  {
-    int g = 5 + 2;
-    print(g);
+    print(i);
   }
   return 0;
 }

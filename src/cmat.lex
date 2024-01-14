@@ -51,7 +51,7 @@ STRING  ["].*["]
 "if" {return IF;}
 "else" {return ELSE;}
 "while" {return WHILE;}
-"for" {return FOR;}
+"for" {printf("FOOR\n");return FOR;}
 "return" {return RETURN;}
 
 "printf" {return PRINTF;}

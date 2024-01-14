@@ -9,6 +9,7 @@
   extern Quad_list* quad_list_main;
   int compteur_string_const = 0;
   int num_registre = 0;
+  int compteur_global=1;
 %}
 
 %code requires {
@@ -68,7 +69,8 @@ instructions:
 
 instruction:
   statement SEMICOLON 
-  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);}
+  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12,compteur_global);
+  compteur_global++;}
   ;
 
 condition :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3); }
@@ -124,7 +126,7 @@ declaration:
         //printf("//%s doit avoir la valeur stocker dans le registre %i\n", $2, $4->stockage);
       }
       num_registre = 0;
-    }
+    }  
   ;
 
 
@@ -270,7 +272,7 @@ datatype:
   ;
 
 M                   : /*Empty*/                                                         { $$ = nextquad(); }
-N                   : /*Empty*/                                                         { $$ = init_goto();}
-V                   : /*Empty*/                                                         { $$ = init_goto2();}
+N                   : /*Empty*/                                                         { $$ = init_goto(compteur_global);}
+V                   : /*Empty*/                                                         { $$ = init_goto2(compteur_global);}
 
 %%

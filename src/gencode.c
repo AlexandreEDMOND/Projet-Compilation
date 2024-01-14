@@ -1,17 +1,23 @@
 #include "quads.h"
 #include "gencode.h"
 #include "symbol_table.h"
+#include "const.h"
 
 void gencode_if(
 	Ctrl_ql * test_block,  // Contient les quads du test
 	int first_true,
 	Quad_list * list_false,  // Goto vers le premier quad si faux
-	Quad_list * else_part  // Index du premier quad vrai 
+	Quad_list * else_part,int compteur_global  // Index du premier quad vrai 
  ) {  // Quads de l'instruction else
 	list_false = concat(else_part, list_false);
 	complete(list_false, nextquad());
 	complete(test_block->Faux, last_quad_idx(list_false)+1);
 	complete(test_block->Vrai, first_true);
+	for (int i=0;i<test_block->Vrai->size;i++){
+		test_block->Vrai->data[i]->idxIF = compteur_global;
+		test_block->Faux->data[i]->idxIF = compteur_global;
+
+	}
 }
 
 Ctrl_ql * gencode_test(
@@ -56,3 +62,4 @@ void gencode_not(Ctrl_ql * test_expr, Ctrl_ql * res) {
 	res->Faux= test_expr->Vrai;
 	res->Vrai= test_expr->Faux;
 }
+

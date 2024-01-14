@@ -1,8 +1,8 @@
 #include "quads.h"
 #include "symbol_table.h"
 #include "switch_op.h"
+#include "const.h"
 #define INIT_QUAD_LIST_CAPACITY 100
-
 extern Quad_list *quad_list_main;
 
 Quad_list *init_quad_list()
@@ -169,18 +169,18 @@ void print_IF_MIPS(Quad *quad, symbol_table *table)
     
     if (quad->op == 'g')
     {
-        printf("\t\tj else_block             # Sinon, aller à else_block\n");
-        printf("\t\tif_block:\n");
+        printf("\t\tj else_block%i             # Sinon, aller à else_block\n",quad->idxIF);
+        printf("\t\tif_block%i:\n",quad->idxIF);
     }
     if (quad->op == '$')
     {
-        printf("\t\tj end_if             # end_if\n");
-        printf("\t\telse_block:             #aller à else_block\n");
+        printf("\t\tj end_if%i             # end_if\n",quad->idxIF);
+        printf("\t\telse_block%i:            #aller à else_block\n",quad->idxIF);
 
     }
     if (quad->op == '^')
     {
-        printf("\t\tend_if:\n");
+        printf("\t\tend_if%i:\n",quad->idxIF);
     
     }
 }
@@ -348,10 +348,18 @@ int nextquad()
 {
     return quad_list_main->size;
 }
-Quad_list *init_goto()
+Quad_list *init_goto(int compteur_global)
 {
-    return create_list(gencode('$', empty(), empty(), empty()));
+    Quad_list* list= create_list(gencode('$', empty(), empty(), empty()));
+    for (int i=0;i<list->size;i++){
+        list->data[i]->idxIF=compteur_global;
+    }
+    return list;
 }
-Quad_list *init_goto2(){
-    return create_list(gencode('^', empty(), empty(), empty()));
+Quad_list *init_goto2(int compteur_global){
+    Quad_list* list= create_list(gencode('^', empty(), empty(), empty()));
+    for (int i=0;i<list->size;i++){
+        list->data[i]->idxIF=compteur_global;
+    }
+    return list;
 }

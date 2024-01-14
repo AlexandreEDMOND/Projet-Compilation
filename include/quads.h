@@ -12,6 +12,7 @@ typedef struct Quad {
     dinguerie * operand2;
     dinguerie * result;
     int idx;
+    int idxIF;
 } Quad;
 
 // Liste de quads
@@ -54,6 +55,6 @@ void print_quad_MIPS(Quad*quad,symbol_table*table);
 void complete(Quad_list *ql, int idx); 
 int last_quad_idx(Quad_list *ql); 
 int nextquad();
-Quad_list *init_goto();
-Quad_list *init_goto2();
+Quad_list *init_goto(int compteur_global);
+Quad_list *init_goto2(int compteur_global);
 void print_IF_MIPS(Quad*quad,symbol_table*table);

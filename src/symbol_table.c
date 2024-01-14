@@ -127,7 +127,7 @@ dinguerie* do_arithmetiques(dinguerie* q_1, dinguerie* q_2, char operation, int 
 dinguerie* empty() {
     dinguerie* o = malloc(sizeof(dinguerie));
     if (o != NULL) {
-        *o = (dinguerie){"lol",0,'t', 0};
+        *o = (dinguerie){"vu",0,'t', 0};
     }
     return o;
 }
@@ -135,7 +135,7 @@ dinguerie* empty() {
 dinguerie* emptyTest() {
     dinguerie* o = malloc(sizeof(dinguerie));
     if (o != NULL) {
-        *o = (dinguerie){"prout",0,'t', 0};
+        *o = (dinguerie){"vu",0,'t', 0};
     }
     return o;
 }

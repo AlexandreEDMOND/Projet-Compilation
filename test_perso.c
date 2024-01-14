@@ -2,17 +2,13 @@
 int main()
 {
   int a = 6;
-  if (a != 6)
-  {
-    int f = 5 + 3;
-    print(f);
+  if (a>5){
+    print(a);
   }
-  else
-  {
-    int g = 5 + 2;
-    print(g);
+  else{
+    printf("caca");
   }
-  int v=2;
+  int v=3;
   print(v);
   return 0;
 }

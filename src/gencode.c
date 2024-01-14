@@ -54,7 +54,7 @@ Ctrl_ql *gencode_test(
 	Quad *t;
 	op1->stockage = 1;
 	if (op2 == NULL)
-		t = gencode(operator, op1, empty(), emptyTest());
+		t = gencode(operator, op1, empty(), emptyTest(), 0);
 	else
 		t = gencode(operator, op1, op2, emptyTest(), type);
 	res->Vrai = create_list(t);

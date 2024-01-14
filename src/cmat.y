@@ -192,7 +192,7 @@ affectation:
     if($2 == '-'){
       op1->stockage = 1;
     }
-    gencode('I', op1, NULL, NULL);
+    gencode('I', op1, NULL, NULL, 0);
   }
   ;
 

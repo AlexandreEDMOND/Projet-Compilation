@@ -160,28 +160,42 @@ void find_max_pile_and_create(Quad_list *quad_list)
 
 void print_IF_MIPS(Quad *quad, symbol_table *table)
 {
-    gen_MIPS_EQ(quad,table);
-    gen_MIPS_SUP(quad,table);
-    gen_MIPS_MIN(quad,table);
-    gen_MIPS_INFEGAL(quad,table);
-    gen_MIPS_SUPEGAL(quad,table);
-    gen_MIPS_NEQ(quad,table);
-    
+    gen_MIPS_EQ(quad, table);
+    gen_MIPS_SUP(quad, table);
+    gen_MIPS_MIN(quad, table);
+    gen_MIPS_INFEGAL(quad, table);
+    gen_MIPS_SUPEGAL(quad, table);
+    gen_MIPS_NEQ(quad, table);
+
     if (quad->op == 'g')
     {
-        printf("\t\tj else_block%i             # Sinon, aller à else_block\n",quad->idxIF);
-        printf("\t\tif_block%i:\n",quad->idxIF);
+        if (quad->type == 1)
+        {
+            printf("\t\tj end_while%i             # Sinon, aller à else_block\n", quad->idxIF);
+            printf("\t\twhile_block%i:\n", quad->idxIF);
+        }
+        else if (quad->type == 0)
+        {
+            printf("\t\tj else_block%i             # Sinon, aller à else_block\n", quad->idxIF);
+            printf("\t\tif_block%i:\n", quad->idxIF);
+        }
     }
     if (quad->op == '$')
     {
-        printf("\t\tj end_if%i             # end_if\n",quad->idxIF);
-        printf("\t\telse_block%i:            #aller à else_block\n",quad->idxIF);
-
+        if (quad->type == 1)
+        {
+            printf("\t\tj end_while%i             # end_if\n", quad->idxIF);
+            printf("\t\telse_block%i:            #aller à else_block\n", quad->idxIF);
+        }
+        else if (quad->type == 0)
+        {
+            printf("\t\tj end_if%i             # end_if\n", quad->idxIF);
+            printf("\t\telse_block%i:            #aller à else_block\n", quad->idxIF);
+        }
     }
     if (quad->op == '^')
     {
-        printf("\t\tend_if%i:\n",quad->idxIF);
-    
+        printf("\t\tend_if%i:\n", quad->idxIF);
     }
 }
 
@@ -350,16 +364,19 @@ int nextquad()
 }
 Quad_list *init_goto(int compteur_global)
 {
-    Quad_list* list= create_list(gencode('$', empty(), empty(), empty()));
-    for (int i=0;i<list->size;i++){
-        list->data[i]->idxIF=compteur_global;
+    Quad_list *list = create_list(gencode('$', empty(), empty(), empty()));
+    for (int i = 0; i < list->size; i++)
+    {
+        list->data[i]->idxIF = compteur_global;
     }
     return list;
 }
-Quad_list *init_goto2(int compteur_global){
-    Quad_list* list= create_list(gencode('^', empty(), empty(), empty()));
-    for (int i=0;i<list->size;i++){
-        list->data[i]->idxIF=compteur_global;
+Quad_list *init_goto2(int compteur_global)
+{
+    Quad_list *list = create_list(gencode('^', empty(), empty(), empty()));
+    for (int i = 0; i < list->size; i++)
+    {
+        list->data[i]->idxIF = compteur_global;
     }
     return list;
 }

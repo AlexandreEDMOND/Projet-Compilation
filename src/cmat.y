@@ -57,7 +57,7 @@
 
 %% 
 program:
-  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {;
+  datatype MAIN OPAR CPAR OBRACE instructions CBRACE {print_quad_list(quad_list_main);
   return 1;}
   ;
 

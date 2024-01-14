@@ -1,5 +1,6 @@
 #include "quads.h"
 #include "symbol_table.h"
+#include "switch_op.h"
 #define INIT_QUAD_LIST_CAPACITY 100
 
 extern Quad_list *quad_list_main;
@@ -157,43 +158,30 @@ void find_max_pile_and_create(Quad_list *quad_list)
     }
 }
 
-int print_IF_MIPS(Quad *quad, symbol_table *table)
+void print_IF_MIPS(Quad *quad, symbol_table *table)
 {
-    if (quad->op == '@')
-    {
-        int A = 0;
-        printf("\t\tlw $t3, %s\n", quad->operand1->valeur);
-        for (int i = 0; i < table->size; i++)
-        {
-            if (quad->operand2->valeur == table->symbols[i].id)
-            {
-                A = 1;
-            }
-        }
-        if (A == 1)
-        {
-            printf("\t\tlw $t4, %s\n", quad->operand2->valeur);
-        }
-        else
-        {
-            printf("\t\tli $t4, %s\n", quad->operand2->valeur);
-        }
-        printf("\t\tbeq $t3, $t4, if_block   # Si a == c, aller à if_block\n");
-        return 1;
-    }
+    gen_MIPS_EQ(quad,table);
+    gen_MIPS_SUP(quad,table);
+    gen_MIPS_MIN(quad,table);
+    gen_MIPS_INFEGAL(quad,table);
+    gen_MIPS_SUPEGAL(quad,table);
+    
     if (quad->op == 'g')
     {
         printf("\t\tj else_block             # Sinon, aller à else_block\n");
         printf("\t\tif_block:\n");
-        return 1;
     }
     if (quad->op == '$')
     {
         printf("\t\tj end_if             # end_if\n");
         printf("\t\telse_block:             #aller à else_block\n");
-        return 1;
+
     }
-    return 0;
+    if (quad->op == '^')
+    {
+        printf("\t\tend_if:\n");
+    
+    }
 }
 
 void print_quad_MIPS(Quad *quad, symbol_table *table)
@@ -225,14 +213,6 @@ void print_quad_MIPS(Quad *quad, symbol_table *table)
                 printf("\t\tsyscall\n\n");
             }
         }
-    }
-    if (quad->op == 'T')
-    {
-        printf("end_if:\n");
-    }
-    if (quad->op == 'T')
-    {
-        printf("end_if:\n");
     }
     if (quad->op == 'e')
     {
@@ -370,4 +350,7 @@ int nextquad()
 Quad_list *init_goto()
 {
     return create_list(gencode('$', empty(), empty(), empty()));
+}
+Quad_list *init_goto2(){
+    return create_list(gencode('^', empty(), empty(), empty()));
 }

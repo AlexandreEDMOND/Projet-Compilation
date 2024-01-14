@@ -1,10 +1,8 @@
 
 int main()
 {
-  int a = 2 + 3;
-  print(a);
-  int c = 3;
-  if (a == 5)
+  int a = 6;
+  if (a >= 5)
   {
     int f = 5 + 3;
     print(f);
@@ -14,5 +12,7 @@ int main()
     int g = 5 + 2;
     print(g);
   }
+  int v=2;
+  print(v);
   return 0;
 }

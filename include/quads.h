@@ -55,4 +55,5 @@ void complete(Quad_list *ql, int idx);
 int last_quad_idx(Quad_list *ql); 
 int nextquad();
 Quad_list *init_goto();
-int print_IF_MIPS(Quad*quad,symbol_table*table);
+Quad_list *init_goto2();
+void print_IF_MIPS(Quad*quad,symbol_table*table);

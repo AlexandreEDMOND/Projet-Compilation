@@ -45,7 +45,8 @@
 %type <alex_le_fou> somme-entiere produit-entier operande-entier
 %type <ctrl_ql> condition; 
 %type <intval> M; // Ces noeuds sont des entiers
-%type<ql>N else-part;
+%type<ql>N else-part V;
+%type<charval> comparaison;
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -72,11 +73,16 @@ instruction:
   T=1;}
   ;
 
-condition :  somme-entiere EQ somme-entiere {$$ = gencode_test('@', $1, $3); }
+condition :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3); }
           ;
-else-part           : instructions             { $$ = init_quad_list(); }
+else-part           : instructions V           { $$ = init_quad_list(); }
                     | /* empty */               { $$ = init_quad_list(); }
-
+comparaison: EQ {$$='@';}
+            | NE {$$='!';}
+            | GT {$$='>';}
+            | LT {$$='<';}
+            |GE {$$='k';}
+            |LE {$$='h';}
             
 statement:
   declaration {}
@@ -270,5 +276,6 @@ datatype:
 
 M                   : /*Empty*/                                                         { $$ = nextquad(); }
 N                   : /*Empty*/                                                         { $$ = init_goto();}
+V                   : /*Empty*/                                                         { $$ = init_goto2();}
 
 %%

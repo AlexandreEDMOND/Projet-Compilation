@@ -42,10 +42,13 @@ int main(int argc, char *argv[])
     r = yyparse();
   }
 
-  // print_quad_list(quad_list_main);
-
   printf("\n.text\nmain:\n");
   print_list_quad_MIPS(quad_list_main, table_of_symbol);
+
+  if (options->show_tos == 1){
+    print_symbol_table(table_of_symbol); 
+  }
+
 
   free(options);
   free_symbol_table(table_of_symbol);

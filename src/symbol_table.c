@@ -157,3 +157,22 @@ dinguerie *emptyTest()
   }
   return o;
 }
+
+void print_symbol_table(const symbol_table* table)
+{
+    if (table == NULL)
+    {
+        printf("# La table des symboles est vide.\n");
+        return;
+    }
+
+    printf("# Table des symboles:\n");
+    printf("# ID\tValeur\tType\n");
+    printf("# -------------------------\n");
+    printf("# %i\n", table->size);
+    for (int i = 0; i < table->size; i++)
+    {
+        symbol* s = &table->symbols[i];
+        printf("# %s\t%s\t%c\n", s->id ? s->id : "NULL", s->value ? s->value : "NULL", s->type);
+    }
+}

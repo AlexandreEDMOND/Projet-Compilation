@@ -12,9 +12,13 @@ int main()
   d++;
 
   print(a);
+  printf("\n");
   print(e);
+  printf("\n");
   print(c);
+  printf("\n");
   print(d);
+  printf("\n");
   
   return 0;
 }

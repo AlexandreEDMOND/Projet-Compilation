@@ -40,5 +40,12 @@ args_options *parse_args(int argc, char *argv[])
 
 void show_credits()
 {
-  printf("Credits\n");
+  printf("----------------------\n");
+  printf("Credits : \n");
+  printf("\t- Romain BOURDAIN\n");
+  printf("\t- Mathis PERNIAS\n");
+  printf("\t- Jean-Raphaël JULIEN\n");
+  printf("\t- Alexandre EDMOND\n");
+  printf("----------------------\n");
+
 }

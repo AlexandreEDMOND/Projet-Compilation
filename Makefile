@@ -39,4 +39,4 @@ clean:
 	rm -f $(SRC_PATH)/$(PREFIX).lex.c $(SRC_PATH)/$(PREFIX).tab.c $(INCLUDE_PATH)/$(PREFIX).lex.h $(INCLUDE_PATH)/$(PREFIX).tab.h
 	find test -type f -name "test.out" -exec rm {} \;
 	find test -type f -name "test_MIPS.asm" -exec rm {} \;
-	rm -f "out"/*
+	rm -fr out/

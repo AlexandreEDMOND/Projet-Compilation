@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
   // Créez un fichier de sortie pour le code assembleur
   FILE *output_file;
+  int original_stdout_fd = dup(fileno(stdout));
   if (options->output_file != NULL)
   {
     output_file = fopen(options->output_file, "w");
@@ -47,14 +48,18 @@ int main(int argc, char *argv[])
   printf("\n.text\nmain:\n");
   print_list_quad_MIPS(quad_list_main, table_of_symbol);
 
-  free(options);
-  free_symbol_table(table_of_symbol);
-  free_quad_list(quad_list_main);
+  if (options->show_tos == 1){
+    print_symbol_table(table_of_symbol); 
+  }
 
   if (options->output_file != NULL)
   {
     fclose(output_file);
   }
+  
+  free(options);
+  free_quad_list(quad_list_main);
+  free_symbol_table(table_of_symbol);
 
   return 0;
 }

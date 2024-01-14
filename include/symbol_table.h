@@ -37,3 +37,4 @@ dinguerie *do_arithmetiques(dinguerie *q_1, dinguerie *q_2, char operation, int 
 dinguerie *integer(int value);
 dinguerie *empty();
 dinguerie *emptyTest();
+void print_symbol_table(const symbol_table *table);

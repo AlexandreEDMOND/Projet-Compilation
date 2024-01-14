@@ -2,6 +2,7 @@
 #include <string.h>
 #include <utils.h>
 #include "args.h"
+#include "symbol_table.h"
 
 args_options *parse_args(int argc, char *argv[])
 {

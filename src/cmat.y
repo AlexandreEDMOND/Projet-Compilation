@@ -107,7 +107,12 @@ statement:
 declaration:
   datatype IDENTIFIER {
       add_symbol(table_of_symbol, $2, NULL, $1);
-      printf("\t\t%s: .word 0\n",$2);
+      if($1 == 'i'){
+        printf("\t\t%s: .word 0\n",$2);
+      }
+      if($1 == 'f'){
+        printf("\t\t%s: .float 0.0\n",$2);
+      }
     }
   | datatype IDENTIFIER ASSIGN somme-entiere {
       add_symbol(table_of_symbol, $2, $4->valeur, $1);
@@ -252,6 +257,46 @@ operande-entier     : INT_NUMBER {
                       dinguerie* op1;
                       NCHK(op1 = malloc(sizeof(dinguerie)));
                       strcpy(op1->valeur, $1);
+                      op1->stockage = 0;
+                      op1->type = 'f';
+                      $$ = op1;
+                    }
+                    | MINUS INT_NUMBER {
+                      dinguerie* op1;
+                      NCHK(op1 = malloc(sizeof(dinguerie)));
+                      if ($2[0] == '-') {
+                          // Supprime la première lettre et décale les autres vers la gauche.
+                          for (int i = 0; i < 49; i++) {
+                              $2[i] = $2[i + 1];
+                          }
+                      } else {
+                          // Ajoute un '-' au début de la chaîne et décale les autres vers la droite.
+                          for (int i = 49; i >= 0; i--) {
+                              $2[i + 1] = $2[i];
+                          }
+                          $2[0] = '-';
+                      }
+                      strcpy(op1->valeur, $2);
+                      op1->stockage = 0;
+                      op1->type = 'i';
+                      $$ = op1;
+                    }
+                    | MINUS FLOAT_NUMBER {
+                      dinguerie* op1;
+                      NCHK(op1 = malloc(sizeof(dinguerie)));
+                      if ($2[0] == '-') {
+                          // Supprime la première lettre et décale les autres vers la gauche.
+                          for (int i = 0; i < 49; i++) {
+                              $2[i] = $2[i + 1];
+                          }
+                      } else {
+                          // Ajoute un '-' au début de la chaîne et décale les autres vers la droite.
+                          for (int i = 49; i >= 0; i--) {
+                              $2[i + 1] = $2[i];
+                          }
+                          $2[0] = '-';
+                      }
+                      strcpy(op1->valeur, $2);
                       op1->stockage = 0;
                       op1->type = 'f';
                       $$ = op1;

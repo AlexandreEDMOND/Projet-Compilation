@@ -1,17 +1,21 @@
 int main()
 {
   int a = 4 + 3 + 7 + 856;
-  int b;
-  b = 3 + 7 + 856 + 4;
+  int e;
+  e = 3 + 7 + 856 + 4;
 
   int c = 4 - 3 - 7 - 856;
   int d;
   d = 3 - 7 - 856 - 4;
 
   print(a);
-  print(b);
+  printf("\n");
+  print(e);
+  printf("\n");
   print(c);
+  printf("\n");
   print(d);
+  printf("\n");
   
   return 0;
 }

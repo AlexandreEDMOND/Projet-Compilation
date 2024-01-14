@@ -1,12 +1,15 @@
 int main()
 {
   float a = 8.00;
-  float b = 1856.75982;
+  float d = 1856.75982;
   float c = -86.34;
 
   print(a);
-  print(b);
+  printf("\n");
+  print(d);
+  printf("\n");
   print(c);
+  printf("\n");
   
   return 0;
 }

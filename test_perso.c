@@ -1,18 +1,19 @@
-
 int main()
 {
-  int a = 2 + 3;
+  float a;
+  float d = 1856.75982;
+  float c = -86.34;
+
+  a = 45.26;
+  d = -84.7;
+  c = 0.0001;
+
   print(a);
-  int c = 3;
-  if (a == 5)
-  {
-    int f = 5 + 3;
-    print(f);
-  }
-  else
-  {
-    int g = 5 + 3;
-    print(g);
-  }
+  printf("\n");
+  print(d);
+  printf("\n");
+  print(c);
+  printf("\n");
+  
   return 0;
 }

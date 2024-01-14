@@ -1,16 +1,19 @@
 int main()
 {
   int a;
-  int b = 56;
+  int d = 56;
   int c = -86;
 
   a = 74;
-  b = -3;
+  d = -3;
   c = 0;
 
   print(a);
-  print(b);
+  printf("\n");
+  print(d);
+  printf("\n");
   print(c);
+  printf("\n");
   
   return 0;
 }

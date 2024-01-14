@@ -1,12 +1,15 @@
 int main()
 {
   int a = 5;
-  int b = 1569;
+  int d = 1569;
   int c = -2;
 
   print(a);
-  print(b);
+  printf("\n");
+  print(d);
+  printf("\n");
   print(c);
+  printf("\n");
   
   return 0;
 }

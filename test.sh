@@ -24,14 +24,15 @@ run_test() {
   # Le output_file est un fichier test.out où est redirigée la sortie des affichage
   # Pour la génération d'un code MIPS, il faut ensuite le compiler et rediriger sa sortie vers un autre fichier
   # On poura ensuite le comparer  au fichier expected_output_file
-  "spim" "-file" $intermediar_file > $output_file
+  "spim" "-file" $intermediar_file | grep -v "SPIM Version 8.0 of January 8, 2010" | grep -v "Copyright 1990-2010, James R. Larus." | grep -v "All Rights Reserved." | grep -v "See the file README for a full copyright notice." | grep -v "Loaded: /usr/lib/spim/exceptions.s" > $output_file
+
+
 
   if diff -q $output_file $expected_output_file; then
     echo "\033[32mVALIDE\033[0m"
   else
     echo "\033[31mERREUR\033[0m"
     diff $output_file $expected_output_file
-    exit 1
   fi
 }
 

@@ -19,4 +19,4 @@ echo "\033[34m ------------------ Lancement du compilateur ------------------ \0
 
 mkdir -p out
 
-bin/cmat.bin "-o" out/$2 < $1
+bin/cmat.bin  < $1

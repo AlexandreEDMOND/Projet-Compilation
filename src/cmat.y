@@ -9,7 +9,6 @@
   extern Quad_list* quad_list_main;
   int compteur_string_const = 0;
   int num_registre = 0;
-  int T=0;
 %}
 
 %code requires {
@@ -69,8 +68,7 @@ instructions:
 
 instruction:
   statement SEMICOLON 
-  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);
-  T=1;}
+  | IF OPAR condition CPAR OBRACE  M instructions CBRACE N ELSE OBRACE else-part CBRACE { gencode_if($3,$6,$9,$12);}
   ;
 
 condition :  somme-entiere comparaison somme-entiere {$$ = gencode_test($2, $1, $3); }
@@ -89,9 +87,6 @@ statement:
   | affectation {}
   | affichage {}
   | RETURN somme-entiere {
-    if (T==1){
-      gencode_old('T',"","","");
-    }
     gencode_old('e', "", "", "");
   }
   ;

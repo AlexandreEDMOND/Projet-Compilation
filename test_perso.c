@@ -2,7 +2,7 @@
 int main()
 {
   int a = 6;
-  if (a >= 5)
+  if (a != 6)
   {
     int f = 5 + 3;
     print(f);

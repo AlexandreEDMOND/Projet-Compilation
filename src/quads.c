@@ -165,6 +165,7 @@ void print_IF_MIPS(Quad *quad, symbol_table *table)
     gen_MIPS_MIN(quad,table);
     gen_MIPS_INFEGAL(quad,table);
     gen_MIPS_SUPEGAL(quad,table);
+    gen_MIPS_NEQ(quad,table);
     
     if (quad->op == 'g')
     {
